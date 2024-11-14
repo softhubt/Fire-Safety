@@ -66,13 +66,6 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
                 ? "Stop Recording"
                 : "Start Recording"),
           ),
-          // Add a button to switch camera
-          ElevatedButton(
-            onPressed: () {
-              controller.switchCamera();
-            },
-            child: const Text("Switch Camera"),
-          ),
           if (controller.getSpeakingTestModel.proficiencyTestDetailsList !=
               null)
             Padding(
