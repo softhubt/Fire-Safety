@@ -69,7 +69,7 @@ class WritingTestController extends GetxController {
 
   Future<void> submitWritingTest({
     required String questionId,
-    required String answer,
+    required String answer, required String id,
   }) async {
     try {
       CustomLoader.openCustomLoader();
@@ -85,6 +85,7 @@ class WritingTestController extends GetxController {
         "question_id": questionId,
         "question_details": questionDetails,
         "answer": answer,
+        "testpayment_id": id
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -108,7 +109,8 @@ class WritingTestController extends GetxController {
             snackPosition: SnackPosition.BOTTOM);
         Get.to(() => ReadingScreenWithMCQ(
             userId: userId.value,
-            quizType: 'Reading Test')); // Corrected userId
+            quizType: 'Reading Test',id:id)
+        ); // Corrected userId
       } else {
         log("Error submitting writing test. Status code: ${writingTestSubmitResponse.value?.statusCode}");
         // Optionally, show an error message

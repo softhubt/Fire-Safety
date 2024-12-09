@@ -11,8 +11,9 @@ import 'package:firesafety/Widgets/custom_button.dart';
 
 class StudentFormThankView extends StatefulWidget {
   final String userId;
+  final String id;
 
-  const StudentFormThankView({super.key, required this.userId});
+  const StudentFormThankView({super.key, required this.userId, required this.id});
 
   @override
   State<StudentFormThankView> createState() => _StudentFormThankViewState();
@@ -61,6 +62,7 @@ class _StudentFormThankViewState extends State<StudentFormThankView> {
                   // Get.to(() => SpeakingTestModule(chapterId: widget.chapterId, userId:widget.userId,));
                   Get.to(() => SpeakingTestModule(
                         userId: widget.userId,
+                        id: widget.id,
                       ));
                   //  Get.to(() => SpeakingTestModule( cameras: [],));
                 },

@@ -15,9 +15,10 @@ import 'package:firesafety/Widgets/custom_appbar.dart';
 class ChapterDetailScreen extends StatefulWidget {
   final String chapterId;
   final String courseId;
+  final String testpaymentId;
 
   const ChapterDetailScreen(
-      {super.key, required this.chapterId, required this.courseId});
+      {super.key, required this.chapterId, required this.courseId, required this.testpaymentId,});
 
   @override
   State<ChapterDetailScreen> createState() => _ChapterDetailScreenState();
@@ -108,16 +109,19 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
                         TopicListScreen(
                           chapterId: widget.chapterId,
                           userId: userId,
+                          testpaymentId: widget.testpaymentId,
                         ),
                         ChapterFlashExerciseView(
                           chapterId: widget.chapterId,
                           userId: userId,
                           courseId: widget.courseId,
+                          testpaymentId: widget.testpaymentId,
                         ),
                         FormativeAssesmentView(
                           chapterId: widget.chapterId,
                           userId: userId,
-                          courseId: widget.courseId, // Handle null case
+                          courseId: widget.courseId,
+                          testpaymentId: widget.testpaymentId,// Handle null case
                           // Handle null case
                         ),
                       ],

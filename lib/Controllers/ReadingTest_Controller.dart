@@ -6,17 +6,33 @@ import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:get/get.dart';
 
+// ReadingTestQuestion model
 class ReadingTestQuestion {
   final String id;
   final String question;
   final List<String> options;
-  final String correctAnswer; //s Added this field for the correct answer
+  final String correctAnswer;
 
   ReadingTestQuestion({
     required this.id,
     required this.question,
     required this.options,
-    required this.correctAnswer, // Initialize it
+    required this.correctAnswer,
+  });
+}
+
+// Question model used for the result screen
+class Question {
+  final String id;
+  final String question;
+  final List<String> options;
+  final String correctAnswer;
+
+  Question({
+    required this.id,
+    required this.question,
+    required this.options,
+    required this.correctAnswer,
   });
 }
 
@@ -24,13 +40,14 @@ class ReadingTestController extends GetxController {
   final RxList<ReadingTestQuestion> questions = <ReadingTestQuestion>[].obs;
   PostReadingResultModel postReadingResultModel = PostReadingResultModel();
   ReadListenTestTypeWiseModel readListenTestTypeWiseModel =
-      ReadListenTestTypeWiseModel();
+  ReadListenTestTypeWiseModel();
   final RxString paragraph = ''.obs;
   final RxInt correctAnswers = 0.obs;
   final RxInt wrongAnswers = 0.obs;
   final RxBool isAnswered = false.obs;
   final RxInt currentQuestionIndex = 0.obs;
   final RxString selectedAnswer = "".obs;
+  final RxDouble progressBarValue = 0.0.obs;
 
   void checkAnswer(String answer) {
     selectedAnswer.value = answer;
@@ -77,22 +94,20 @@ class ReadingTestController extends GetxController {
           paragraph.value =
               model.readingListeningTestDetailsList![0].paragraph ?? '';
           questions.value = model
-                  .readingListeningTestDetailsList![0].testQuestionDetails
-                  ?.map((element) {
-                return ReadingTestQuestion(
-                  id: element.id ?? '',
-                  question: element.question ?? '',
-                  options: [
-                    element.option1 ?? '',
-                    element.option2 ?? '',
-                    element.option3 ?? '',
-                    element.option4 ?? '',
-                  ],
-                  correctAnswer: element.answer ??
-                      '', // Assuming 'answer' is the correct one
-                );
-              }).toList() ??
-              [];
+              .readingListeningTestDetailsList![0].testQuestionDetails
+              ?.map((element) {
+            return ReadingTestQuestion(
+              id: element.id ?? '',
+              question: element.question ?? '',
+              options: [
+                element.option1 ?? '',
+                element.option2 ?? '',
+                element.option3 ?? '',
+                element.option4 ?? '',
+              ],
+              correctAnswer: element.answer ?? '',
+            );
+          }).toList() ?? [];
         } else {
           questions.clear();
           log("No reading listening test data available.");
@@ -113,6 +128,7 @@ class ReadingTestController extends GetxController {
     required String testId,
     required String userId,
     required String type,
+    required String id,
   }) async {
     try {
       CustomLoader.openCustomLoader();
@@ -120,6 +136,7 @@ class ReadingTestController extends GetxController {
         "type": "Reading Test",
         "read_listening_test_id": testId,
         "user_id": userId,
+        "testpayment_id": id,
         "obtain_marks": "${correctAnswers.value}",
         "total_marks": "${questions.length}",
         "right_answers": "${correctAnswers.value}",
@@ -156,5 +173,17 @@ class ReadingTestController extends GetxController {
     selectedAnswer.value = "";
     correctAnswers.value = 0;
     wrongAnswers.value = 0;
+  }
+
+  // Method to map ReadingTestQuestion to Question model
+  List<Question> mapToQuestionList(List<ReadingTestQuestion> readingTestQuestions) {
+    return readingTestQuestions.map((e) {
+      return Question(
+        id: e.id,
+        question: e.question,
+        options: e.options,
+        correctAnswer: e.correctAnswer,
+      );
+    }).toList();
   }
 }

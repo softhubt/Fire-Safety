@@ -28,6 +28,8 @@ class ListeningTestController extends GetxController {
       PostListeningResultModel();
   final RxList<ListenTestQuestion> questions = <ListenTestQuestion>[].obs;
   final RxString audioUrl = ''.obs;
+  final RxDouble progressBarValue = 0.0.obs;
+
 
   RxInt correctAnswers = 0.obs;
   RxInt wrongAnswers = 0.obs;
@@ -122,17 +124,19 @@ class ListeningTestController extends GetxController {
   Future<void> postListeningTestResult({
     required String testId,
     required String type,
+    required String id,
   }) async {
     try {
       CustomLoader.openCustomLoader();
       Map<String, dynamic> payload = {
         "type": type,
         "read_listening_test_id": testId,
-        "user_id": userId,
-        "obtain_marks": correctAnswers.value,
-        "total_marks": questions.length,
-        "right_answers": correctAnswers.value,
-        "wrong_answers": wrongAnswers.value,
+        "user_id": userId.value,  // Correctly using userId.value
+        "testpayment_id": id,  // Correctly using userId.value
+        "obtain_marks": correctAnswers.value.toString(),
+        "total_marks": questions.length.toString(),
+        "right_answers": correctAnswers.value.toString(),
+        "wrong_answers": wrongAnswers.value.toString(),
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -144,11 +148,9 @@ class ListeningTestController extends GetxController {
         bodyMessage: "Post quiz result response",
       );
 
-      postListeningResultModel =
-          postListeningResultModelFromJson(response["body"]);
+      postListeningResultModel = postListeningResultModelFromJson(response["body"]);
 
-      if (postListeningResultModel.statusCode == "200" ||
-          postListeningResultModel.statusCode == "201") {
+      if (postListeningResultModel.statusCode == "200" || postListeningResultModel.statusCode == "201") {
         log("Quiz results posted successfully.");
       } else {
         log("Something went wrong: ${postListeningResultModel.statusCode}");

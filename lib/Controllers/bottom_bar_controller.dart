@@ -1,3 +1,4 @@
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/storage_key_constant.dart';
@@ -30,7 +31,8 @@ class BottomBarController extends GetxController {
     // Populate screenList after fetching userId
     screenList.value = [
       DashboardScreen(userId: userId.value),
-      const MyCourseListView(),
+     // const MyCourseListView(),
+       MypurchesCatrgotyListscreen(userId:userId.value),
     ];
 
     isLoading.value = false; // Stop loading after data is fetched

@@ -7,8 +7,9 @@ import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_
 class TopicListScreen extends StatefulWidget {
   final String chapterId;
   final String userId;
+  final String testpaymentId;
 
-  TopicListScreen({Key? key, required this.chapterId, required this.userId})
+  TopicListScreen({Key? key, required this.chapterId, required this.userId, required this.testpaymentId,})
       : super(key: key);
 
   @override
@@ -72,6 +73,8 @@ class _TopicListScreenState extends State<TopicListScreen> {
                             userId: widget.userId,
                             //  userId: chapterDetailController.userId.value,
                             quizType: "3",
+                            testpaymentId: widget.testpaymentId,
+
                           ),
                         ),
                       );

@@ -1,4 +1,5 @@
 import 'package:firesafety/Controllers/ListeningTest_Controller.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ListeningTestWithQuizRuselt_View.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
 import 'package:firesafety/Widgets/custom_no_data_found.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,11 @@ import 'package:get/get.dart';
 
 class ListeningWithMcqView extends StatefulWidget {
   final String userId;
+  final String id;
 
   const ListeningWithMcqView({
     Key? key,
-    required this.userId,
+    required this.userId, required this.id,
   }) : super(key: key);
   @override
   _ListeningWithMcqViewState createState() => _ListeningWithMcqViewState();
@@ -83,8 +85,22 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
                   .readingListeningTestDetailsList?[0].readListeningTestId ??
               '',
           type: "Listening Test",
+          id:widget.id
         )
-        .whenComplete(() => _showResultDialog());
+        .then((_) {
+      // Navigate to the result screen
+      Get.to(() => ListeningestResultView(
+        testListId: controller.listenTestTypeWiseModel
+            .readingListeningTestDetailsList?[0].id ?? '',
+        testName: 'Quiz Test',
+        attemptedQuestions: controller.correctAnswers.value.toDouble(),
+        unattemptedQuestions: (controller.questions.length - controller.correctAnswers.value).toDouble(),
+        skippedQuestion: 0.0, // Assuming skipped questions are 0
+        rightAnswer: controller.correctAnswers.value.toDouble(),
+        wrongAnswer: controller.wrongAnswers.value.toDouble(),
+        answeredList: controller.questions,
+      ));
+    });
   }
 
   void _showResultDialog() {
@@ -121,7 +137,7 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         ),
         TextButton(
           onPressed: () {
-            Get.to(() => MyCourseListView());
+            Get.to(() => MyCourseListView(categoryId: '', subcategoryId: '', testpaymentId: '',));
           },
           child: const Text('Next Page'),
         ),

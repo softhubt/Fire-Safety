@@ -15,10 +15,11 @@ import 'package:firesafety/Widgets/custom_loader.dart';
 
 class StudentFormView extends StatefulWidget {
   final String userId;
+  final String id;
 
   const StudentFormView({
     Key? key,
-    required this.userId,
+    required this.userId, required this.id,
   }) : super(key: key);
 
   @override
@@ -39,6 +40,7 @@ class _StudentFormViewState extends State<StudentFormView> {
     super.initState();
     _controller = Get.put(SubmitStudentFormController());
     _controller.userId.value = widget.userId;
+    _controller.id.value = widget.id;
     _controller.getBranchListform();
   }
 
@@ -902,14 +904,79 @@ class _StudentFormViewState extends State<StudentFormView> {
     );
   }
 
+  // void _submitForm() {
+  //   if (_controller.formKey.currentState?.validate() ?? false) {
+  //     if (!_isVerified) {
+  //       // Check if the checkbox is not ticked
+  //       // Show a message to the user
+  //       Get.snackbar(
+  //         "Verification Required",
+  //         "Please verify information .",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //         backgroundColor: Colors.red,
+  //         colorText: Colors.white,
+  //       );
+  //       return; // Exit the function if not verified
+  //     }
+  //
+  //     CustomLoader.openCustomLoader();
+  //     _controller.submitForm(userId: widget.userId,id: widget.id).then((_) {
+  //       CustomLoader.closeCustomLoader();
+  //       Get.to(() => StudentFormThankView(
+  //             userId: widget.userId, id: widget.id,
+  //           ));
+  //     }).catchError((error) {
+  //       CustomLoader.closeCustomLoader();
+  //       log("Error during form submission: $error");
+  //       // Show a toast or some feedback to the user
+  //     });
+  //   }
+  // }
+
+
   void _submitForm() {
+    // Check if the form is valid first
     if (_controller.formKey.currentState?.validate() ?? false) {
+
+      // Check if all images are uploaded
+      if (_controller.selectedImage1 == null || _controller.selectedImage1!.path.isEmpty) {
+        Get.snackbar(
+          "Missing Image",
+          "Please upload the first picture before submitting.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return; // Exit the function if the image is not selected
+      }
+
+      if (_controller.selectedImage2 == null || _controller.selectedImage2!.path.isEmpty) {
+        Get.snackbar(
+          "Missing Document Image",
+          "Please upload the document image before submitting.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return; // Exit the function if the document image is not selected
+      }
+
+      if (_controller.selectedImage3 == null || _controller.selectedImage3!.path.isEmpty) {
+        Get.snackbar(
+          "Missing Signature Image",
+          "Please upload the signature image before submitting.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return; // Exit the function if the signature image is not selected
+      }
+
+      // Check if the verification checkbox is not ticked
       if (!_isVerified) {
-        // Check if the checkbox is not ticked
-        // Show a message to the user
         Get.snackbar(
           "Verification Required",
-          "Please verify information .",
+          "Please verify information.",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -917,17 +984,26 @@ class _StudentFormViewState extends State<StudentFormView> {
         return; // Exit the function if not verified
       }
 
+      // All validations passed, proceed with submission
       CustomLoader.openCustomLoader();
-      _controller.submitForm(userId: widget.userId).then((_) {
+      _controller.submitForm(userId: widget.userId, id: widget.id).then((_) {
         CustomLoader.closeCustomLoader();
         Get.to(() => StudentFormThankView(
-              userId: widget.userId,
-            ));
+          userId: widget.userId, id: widget.id,
+        ));
       }).catchError((error) {
         CustomLoader.closeCustomLoader();
         log("Error during form submission: $error");
-        // Show a toast or some feedback to the user
+        // Optionally show an error message to the user
+        Get.snackbar(
+          "Error",
+          "Something went wrong. Please try again later.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       });
     }
   }
+
 }

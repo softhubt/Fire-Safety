@@ -25,6 +25,7 @@ class SpekingTestController extends GetxController {
 
   RxBool isRecording = false.obs;
   RxString userId = "".obs;
+  RxString id = "".obs;
   RxString recordedVideoPath = "".obs;
   RxInt currentCameraIndex = 0.obs;
 
@@ -147,7 +148,7 @@ class SpekingTestController extends GetxController {
     }
   }
 
-  Future<void> postSpeakingTest() async {
+  Future<void> postSpeakingTest({required String id}) async {
     CustomLoader.openCustomLoader();
     try {
       var header = {
@@ -172,6 +173,7 @@ class SpekingTestController extends GetxController {
 
       request.files.add(await http.MultipartFile.fromPath(
           "videofile", recordedVideoPath.value));
+      request.fields["testpayment_id"] = id;
       var response = await request.send();
       var responsed = await http.Response.fromStream(response);
 
@@ -183,7 +185,7 @@ class SpekingTestController extends GetxController {
       if (postSpeakingTestDataModel.statusCode == "200" ||
           postSpeakingTestDataModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
-        Get.to(() => const WritingTestPage(userId: ''));
+        Get.to(() =>  WritingTestPage(userId: '',id:id));
       } else {
         CustomLoader.closeCustomLoader();
       }

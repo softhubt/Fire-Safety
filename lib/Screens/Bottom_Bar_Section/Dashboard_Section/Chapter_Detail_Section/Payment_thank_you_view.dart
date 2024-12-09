@@ -10,7 +10,10 @@ import 'package:firesafety/Widgets/custom_button.dart';
 
 class PaymentThankYouView extends StatelessWidget {
   final String userId;
-  const PaymentThankYouView({super.key, required this.userId});
+  final String id;
+
+  const PaymentThankYouView(
+      {super.key, required this.userId, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,7 @@ class PaymentThankYouView extends StatelessWidget {
                 onTap: () {
                   Get.to(() => StudentFormView(
                         userId: userId,
+                        id: id,
                       ));
                 },
               ),

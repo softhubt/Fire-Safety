@@ -115,6 +115,7 @@ class ChapterFormativeAssessmentController extends GetxController {
     required String chapterId,
     required String courseId,
     required String testFormativeType,
+    required String testpaymentid,
   }) async {
     if (testFormativeId == null) {
       log("testFormativeId is not available");
@@ -139,6 +140,7 @@ class ChapterFormativeAssessmentController extends GetxController {
         "chapter_id": chapterId,
         "test_formative_id": testFormativeId!,
         "test_formative_type": testFormativeType,
+        "testpayment_id": testpaymentid,
         "order_item":
             jsonEncode(orderItems.map((item) => item.toJson()).toList()),
       };
@@ -188,11 +190,19 @@ class ChapterFormativeAssessmentController extends GetxController {
     if (value == null || value.isEmpty) {
       return 'This field is required';
     }
-    final wordCount =
-        value.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
-    if (wordCount < 50) {
-      return 'Please write at least 50 words';
+
+    final charCount = value.length;
+
+    // Check if the character count is less than 100
+    if (charCount < 50) {
+      return 'Please write at least 100 characters';
     }
+
     return null;
   }
+
+  String getCharacterCount(String value) {
+    return '${value.length}/50'; // Returns the character count in the format "X/100"
+  }
+
 }

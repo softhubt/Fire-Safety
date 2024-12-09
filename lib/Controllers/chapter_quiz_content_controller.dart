@@ -1,4 +1,6 @@
 import 'dart:developer';
+
+import 'package:firesafety/Models/postShowlastResult_model.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Models/get_chapter_quiz_list_model.dart';
@@ -10,8 +12,11 @@ import 'package:firesafety/Widgets/custom_loader.dart';
 class ChapterQuizContentController extends GetxController {
   GetChapterQuizListModel getChapterQuizListModel = GetChapterQuizListModel();
   PostChapterQuizResultModel postChapterQuizResultModel =
-      PostChapterQuizResultModel();
+  PostChapterQuizResultModel();
+  PostShowlastChapterresultQuizModel postShowlastChapterresultQuizModel =
+  PostShowlastChapterresultQuizModel();
 
+  final RxDouble progressBarValue = 0.0.obs;
   RxString selectedAnswer = "".obs;
   RxInt currentQuestionIndex = 0.obs;
   RxBool isAnswered = false.obs;
@@ -19,8 +24,12 @@ class ChapterQuizContentController extends GetxController {
   RxInt correctAnswers = 0.obs;
   RxInt wrongAnswers = 0.obs;
 
-  RxList<Question> questions = <Question>[].obs;
+  RxList<Question> questions = <Question>[].obs; // RxList<Question>
 
+  // New variable to store the quiz result
+  RxBool isQuizCompleted = false.obs;
+
+  // This function checks the selected answer
   void checkAnswer(String answer) {
     selectedAnswer.value = answer;
     isAnswered.value = true;
@@ -32,20 +41,24 @@ class ChapterQuizContentController extends GetxController {
     }
   }
 
+  // Move to the next question
   void nextQuestion() {
     currentQuestionIndex.value++;
     isAnswered.value = false;
     selectedAnswer.value = "";
   }
 
+  // Reset the quiz for a new attempt
   void resetQuiz() {
     currentQuestionIndex.value = 0;
     isAnswered.value = false;
     selectedAnswer.value = "";
     correctAnswers.value = 0;
     wrongAnswers.value = 0;
+    isQuizCompleted.value = false;  // Reset the completion flag
   }
 
+  // Fetch quiz data
   Future<void> getQuizList({
     required String chapterId,
     required String userId,
@@ -79,21 +92,20 @@ class ChapterQuizContentController extends GetxController {
         if (getChapterQuizListModel.testDetailsList != null &&
             getChapterQuizListModel.testDetailsList!.isNotEmpty) {
           questions.value = getChapterQuizListModel
-                  .testDetailsList![0].testQuestionDetails
-                  ?.map((element) {
-                return Question(
-                  text: element.question ?? '',
-                  options: [
-                    element.option1 ?? '',
-                    element.option2 ?? '',
-                    element.option3 ?? '',
-                    element.option4 ?? '',
-                  ],
-                  correctAnswer: element.answer ?? '',
-                  id: element.id ?? '',
-                );
-              }).toList() ??
-              [];
+              .testDetailsList![0].testQuestionDetails
+              ?.map((element) {
+            return Question(
+              text: element.question ?? '',
+              options: [
+                element.option1 ?? '',
+                element.option2 ?? '',
+                element.option3 ?? '',
+                element.option4 ?? '',
+              ],
+              correctAnswer: element.answer ?? '',
+              id: element.id ?? '',
+            );
+          }).toList() ?? [];
         } else {
           questions.clear();
           log("No quiz data available.");
@@ -110,6 +122,7 @@ class ChapterQuizContentController extends GetxController {
     }
   }
 
+  // Submit the quiz result
   Future<void> postQuizResult({
     required String testId,
     required String userId,
@@ -117,6 +130,7 @@ class ChapterQuizContentController extends GetxController {
     required String courseid,
     required String chapterid,
     required String topicid,
+    required String testpaymentid,
   }) async {
     try {
       CustomLoader.openCustomLoader();
@@ -132,6 +146,7 @@ class ChapterQuizContentController extends GetxController {
         "total_marks": "${questions.length}",
         "right_answers": "${correctAnswers.value}",
         "wrong_answers": "${wrongAnswers.value}",
+        "testpayment_id": testpaymentid,
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -148,12 +163,51 @@ class ChapterQuizContentController extends GetxController {
 
       if (postChapterQuizResultModel.statusCode == "200" ||
           postChapterQuizResultModel.statusCode == "201") {
+        isQuizCompleted.value = true;  // Mark the quiz as completed
         log("Quiz results posted successfully.");
       } else {
         log("Something went wrong: ${postChapterQuizResultModel.statusCode}");
       }
     } catch (error) {
       log("Error posting quiz results: $error");
+    } finally {
+      CustomLoader.closeCustomLoader();
+    }
+  }
+
+  Future<void> ShowresultQuizResult({
+    required String testId,
+    required String userId,
+  }) async {
+    try {
+      CustomLoader.openCustomLoader();
+
+      Map<String, dynamic> payload = {
+        "test_id": testId,
+        "user_id": userId,
+      };
+
+      var response = await HttpServices.postHttpMethod(
+        url: EndPointConstant.testresultdisplay,
+        payload: payload,
+        urlMessage: "Post quiz result url",
+        payloadMessage: "Post quiz result payload",
+        statusMessage: "Post quiz result status code",
+        bodyMessage: "Post quiz result response",
+      );
+
+      postShowlastChapterresultQuizModel =
+          postShowlastChapterresultQuizModelFromJson(response["body"]);
+
+      if (postShowlastChapterresultQuizModel.statusCode == "200" ||
+          postShowlastChapterresultQuizModel.statusCode == "201") {
+        isQuizCompleted.value = true;  // Mark the quiz as completed
+        log("Quiz results fetched successfully.");
+      } else {
+        log("Something went wrong: ${postShowlastChapterresultQuizModel.statusCode}");
+      }
+    } catch (error) {
+      log("Error fetching quiz results: $error");
     } finally {
       CustomLoader.closeCustomLoader();
     }

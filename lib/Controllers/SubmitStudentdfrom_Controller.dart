@@ -49,6 +49,7 @@ class SubmitStudentFormController extends GetxController {
   final RxString selectModeOfEnrollment = ''.obs;
   RxString selectId = "1".obs;
   RxString userId = "".obs;
+  RxString id = "".obs;
   RxString selectCode = "1".obs;
   final RxList<OrderItem> educationEntries = <OrderItem>[].obs;
 
@@ -122,7 +123,7 @@ class SubmitStudentFormController extends GetxController {
     }
   }
 
-  Future<void> submitForm({required String userId}) async {
+  Future<void> submitForm({required String userId, required String id}) async {
     CustomLoader.openCustomLoader();
 
     if (selectedImage1 == null ||
@@ -155,6 +156,7 @@ class SubmitStudentFormController extends GetxController {
         "branch": selectBranch.value,
         "mode_of_enrollment": selectModeOfEnrollment.value,
         "requirements": disabilityRequirementsController.text,
+        "testpayment_id": id,
         "traning_course1":
             selectedCourses.length > 0 ? selectedCourses[0] : null,
         "traning_course2":
@@ -210,13 +212,13 @@ class SubmitStudentFormController extends GetxController {
           getSubmitStudentFormModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
         customToast(message: "Booking Form Added Successfully!");
-        Get.to(() => StudentFormThankView(userId: userId));
+        Get.to(() => StudentFormThankView(userId: userId, id: id,));
         clearAllFields();
 
         // Navigate to the thank you view
-        Get.to(() => StudentFormThankView(userId: userId));
+        Get.to(() => StudentFormThankView(userId: userId,id:id));
       } else {
-        Get.to(() => StudentFormThankView(userId: userId));
+        Get.to(() => StudentFormThankView(userId: userId, id: id,));
         CustomLoader.closeCustomLoader();
         customToast(
             message:

@@ -28,9 +28,9 @@ class CreateAccountScreen extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          top: Get.height * 0.150, bottom: Get.height * 0.050),
+                          top: Get.height * 0.100, bottom: Get.height * 0.020),
                       child: SizedBox(
-                          height: Get.height * 0.200,
+                          height: Get.height * 0.150,
                           width: Get.width * 0.400,
                           child: Image.asset(ImagePathConstant.logo,
                               fit: BoxFit.fill)),
@@ -38,7 +38,7 @@ class CreateAccountScreen extends StatelessWidget {
                     Text("Create Account", style: TextStyleConstant.bold30()),
                     Padding(
                       padding: EdgeInsets.only(
-                          top: Get.height * 0.040, bottom: Get.height * 0.006),
+                          top: Get.height * 0.020, bottom: Get.height * 0.009),
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text("First Name",
@@ -119,7 +119,8 @@ class CreateAccountScreen extends StatelessWidget {
                       validator: FormValidationServices.validateField(
                           fieldName: "Bio"),
                     ),
-                    const Spacer(),
+                  //  const Spacer(),
+                    SizedBox(height: 25,),
                     CustomButton(
                       title: "Create Account",
                       onTap: () {

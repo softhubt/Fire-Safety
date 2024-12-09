@@ -7,8 +7,9 @@ import 'package:firesafety/Widgets/custom_button.dart';
 
 class WritingTestPage extends StatelessWidget {
   final String userId;
+  final String id;
 
-  const WritingTestPage({super.key, required this.userId});
+  const WritingTestPage({super.key, required this.userId, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class WritingTestPage extends StatelessWidget {
                     .proficiencyTestDetailsList?.first.id ??
                 '';
             controller.submitWritingTest(
-                questionId: questionId, answer: answer);
+                questionId: questionId, answer: answer,id:id);
           },
         ),
       ),

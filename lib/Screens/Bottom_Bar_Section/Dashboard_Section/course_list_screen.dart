@@ -14,12 +14,18 @@ class CourseListScreen extends StatefulWidget {
   final String categoryId;
   final String userId;
   final String subcategoryId;
+  final String amount;
+  final String days;
+  final String isPurchase;
 
   const CourseListScreen({
     super.key,
     required this.categoryId,
     required this.subcategoryId,
     required this.userId,
+    required this.amount,
+    required this.days,
+    required this.isPurchase,
   });
 
   @override
@@ -34,9 +40,9 @@ class _CourseListScreenState extends State<CourseListScreen> {
     super.initState();
     controller
         .getCourseList(
-          categoryId: widget.categoryId,
-          subcategoryId: widget.subcategoryId,
-        )
+      categoryId: widget.categoryId,
+      subcategoryId: widget.subcategoryId,
+    )
         .whenComplete(() => setState(() {}));
   }
 
@@ -53,54 +59,91 @@ class _CourseListScreenState extends State<CourseListScreen> {
       body: Padding(
         padding: screenPadding,
         child: (controller.getCourseListModel.courseList != null &&
-                controller.getCourseListModel.courseList!.isNotEmpty)
-            ? GridView.builder(
-                shrinkWrap: true,
-                itemCount: controller.getCourseListModel.courseList?.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  childAspectRatio: 1.0,
+            controller.getCourseListModel.courseList!.isNotEmpty)
+            ? ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.getCourseListModel.courseList?.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              onTap: () {
+                Get.to(() => CourseDetailScreen(
+                  courseId:
+                  "${controller.getCourseListModel.courseList?[index].courseId}",
+                  testpaymentId: "widget.testpaymentId,",
+                  isPurchase: widget.isPurchase,
+                ));
+              },
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.to(() => CourseDetailScreen(
-                          courseId:
-                              "${controller.getCourseListModel.courseList?[index].courseId}"));
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: contentPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Image (placed at the top)
+                      SizedBox(
+                        height: Get.height * 0.2, // Height of the image
+                        width: double.infinity, // Image takes up full width
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(13), // Circular border radius
+                          child: Image.network(
+                            "${controller.getCourseListModel.courseList?[index].courseImage}",
+                            fit: BoxFit.cover, // Cover the container area without distortion
+                          ),
+                        ),
                       ),
-                      child: Container(
-                        padding: contentPadding,
+                      SizedBox(height: Get.height * 0.02), // Space between image and text
+                      // Text with course name and price
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width * 0.02),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              height: Get.height * 0.123,
-                              width: Get.width,
-                              child: Image.network(
-                                "${controller.getCourseListModel.courseList?[index].courseImage}",
-                                fit: BoxFit.fill,
-                              ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.school,
+                                  size: 20,
+                                  color: ColorConstant.primary,
+                                ),
+                                SizedBox(width: 8), // Add some space between the icon and text
+                                Expanded(
+                                  child: Text(
+                                    "${controller.getCourseListModel.courseList?[index].courseName}",
+                                    style: TextStyleConstant.semiBold16(),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: Get.height * 0.020),
-                              child: Text(
-                                "${controller.getCourseListModel.courseList?[index].courseName}",
-                                style: TextStyleConstant.semiBold16(),
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_today, // Calendar icon
+                                  size: 20, // Adjust the icon size
+                                  color: ColorConstant.primary, // Optional: Set the icon color
+                                ),
+                                SizedBox(width: 8), // Add space between the icon and the text
+                                Text(
+                                  "Start on ${controller.getCourseListModel.courseList?[index].startDate}",
+                                  style: TextStyleConstant.semiBold14(),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        )
             : const CustomNoDataFound(),
       ),
       bottomNavigationBar: Padding(
@@ -109,14 +152,33 @@ class _CourseListScreenState extends State<CourseListScreen> {
           left: screenWidthPadding,
           right: screenWidthPadding,
         ),
-        child: CustomButton(
-          title: "Purchase",
-          onTap: () {
-            Get.to(() => PaymentThankYouView(
-                  //  chapterId: widget.chapterId,  // Use widget to access
-                  userId: widget.userId, // Use widget to access
-                ));
-          },
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomButton(
+                title: "Price: ${widget.amount}",
+                onTap: () {
+                  // Show price information, you can also navigate to a price details page if needed
+                },
+              ),
+            ),
+            SizedBox(width: screenWidthPadding), // Space between buttons
+            Expanded(
+              child: CustomButton(
+                title: "Buy",
+                onTap: () {
+                  // Passing all required arguments to getPurchesCpource
+                  controller.getPurchesCpource(
+                    categoryId: widget.categoryId,
+                    subcategoryId: widget.subcategoryId,
+                    userId: widget.userId,
+                    amount: widget.amount,
+                    days: widget.days,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

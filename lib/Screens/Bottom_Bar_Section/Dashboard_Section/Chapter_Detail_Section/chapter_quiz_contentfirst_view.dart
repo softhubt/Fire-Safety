@@ -100,7 +100,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
             //  Get.to(() => SpeakingTestModule(chapterId: ""));
             //  Get.to(() => StudentFormView());
             Get.to(() => PaymentThankYouView(
-                  userId: '',
+                  userId: '', id: '',
                 ));
           },
         ),
@@ -143,7 +143,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                   Get.to(() => ChapterDetailScreen(
                             chapterId:
                                 "${controller.getChapterListModel.courseChapterList?[index].chapterId}",
-                            courseId: widget.courseId,
+                            courseId: widget.courseId, testpaymentId: '',
                           )
 
                       // SpeakingTestModule(

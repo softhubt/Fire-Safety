@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/FlashExreciseController.dart';
-// Update this path according to your project structure
 
 class ChapterFlashExerciseView extends StatefulWidget {
   final String chapterId;
   final String userId;
   final String courseId;
+  final String testpaymentId;
 
   const ChapterFlashExerciseView({
     super.key,
     required this.chapterId,
     required this.userId,
     required this.courseId,
+    required this.testpaymentId,
   });
 
   @override
@@ -48,8 +49,7 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
         child: Obx(() {
           if (controller.questions.isEmpty) {
             return Center(
-                child:
-                    CircularProgressIndicator()); // Show loader while data is being fetched
+                child: CircularProgressIndicator()); // Show loader while data is being fetched
           }
 
           return Form(
@@ -98,18 +98,55 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (controller.formKey.currentState!.validate()) {
-            // Submit the answers
-            controller.submitFlashExerciseTest(
-              userId: widget.userId,
-              chapterId: widget.chapterId,
-              courseId: widget.courseId, // Pass the actual course ID
-              flashExerciseType: "5", // Replace with actual flash exercise type
-            );
-          }
+          // Show a confirmation dialog before submitting the test
+          _showConfirmationDialog();
         },
         child: Icon(Icons.send),
       ),
     );
+  }
+
+  // Function to show a confirmation dialog
+  void _showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Submission'),
+          content: Text('Are you sure you want to submit your answers?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Close the dialog without doing anything
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Close the dialog and submit the test
+                Navigator.of(context).pop();
+                _submitTest();
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Function to handle the test submission
+  void _submitTest() {
+    if (controller.formKey.currentState!.validate()) {
+      // Submit the answers
+      controller.submitFlashExerciseTest(
+        userId: widget.userId,
+        chapterId: widget.chapterId,
+        courseId: widget.courseId, // Pass the actual course ID
+        flashExerciseType: "5", // Replace with actual flash exercise type
+        testpaymentId: widget.testpaymentId, // Replace with actual flash exercise type
+      );
+    }
   }
 }

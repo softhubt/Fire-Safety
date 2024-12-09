@@ -9,7 +9,8 @@ import 'package:firesafety/Widgets/custom_button.dart';
 
 class SpeakingTestModule extends StatefulWidget {
   final String userId;
-  const SpeakingTestModule({Key? key, required this.userId}) : super(key: key);
+  final String id;
+  const SpeakingTestModule({Key? key, required this.userId,  required this.id}) : super(key: key);
 
   @override
   _SpeakingTestModuleState createState() => _SpeakingTestModuleState();
@@ -85,7 +86,7 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
         child: CustomButton(
           title: "Submit",
           onTap: () {
-            controller.postSpeakingTest();
+            controller.postSpeakingTest(id:widget.id);
           },
         ),
       ),

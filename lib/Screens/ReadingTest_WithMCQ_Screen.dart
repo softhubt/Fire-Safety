@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firesafety/Controllers/ReadingTest_Controller.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ReadingTestResult_View.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Widgets/custom_no_data_found.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,12 @@ import 'package:get/get.dart';
 class ReadingScreenWithMCQ extends StatefulWidget {
   final String userId;
   final String quizType;
+  final String id;
 
   const ReadingScreenWithMCQ({
     Key? key,
     required this.userId,
-    required this.quizType,
+    required this.quizType, required this.id,
   }) : super(key: key);
 
   @override
@@ -114,20 +116,34 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: ElevatedButton(
+                      // Inside the ElevatedButton onPressed:
                       onPressed: () {
-                        if (controller.currentQuestionIndex.value <
-                            controller.questions.length - 1) {
-                          controller.nextQuestion();
+                        if (controller.currentQuestionIndex.value < controller.questions.length - 1) {
+                          controller.nextQuestion(); // Move to next question
                         } else {
-                          controller
-                              .postReadingTestResult(
-                                testId: controller.questions[0].id,
-                                userId: widget.userId,
-                                type: widget.quizType,
-                              )
-                              .whenComplete(() => showResultDialog());
+                          // Once the last question is reached, submit the result
+                          controller.postReadingTestResult(
+                            testId: controller.questions[0].id,
+                            userId: widget.userId,
+                            type: widget.quizType,
+                            id: widget.id,
+                          ).then((_) {
+                            // Navigate to the result screen
+                            Get.to(() => RedingTestResultView(
+                              testListId: controller.readListenTestTypeWiseModel
+                                  .readingListeningTestDetailsList?[0].id ?? '',
+                              testName: 'Quiz Test',
+                              attemptedQuestions: controller.correctAnswers.value.toDouble(),
+                              unattemptedQuestions: (controller.questions.length - controller.correctAnswers.value).toDouble(),
+                              skippedQuestion: 0.0, // Assuming skipped questions are 0
+                              rightAnswer: controller.correctAnswers.value.toDouble(),
+                              wrongAnswer: controller.wrongAnswers.value.toDouble(),
+                              answeredList: controller.questions,
+                            ));
+                          });
                         }
                       },
+
                       child: (controller.currentQuestionIndex.value <
                               controller.questions.length - 1)
                           ? const Text('Next Question')
@@ -191,7 +207,7 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      ListeningWithMcqView(userId: widget.userId),
+                      ListeningWithMcqView(userId: widget.userId,id:widget.id),
                 ),
               );
             },
@@ -240,3 +256,4 @@ class OptionButton extends StatelessWidget {
     );
   }
 }
+

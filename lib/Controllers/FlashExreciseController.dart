@@ -113,6 +113,7 @@ class FlasExerciseController extends GetxController {
     required String chapterId,
     required String courseId,
     required String flashExerciseType,
+    required String testpaymentId,
   }) async {
     if (flashExerciseId == null) {
       log("flashExerciseId is not available");
@@ -137,8 +138,10 @@ class FlasExerciseController extends GetxController {
         "chapter_id": chapterId,
         "flash_exercise_id": flashExerciseId!,
         "flash_exercise_type": flashExerciseType,
+        "testpayment_id": testpaymentId,
         "order_item":
             jsonEncode(orderItems.map((item) => item.toJson()).toList()),
+
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -182,11 +185,19 @@ class FlasExerciseController extends GetxController {
     if (value == null || value.isEmpty) {
       return 'This field is required';
     }
-    final wordCount =
-        value.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
-    if (wordCount < 100) {
-      return 'Please write at least 100 words';
+
+    final charCount = value.length;
+
+    // Check if the character count is less than 100
+    if (charCount < 100) {
+      return 'Please write at least 100 characters';
     }
+
     return null;
   }
+
+  String getCharacterCount(String value) {
+    return '${value.length}/100'; // Returns the character count in the format "X/100"
+  }
+
 }

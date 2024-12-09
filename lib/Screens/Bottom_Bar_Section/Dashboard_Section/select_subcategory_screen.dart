@@ -1,3 +1,4 @@
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/color_constant.dart';
@@ -12,24 +13,22 @@ class SelectSubcategoryScreen extends StatefulWidget {
   final String categoryId;
   final String userId;
 
-  const SelectSubcategoryScreen(
-      {super.key, required this.categoryId, required this.userId});
+  const SelectSubcategoryScreen({super.key, required this.categoryId, required this.userId});
 
   @override
-  State<SelectSubcategoryScreen> createState() =>
-      _SelectSubcategoryScreenState();
+  State<SelectSubcategoryScreen> createState() => _SelectSubcategoryScreenState();
 }
 
 class _SelectSubcategoryScreenState extends State<SelectSubcategoryScreen> {
-  SelectSubcategoryController controller =
-      Get.put(SelectSubcategoryController());
+  SelectSubcategoryController controller = Get.put(SelectSubcategoryController());
 
   @override
   void initState() {
     super.initState();
+    // Fetch the subcategory data when the screen is initialized
     controller
-        .getSubcategory(categoryId: widget.categoryId)
-        .whenComplete(() => setState(() {}));
+        .getSubcategory(categoryId: widget.categoryId, userId: widget.userId)
+        .whenComplete(() => setState(() {})); // Call setState to refresh the UI after data load
   }
 
   @override
@@ -44,54 +43,172 @@ class _SelectSubcategoryScreenState extends State<SelectSubcategoryScreen> {
       body: Padding(
         padding: screenPadding,
         child: (controller.getSubcategoryModel.subcategoryList != null)
-            ? GridView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    controller.getSubcategoryModel.subcategoryList?.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                    childAspectRatio: 1.0),
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Get.to(() => CourseListScreen(
-                            categoryId:
-                                "${controller.getSubcategoryModel.subcategoryList?[index].categoryId}",
-                            subcategoryId:
-                                "${controller.getSubcategoryModel.subcategoryList?[index].subcategoryId}",
-                            userId: widget.userId,
-                          ));
-                    },
-                    child: Card(
-                      child: Container(
-                        padding: contentPadding,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: Get.height * 0.123,
-                              width: Get.width,
-                              child: Image.network(
-                                  "${controller.getSubcategoryModel.subcategoryList?[index].subcategoryImage}",
-                                  fit: BoxFit.fill),
+            ? ListView.builder(
+          itemCount: controller.getSubcategoryModel.subcategoryList?.length,
+          itemBuilder: (BuildContext context, int index) {
+            // Access the subcategory data for each item
+            var subcategory = controller.getSubcategoryModel.subcategoryList?[index];
+
+            return GestureDetector(
+              onTap: () {
+                // Access the subcategory object
+                var subcategory = controller.getSubcategoryModel.subcategoryList?[index];
+
+                // Check if the subcategory has been purchased (is_purchase == 1)
+                if (subcategory?.isPurchase == 1) {
+                  // If is_purchase is 1, navigate to MypurchesCatrgotyListscreen
+                  Get.to(() => MypurchesCatrgotyListscreen(
+                    userId: widget.userId,
+                  ));
+                } else {
+                  // If is_purchase is 0, navigate to CourseListScreen
+                  Get.to(() => CourseListScreen(
+                    categoryId: "${subcategory?.categoryId}",
+                    subcategoryId: "${subcategory?.subcategoryId}",
+                    amount: "${subcategory?.amount}",
+                    days: "${subcategory?.days}",
+                    userId: widget.userId,
+                    isPurchase: "${subcategory?.isPurchase}",
+                  ));
+                }
+              },
+              child: Card(
+                child: Container(
+
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child:
+                  Column(
+                    children: [
+                      // Display subcategory name above the image, not centered
+                      // Text(
+                      //   "${subcategory?.subcategoryName}",
+                      //   style: TextStyleConstant.semiBold16(),
+                      //   textAlign: TextAlign.start, // Align to start (left)
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
+
+                      // Image display at the top - full width
+                      SizedBox(
+                        height: Get.height * 0.2, // Adjust height as necessary
+                        width: double.infinity, // Full width
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18), // Set the border radius to make it circular
+                          child: Container(
+                            child: Image.network(
+                              "${subcategory?.subcategoryImage}",
+                              fit: BoxFit.fill, // Stretch image to cover entire area
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: Get.height * 0.020),
-                              child: Text(
-                                  "${controller.getSubcategoryModel.subcategoryList?[index].subcategoryName}",
-                                  style: TextStyleConstant.semiBold16(),
-                                  overflow: TextOverflow.ellipsis),
-                            )
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              )
+
+                      SizedBox(height: 10), // Spacing between image and text
+
+                      // Text content
+                      Row(
+                        children: [
+                          // Text content with subcategory details
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.school,  // School icon
+                                      size: 20,       // Adjust the icon size as needed
+                                      color: ColorConstant.primary,  // Optional: Set the icon color
+                                    ),
+                                    SizedBox(width: 8),  // Space between the icon and the text
+                                    Text(
+                                      "${subcategory?.subcategoryName}",
+                                      style: TextStyleConstant.semiBold16(),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Row with "Buy" and "Price" buttons
+                      SizedBox(height: 10), // Add space between text and buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Buy Button
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: screenHeightPadding,
+                              left: screenWidthPadding,
+                              right: screenWidthPadding,
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Show price or handle price-related actions
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Price"),
+                                    content: Text(
+                                      "₹${subcategory?.amount}",
+                                      style: TextStyle(color: ColorConstant.white),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Get.back(),
+                                        child: Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorConstant.primary, // Customize button color if needed
+                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text('₹${subcategory?.amount}',
+                                  style: TextStyleConstant.semiBold16(color: Colors.white)),
+                            ),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigate to the purchase screen
+                              Get.to(() => CourseListScreen(
+                                categoryId: "${subcategory?.categoryId}",
+                                subcategoryId: "${subcategory?.subcategoryId}",
+                                amount: "${subcategory?.amount}",
+                                days: "${subcategory?.days}",
+                                userId: widget.userId,
+                                isPurchase: "${subcategory?.isPurchase}",
+                              ));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorConstant.primary,
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('Buy Now', style: TextStyleConstant.semiBold16(color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            );
+          },
+        )
             : const CustomNoDataFound(),
       ),
     );
