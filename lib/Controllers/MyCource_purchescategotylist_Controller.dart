@@ -5,18 +5,15 @@ import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Models/get_course_list_model.dart';
 import 'package:firesafety/Services/http_services.dart';
 
-
 class MypurschaseSubcategoryController extends GetxController {
-  GetPurchaseSubcategoryModel getPurchaseSubcategoryModel = GetPurchaseSubcategoryModel();
+  GetPurchaseSubcategoryModel getPurchaseSubcategoryModel =
+      GetPurchaseSubcategoryModel();
 
-
-
-  Future GetPurchesSubCategory(
-      {required String UserId,}) async {
+  Future GetPurchesSubCategory({
+    required String UserId,
+  }) async {
     try {
-      Map<String, dynamic> payload = {
-        "user_id": UserId
-      };
+      Map<String, dynamic> payload = {"user_id": UserId};
 
       var response = await HttpServices.postHttpMethod(
           url: EndPointConstant.mypurchasesubcategorylist,
@@ -26,7 +23,8 @@ class MypurschaseSubcategoryController extends GetxController {
           statusMessage: "Get course list status code",
           bodyMessage: "Get course list response");
 
-      getPurchaseSubcategoryModel = getPurchaseSubcategoryModelFromJson(response["body"]);
+      getPurchaseSubcategoryModel =
+          getPurchaseSubcategoryModelFromJson(response["body"]);
 
       if (getPurchaseSubcategoryModel.statusCode == "200" ||
           getPurchaseSubcategoryModel.statusCode == "201") {
@@ -37,7 +35,6 @@ class MypurschaseSubcategoryController extends GetxController {
       log("Something went wrong during getting course list ::: $error");
     }
   }
-
 
   // Future getPurchesCpource({
   //   required String categoryId,
@@ -81,5 +78,4 @@ class MypurschaseSubcategoryController extends GetxController {
   //     log("Something went wrong during payment ::: $error");
   //   }
   // }
-
 }

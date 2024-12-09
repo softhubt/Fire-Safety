@@ -1,14 +1,11 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/drawer_view.dart';
-import 'package:firesafety/Widgets/custom_shimmer.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:firesafety/Constant/color_constant.dart';
-import 'package:firesafety/Constant/layout_constant.dart';
-import 'package:firesafety/Constant/textstyle_constant.dart';
+import 'package:firesafety/Widgets/custom_appbar.dart';
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get/get.dart';
+import 'package:firesafety/Widgets/custom_shimmer.dart';
 import 'package:firesafety/Controllers/dashboard_controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/select_subcategory_screen.dart';
-import 'package:firesafety/Widgets/custom_appbar.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String userId;
@@ -24,124 +21,167 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    controller.initialFunctioun().whenComplete(() => setState(() {}));
+    controller.initialFunctioun();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Dashboard",
-        leading: IconButton(
-          onPressed: () {
-            Get.to(() => const DrawerView());
-          },
-          icon: const Icon(Icons.menu_open_rounded, color: ColorConstant.white),
-        ),
-      ),
-      drawer: appDrawer(),
+          title: "Dashboard",
+          leading: IconButton(
+              onPressed: () {},
+              icon:
+                  const Icon(Icons.menu_rounded, color: ColorConstant.white))),
       body: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
-          Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: screenHeightPadding,
-                  horizontal: screenHeightPadding),
-              child: (controller.getadvertiesmentModel.advertisementList !=
-                      null)
-                  ? CarouselSlider.builder(
-                      itemCount: controller
-                          .getadvertiesmentModel.advertisementList?.length,
-                      itemBuilder: (context, index, realIndex) {
-                        final element = controller
-                            .getadvertiesmentModel.advertisementList?[index];
-                        return Container(
-                            width: Get.width * 0.900,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                image: DecorationImage(
-                                    image:
-                                        NetworkImage("${element?.imagePath}"),
-                                    fit: BoxFit.fill)));
-                      },
-                      options: CarouselOptions(
-                          initialPage: 0,
-                          autoPlay: true,
-                          height: Get.height * 0.180,
-                          viewportFraction: 1))
-                  : CustomShimmer(
-                      height: Get.height * 0.180, width: Get.width * 0.900)),
-          Padding(
-            padding: screenHorizontalPadding,
-            child: (controller.getCategoryModel.categoryList != null)
-                ? GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.getCategoryModel.categoryList?.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: contentHeightPadding,
-                        crossAxisSpacing: contentWidthPadding,
-                        childAspectRatio: 2 / 2),
-                    itemBuilder: (BuildContext context, int index) {
-                      final element =
-                          controller.getCategoryModel.categoryList?[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => SelectSubcategoryScreen(
-                              categoryId: "${element?.categoryId}",
-                              userId: widget.userId));
-                        },
-                        child: Container(
-                          padding: contentPadding,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(24)),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: Get.height * 0.120,
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22),
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            "${element?.categoryImage}"),
-                                        fit: BoxFit.fill)),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: contentHeightPadding),
-                                  child: Text("${element?.categoryName}",
-                                      style: TextStyleConstant.medium18(),
-                                      overflow: TextOverflow.ellipsis)),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: contentHeightPadding,
-                        crossAxisSpacing: contentWidthPadding,
-                        childAspectRatio: 2 / 1.8),
-                    itemBuilder: (BuildContext context, int index) {
-                      return const CustomShimmer(radius: 24);
-                    },
-                  ),
-          ),
+          // Carousel Section
+          _buildCarousel(),
+          const SizedBox(height: 16),
+          // Categories Section
+          _buildCategoryGrid(),
         ],
       ),
+      drawer: _appDrawer(),
     );
   }
 
-  Widget appDrawer() {
-    return ListView(
-      children: [],
+  Widget _buildCarousel() {
+    return (controller.getadvertiesmentModel.advertisementList != null)
+        ? CarouselSlider.builder(
+            itemCount:
+                controller.getadvertiesmentModel.advertisementList?.length,
+            itemBuilder: (context, index, realIndex) {
+              final element =
+                  controller.getadvertiesmentModel.advertisementList?[index];
+              return Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      image: DecorationImage(
+                        image: NetworkImage("${element?.imagePath}"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "${element?.description}",
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            options: CarouselOptions(
+              autoPlay: true,
+              height: 180,
+              viewportFraction: 0.9,
+              enlargeCenterPage: true,
+            ),
+          )
+        : const CustomShimmer(height: 180, width: double.infinity);
+  }
+
+  Widget _buildCategoryGrid() {
+    return (controller.getCategoryModel.categoryList != null)
+        ? GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: controller.getCategoryModel.categoryList?.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            itemBuilder: (context, index) {
+              final element = controller.getCategoryModel.categoryList?[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => SelectSubcategoryScreen(
+                        categoryId: "${element?.categoryId}",
+                        userId: widget.userId,
+                      ));
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 6,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage("${element?.categoryImage}"),
+                        radius: 30,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "${element?.categoryName}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 4,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            itemBuilder: (context, index) {
+              return const CustomShimmer(radius: 16);
+            },
+          );
+  }
+
+  Widget _appDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: const [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Text("User Info"),
+          ),
+          ListTile(title: Text("Home"), leading: Icon(Icons.home)),
+          ListTile(title: Text("Settings"), leading: Icon(Icons.settings)),
+        ],
+      ),
     );
   }
 }
