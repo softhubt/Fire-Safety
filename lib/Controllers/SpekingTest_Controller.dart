@@ -24,6 +24,7 @@ class SpekingTestController extends GetxController {
   late List<CameraDescription> cameras;
 
   RxBool isRecording = false.obs;
+  RxBool isCameraInitilize = false.obs;
   RxString userId = "".obs;
   RxString id = "".obs;
   RxString recordedVideoPath = "".obs;
@@ -185,7 +186,7 @@ class SpekingTestController extends GetxController {
       if (postSpeakingTestDataModel.statusCode == "200" ||
           postSpeakingTestDataModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
-        Get.to(() =>  WritingTestPage(userId: '',id:id));
+        Get.to(() => WritingTestPage(userId: '', id: id));
       } else {
         CustomLoader.closeCustomLoader();
       }
