@@ -19,7 +19,8 @@ class StudentFormView extends StatefulWidget {
 
   const StudentFormView({
     Key? key,
-    required this.userId, required this.id,
+    required this.userId,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -69,9 +70,11 @@ class _StudentFormViewState extends State<StudentFormView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.remove_red_eye, color: Colors.blue), // Eye icon
-                    SizedBox(width: 8), // Space between icon and text
-                    Text("View Sample From", style: TextStyle(fontSize: 16)),
+                    const Icon(Icons.remove_red_eye,
+                        color: Colors.blue), // Eye icon
+                    const SizedBox(width: 8), // Space between icon and text
+                    const Text("View Sample From",
+                        style: TextStyle(fontSize: 16)),
                     // Space between the form and the image
                     Padding(
                       padding: const EdgeInsets.only(left: 170),
@@ -91,23 +94,25 @@ class _StudentFormViewState extends State<StudentFormView> {
                     _buildDatePickerField(
                         _controller.dobController, 'Date Of Birth'),
                     const SizedBox(height: 10),
-                    Text('Gender:', style: TextStyle(fontSize: 16)),
+                    const Text('Gender:', style: TextStyle(fontSize: 16)),
                     _buildGenderSelector(),
                     const SizedBox(height: 10),
                     _buildTextField(_controller.countryBirthController,
                         'Country and Birth Place'),
                     const SizedBox(height: 10),
-                    Text('Marital Status:', style: TextStyle(fontSize: 16)),
+                    const Text('Marital Status:',
+                        style: TextStyle(fontSize: 16)),
                     _buildMaritalStatusDropdown(),
                     const SizedBox(height: 10),
-                    Text('Address:', style: TextStyle(fontSize: 16)),
+                    const Text('Address:', style: TextStyle(fontSize: 16)),
                     _buildTextField(_controller.addressController, 'Address',
                         maxLines: 3),
                     const SizedBox(height: 10),
-                    Text('Select Country:', style: TextStyle(fontSize: 16)),
+                    const Text('Select Country:',
+                        style: TextStyle(fontSize: 16)),
                     _buildGetContryListDropdown(),
                     const SizedBox(height: 10),
-                    Text('Select State:', style: TextStyle(fontSize: 16)),
+                    const Text('Select State:', style: TextStyle(fontSize: 16)),
                     _buildStateListDropdown(),
                     const SizedBox(height: 10),
                     _buildTextField(_controller.zipCodeController, 'Zip Code'),
@@ -126,11 +131,12 @@ class _StudentFormViewState extends State<StudentFormView> {
                     _buildTextField(
                         _controller.examvenueController, 'Exam Venue:'),
                     const SizedBox(height: 10),
-                    Text('Select Branch:', style: TextStyle(fontSize: 16)),
+                    const Text('Select Branch:',
+                        style: TextStyle(fontSize: 16)),
                     _buildSelectBranchDropdown(),
                     const SizedBox(height: 20),
 
-                    Center(
+                    const Center(
                       child: Text(
                         'TRAINING COURSES',
                         style: TextStyle(
@@ -148,12 +154,12 @@ class _StudentFormViewState extends State<StudentFormView> {
 
                     const SizedBox(height: 20),
 
-                    Text('Mode of Enrollment:',
+                    const Text('Mode of Enrollment:',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     _buildSelectModeeOfEnrollMentDropdown(), // Add some space
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       'Do any Delegates have disabilities that will\nrequire special facilities or assistance? If yes,\nplease outline their requirements.',
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
@@ -176,7 +182,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                         children: [
                           Column(
                             children: [
-                              Text("Upload Picture"),
+                              const Text("Upload Picture"),
                               imageBox(
                                 onTap: () {
                                   selectImageSourceDialog(
@@ -192,7 +198,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text("Upload Document Image"),
+                                const Text("Upload Document Image"),
                                 imageBox(
                                   onTap: () {
                                     selectImageSourceDialog(
@@ -209,7 +215,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text("Upload Signature Image"),
+                                const Text("Upload Signature Image"),
                                 imageBox(
                                   onTap: () {
                                     selectImageSourceDialog(
@@ -227,7 +233,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                     ),
 
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       'Education Details',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -277,8 +283,8 @@ class _StudentFormViewState extends State<StudentFormView> {
                     ),
                     GestureDetector(
                       onTap: _showTermsAndConditions,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Read Terms and Conditions",
                           style: TextStyle(
@@ -318,7 +324,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ),
           Checkbox(
@@ -345,7 +351,7 @@ class _StudentFormViewState extends State<StudentFormView> {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
       ),
@@ -366,7 +372,7 @@ class _StudentFormViewState extends State<StudentFormView> {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
       ),
@@ -387,7 +393,7 @@ class _StudentFormViewState extends State<StudentFormView> {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
       ),
@@ -438,7 +444,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           _controller.maritalStatusValue.value = value!;
         });
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Marital Status',
         border: OutlineInputBorder(),
       ),
@@ -462,7 +468,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           _controller.SelectcountryListValue.value = value!;
         });
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Select Country',
         border: OutlineInputBorder(),
       ),
@@ -486,7 +492,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           _controller.SelectStateListValue.value = value!;
         });
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Select State',
         border: OutlineInputBorder(),
       ),
@@ -516,7 +522,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           _controller.selectBranch.value = value;
         }
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Select Branch',
         border: OutlineInputBorder(),
       ),
@@ -542,7 +548,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           _controller.selectModeOfEnrollment.value = value!;
         });
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'select Mode Of Enrollment',
         border: OutlineInputBorder(),
       ),
@@ -574,7 +580,7 @@ class _StudentFormViewState extends State<StudentFormView> {
             hintText:
                 controller.text.isNotEmpty ? controller.text : 'Select Date',
             prefixIcon: const Icon(Icons.calendar_today),
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
           ),
         ),
       ),
@@ -616,11 +622,11 @@ class _StudentFormViewState extends State<StudentFormView> {
       scrollDirection: Axis.horizontal,
       child: DataTable(
         columns: [
-          DataColumn(label: Text('Institution Name')),
-          DataColumn(label: Text('From Date')),
-          DataColumn(label: Text('To Date')),
-          DataColumn(label: Text('Degree Obtained')),
-          DataColumn(label: Text('Action')),
+          const DataColumn(label: Text('Institution Name')),
+          const DataColumn(label: Text('From Date')),
+          const DataColumn(label: Text('To Date')),
+          const DataColumn(label: Text('Degree Obtained')),
+          const DataColumn(label: Text('Action')),
         ],
         rows: _controller.educationEntries.map((entry) {
           return DataRow(
@@ -658,7 +664,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                 ? DecorationImage(image: FileImage(image), fit: BoxFit.fill)
                 : null),
         child: image.path.isEmpty
-            ? Icon(Icons.add_a_photo, color: ColorConstant.grey)
+            ? const Icon(Icons.add_a_photo, color: ColorConstant.grey)
             : null,
       ),
     );
@@ -703,7 +709,7 @@ class _StudentFormViewState extends State<StudentFormView> {
           // title: const Text("Terms and Conditions of Service"),
           content: SingleChildScrollView(
             child: RichText(
-              text: TextSpan(
+              text: const TextSpan(
                 children: [
                   TextSpan(
                     text: "Terms and Conditions of Service\n\n",
@@ -933,13 +939,12 @@ class _StudentFormViewState extends State<StudentFormView> {
   //   }
   // }
 
-
   void _submitForm() {
     // Check if the form is valid first
     if (_controller.formKey.currentState?.validate() ?? false) {
-
       // Check if all images are uploaded
-      if (_controller.selectedImage1 == null || _controller.selectedImage1!.path.isEmpty) {
+      if (_controller.selectedImage1 == null ||
+          _controller.selectedImage1!.path.isEmpty) {
         Get.snackbar(
           "Missing Image",
           "Please upload the first picture before submitting.",
@@ -950,7 +955,8 @@ class _StudentFormViewState extends State<StudentFormView> {
         return; // Exit the function if the image is not selected
       }
 
-      if (_controller.selectedImage2 == null || _controller.selectedImage2!.path.isEmpty) {
+      if (_controller.selectedImage2 == null ||
+          _controller.selectedImage2!.path.isEmpty) {
         Get.snackbar(
           "Missing Document Image",
           "Please upload the document image before submitting.",
@@ -961,7 +967,8 @@ class _StudentFormViewState extends State<StudentFormView> {
         return; // Exit the function if the document image is not selected
       }
 
-      if (_controller.selectedImage3 == null || _controller.selectedImage3!.path.isEmpty) {
+      if (_controller.selectedImage3 == null ||
+          _controller.selectedImage3!.path.isEmpty) {
         Get.snackbar(
           "Missing Signature Image",
           "Please upload the signature image before submitting.",
@@ -989,8 +996,9 @@ class _StudentFormViewState extends State<StudentFormView> {
       _controller.submitForm(userId: widget.userId, id: widget.id).then((_) {
         CustomLoader.closeCustomLoader();
         Get.to(() => StudentFormThankView(
-          userId: widget.userId, id: widget.id,
-        ));
+              userId: widget.userId,
+              id: widget.id,
+            ));
       }).catchError((error) {
         CustomLoader.closeCustomLoader();
         log("Error during form submission: $error");
@@ -1005,5 +1013,4 @@ class _StudentFormViewState extends State<StudentFormView> {
       });
     }
   }
-
 }
