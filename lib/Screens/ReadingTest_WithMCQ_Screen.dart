@@ -139,6 +139,9 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                               rightAnswer: controller.correctAnswers.value.toDouble(),
                               wrongAnswer: controller.wrongAnswers.value.toDouble(),
                               answeredList: controller.questions,
+                              userId: widget.userId,
+                              id: widget.id,
+
                             ));
                           });
                         }

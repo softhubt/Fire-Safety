@@ -5,6 +5,7 @@ import 'package:firesafety/Controllers/ListeningTest_Controller.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
 import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -18,6 +19,7 @@ class ListeningestResultView extends StatefulWidget {
   final double skippedQuestion;
   final double rightAnswer;
   final double wrongAnswer;
+  final String userId;
   final List<ListenTestQuestion> answeredList;
 
   const ListeningestResultView({
@@ -30,6 +32,7 @@ class ListeningestResultView extends StatefulWidget {
     required this.rightAnswer,
     required this.wrongAnswer,
     required this.answeredList,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -48,7 +51,7 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
+
               SizedBox(height: 20),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,6 +141,9 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
               SizedBox(height: screenHeightPadding),
               Container(
                 padding: contentPadding,
@@ -173,39 +179,39 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
                 ),
               ),
 
-              SizedBox(height: screenHeightPadding),
-              Container(
-                padding: contentPadding,
-                decoration: BoxDecoration(
-                    color: ColorConstant.blue.withOpacity(0.1),
-                    border:
-                    Border.all(width: 2, color: ColorConstant.blue),
-                    borderRadius: BorderRadius.circular(16)),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: Get.height * 0.300,
-                      child: PieChart(
-                        PieChartData(
-                          sections: showingSecondSections(
-                              rightAnswer: widget.rightAnswer,
-                              wrongAnswer: widget.wrongAnswer,
-                              skippedQuestions: widget.skippedQuestion +
-                                  widget.unattemptedQuestions),
-                          centerSpaceRadius: 20,
-                          sectionsSpace: 2,
-                          borderData: FlBorderData(show: false),
-                          pieTouchData: PieTouchData(
-                            touchCallback: (FlTouchEvent event,
-                                pieTouchResponse) {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    buildSecondLegend(),
-                  ],
-                ),
-              ),
+              // SizedBox(height: screenHeightPadding),
+              // Container(
+              //   padding: contentPadding,
+              //   decoration: BoxDecoration(
+              //       color: ColorConstant.blue.withOpacity(0.1),
+              //       border:
+              //       Border.all(width: 2, color: ColorConstant.blue),
+              //       borderRadius: BorderRadius.circular(16)),
+              //   child: Column(
+              //     children: [
+              //       SizedBox(
+              //         height: Get.height * 0.300,
+              //         child: PieChart(
+              //           PieChartData(
+              //             sections: showingSecondSections(
+              //                 rightAnswer: widget.rightAnswer,
+              //                 wrongAnswer: widget.wrongAnswer,
+              //                 skippedQuestions: widget.skippedQuestion +
+              //                     widget.unattemptedQuestions),
+              //             centerSpaceRadius: 20,
+              //             sectionsSpace: 2,
+              //             borderData: FlBorderData(show: false),
+              //             pieTouchData: PieTouchData(
+              //               touchCallback: (FlTouchEvent event,
+              //                   pieTouchResponse) {},
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //       buildSecondLegend(),
+              //     ],
+              //   ),
+              // ),
 
               SizedBox(height: screenHeightPadding),
               Padding(
@@ -214,9 +220,9 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        title: "Exit",
+                        title: "Next ",
                         onTap: () {
-                          //  Get.offAll(() => const BottomBarView());
+                          Get.to(() => MypurchesCatrgotyListscreen(userId: widget.userId,));
                         },
                       ),
                     ),
@@ -251,14 +257,14 @@ List<PieChartSectionData> showingSections(
       required double skippedQuestions}) {
   return [
     PieChartSectionData(
-        color: ColorConstant.blue,
+        color: ColorConstant.green,
         value: attemptedQuestions,
         title: attemptedQuestions.toString().split(".")[0],
         radius: 100,
         titleStyle:
         TextStyleConstant.extraBold18(color: ColorConstant.white)),
     PieChartSectionData(
-      color: ColorConstant.orange,
+      color: ColorConstant.red,
       value: unattemptedQuestions,
       title: unattemptedQuestions.toString().split(".")[0],
       radius: 100,
@@ -323,9 +329,9 @@ Widget buildLegend() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
-      buildLegendItem('Attempted', ColorConstant.blue),
-      buildLegendItem('Not Visited', ColorConstant.orange),
-      buildLegendItem('Skipped', ColorConstant.grey),
+      buildLegendItem('Wrong Answer', ColorConstant.red),
+      buildLegendItem('Correct Answer', ColorConstant.green),
+      // buildLegendItem('Skipped', ColorConstant.grey),
     ],
   );
 }

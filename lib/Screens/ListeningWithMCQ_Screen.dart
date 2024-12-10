@@ -99,6 +99,7 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         rightAnswer: controller.correctAnswers.value.toDouble(),
         wrongAnswer: controller.wrongAnswers.value.toDouble(),
         answeredList: controller.questions,
+        userId: widget.userId,
       ));
     });
   }

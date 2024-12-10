@@ -5,6 +5,7 @@ import 'package:firesafety/Controllers/ReadingTest_Controller.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
 import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
+import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -13,11 +14,14 @@ import 'package:get/get.dart';
 class RedingTestResultView extends StatefulWidget {
   final String testListId;
   final String testName;
+  final String userId;
+  final String id;
   final double attemptedQuestions;
   final double unattemptedQuestions;
   final double skippedQuestion;
   final double rightAnswer;
   final double wrongAnswer;
+  // final double userId;
   final List<ReadingTestQuestion> answeredList; // Change to List<Question> instead of List<Map>
 
   const RedingTestResultView({
@@ -30,6 +34,9 @@ class RedingTestResultView extends StatefulWidget {
     required this.rightAnswer,
     required this.wrongAnswer,
     required this.answeredList,
+    required this.userId,
+    required this.id,
+    // required this.userId,
   }) : super(key: key);
 
   @override
@@ -217,9 +224,9 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
                   children: [
                     Expanded(
                       child: CustomButton(
-                        title: "Exit",
+                        title: "Next Test",
                         onTap: () {
-                          //  Get.offAll(() => const BottomBarView());
+                          Get.to(() =>   ListeningWithMcqView(userId:widget.userId,id:widget.id),);
                         },
                       ),
                     ),

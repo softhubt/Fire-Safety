@@ -165,6 +165,7 @@ class ChapterQuizContentController extends GetxController {
           postChapterQuizResultModel.statusCode == "201") {
         isQuizCompleted.value = true;  // Mark the quiz as completed
         log("Quiz results posted successfully.");
+      //  Get.to(() =>  WritingTestPage(userId: '',id:id));
       } else {
         log("Something went wrong: ${postChapterQuizResultModel.statusCode}");
       }

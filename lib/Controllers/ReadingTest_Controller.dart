@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Models/ReadingTestAfterPurchesmodel.dart';
 import 'package:firesafety/Models/post_reading_test_result_model.dart';
+import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:get/get.dart';
@@ -157,6 +158,8 @@ class ReadingTestController extends GetxController {
       if (postReadingResultModel.statusCode == "200" ||
           postReadingResultModel.statusCode == "201") {
         log("Quiz results posted successfully.");
+
+         Get.to(() =>   ListeningWithMcqView(userId:userId,id:id),);
       } else {
         log("Something went wrong: ${postReadingResultModel.statusCode}");
       }
