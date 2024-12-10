@@ -80,6 +80,7 @@ class SubmitStudentFormController extends GetxController {
   }
 
   final formKey = GlobalKey<FormState>();
+
   void toggleCourseSelection(String course) {
     if (selectedCourses.contains(course)) {
       selectedCourses.remove(course);
@@ -212,13 +213,19 @@ class SubmitStudentFormController extends GetxController {
           getSubmitStudentFormModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
         customToast(message: "Booking Form Added Successfully!");
-        Get.to(() => StudentFormThankView(userId: userId, id: id,));
+        Get.to(() => StudentFormThankView(
+              userId: userId,
+              id: id,
+            ));
         clearAllFields();
 
         // Navigate to the thank you view
-        Get.to(() => StudentFormThankView(userId: userId,id:id));
+        Get.to(() => StudentFormThankView(userId: userId, id: id));
       } else {
-        Get.to(() => StudentFormThankView(userId: userId, id: id,));
+        Get.to(() => StudentFormThankView(
+              userId: userId,
+              id: id,
+            ));
         CustomLoader.closeCustomLoader();
         customToast(
             message:

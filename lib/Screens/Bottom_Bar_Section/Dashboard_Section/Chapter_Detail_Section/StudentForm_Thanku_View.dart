@@ -13,7 +13,8 @@ class StudentFormThankView extends StatefulWidget {
   final String userId;
   final String id;
 
-  const StudentFormThankView({super.key, required this.userId, required this.id});
+  const StudentFormThankView(
+      {super.key, required this.userId, required this.id});
 
   @override
   State<StudentFormThankView> createState() => _StudentFormThankViewState();
@@ -23,13 +24,7 @@ class _StudentFormThankViewState extends State<StudentFormThankView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "Thanku",
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: ColorConstant.black),
-          onPressed: () => Get.back(),
-        ),
-      ),
+      appBar: const CustomAppBar(title: "Thanku"),
       body: Center(
         child: Padding(
           padding: screenHorizontalPadding,

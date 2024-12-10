@@ -1,13 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:firesafety/Constant/layout_constant.dart';
+import 'package:firesafety/Controllers/SubmitStudentdfrom_Controller.dart';
+import 'package:firesafety/Services/form_validation_services.dart';
+import 'package:firesafety/Widgets/custom_appbar.dart';
+import 'package:firesafety/Widgets/custom_button.dart';
+import 'package:firesafety/Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/color_constant.dart';
-import 'package:firesafety/Constant/image_path_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
-import 'package:firesafety/Controllers/SubmitStudentdfrom_Controller.dart';
 import 'package:firesafety/Models/Post_SubmitStudentForm_Model.dart';
 import 'package:firesafety/Models/get_BranchList_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/StudentForm_Thanku_View.dart';
@@ -16,20 +20,14 @@ import 'package:firesafety/Widgets/custom_loader.dart';
 class StudentFormView extends StatefulWidget {
   final String userId;
   final String id;
-
-  const StudentFormView({
-    Key? key,
-    required this.userId,
-    required this.id,
-  }) : super(key: key);
+  const StudentFormView({super.key, required this.userId, required this.id});
 
   @override
-  _StudentFormViewState createState() => _StudentFormViewState();
+  State<StudentFormView> createState() => _StudentFormViewState();
 }
 
 class _StudentFormViewState extends State<StudentFormView> {
-  // late final SubmitStudentFormController _controller;
-  SubmitStudentFormController _controller =
+  SubmitStudentFormController controller =
       Get.put(SubmitStudentFormController());
 
   // State to keep track of checkbox selections
@@ -39,309 +37,409 @@ class _StudentFormViewState extends State<StudentFormView> {
   @override
   void initState() {
     super.initState();
-    _controller = Get.put(SubmitStudentFormController());
-    _controller.userId.value = widget.userId;
-    _controller.id.value = widget.id;
-    _controller.getBranchListform();
+    controller = Get.put(SubmitStudentFormController());
+    controller.userId.value = widget.userId;
+    controller.id.value = widget.id;
+    controller.getBranchListform();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Student Form"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
-      ),
+      appBar: const CustomAppBar(title: "Student Form", isBack: true),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _controller.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.remove_red_eye,
-                        color: Colors.blue), // Eye icon
-                    const SizedBox(width: 8), // Space between icon and text
-                    const Text("View Sample From",
-                        style: TextStyle(fontSize: 16)),
-                    // Space between the form and the image
-                    Padding(
-                      padding: const EdgeInsets.only(left: 170),
-                      child: Image.asset(
-                        ImagePathConstant.Receipt,
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(_controller.nameController, 'Name'),
-                    const SizedBox(height: 10),
-                    _buildTextField(
-                        _controller.nationalityController, 'Nationality'),
-                    const SizedBox(height: 10),
-                    _buildDatePickerField(
-                        _controller.dobController, 'Date Of Birth'),
-                    const SizedBox(height: 10),
-                    const Text('Gender:', style: TextStyle(fontSize: 16)),
-                    _buildGenderSelector(),
-                    const SizedBox(height: 10),
-                    _buildTextField(_controller.countryBirthController,
-                        'Country and Birth Place'),
-                    const SizedBox(height: 10),
-                    const Text('Marital Status:',
-                        style: TextStyle(fontSize: 16)),
-                    _buildMaritalStatusDropdown(),
-                    const SizedBox(height: 10),
-                    const Text('Address:', style: TextStyle(fontSize: 16)),
-                    _buildTextField(_controller.addressController, 'Address',
-                        maxLines: 3),
-                    const SizedBox(height: 10),
-                    const Text('Select Country:',
-                        style: TextStyle(fontSize: 16)),
-                    _buildGetContryListDropdown(),
-                    const SizedBox(height: 10),
-                    const Text('Select State:', style: TextStyle(fontSize: 16)),
-                    _buildStateListDropdown(),
-                    const SizedBox(height: 10),
-                    _buildTextField(_controller.zipCodeController, 'Zip Code'),
-                    const SizedBox(height: 10),
-                    _buildTextField(
-                        _controller.phoneController, 'Phone Number'),
-                    const SizedBox(height: 10),
-                    _nonmandatorybuildTextField(
-                        _controller.mobileController, 'Mobile Number'),
-                    const SizedBox(height: 10),
-                    _buildTextField(_controller.emailController, 'Email Id'),
-                    const SizedBox(height: 10),
-                    _nonmandatorybuildTextField(
-                        _controller.altEmailController, 'Alternative Email Id'),
-                    const SizedBox(height: 10),
-                    _buildTextField(
-                        _controller.examvenueController, 'Exam Venue:'),
-                    const SizedBox(height: 10),
-                    const Text('Select Branch:',
-                        style: TextStyle(fontSize: 16)),
-                    _buildSelectBranchDropdown(),
-                    const SizedBox(height: 20),
-
-                    const Center(
-                      child: Text(
-                        'TRAINING COURSES',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildCourseCheckbox('1. Diploma Safety Course', 0),
-                    _buildCourseCheckbox('2. POST DIPLOMA Safety COURSES', 1),
-                    _buildCourseCheckbox('3. GRADUATION PROGRAMS (ASP/CSP)', 2),
-                    _buildCourseCheckbox('4. CERTIFICATE COURSES', 3),
-                    _buildCourseCheckbox(
-                        '5. NIBOSH IGC (International General Certification) IG1 & IG2',
-                        4),
-
-                    const SizedBox(height: 20),
-
-                    const Text('Mode of Enrollment:',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    _buildSelectModeeOfEnrollMentDropdown(), // Add some space
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Do any Delegates have disabilities that will\nrequire special facilities or assistance? If yes,\nplease outline their requirements.',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10), // Add some space
-                    _buildTextField(
-                        _controller.disabilityRequirementsController,
-                        'Requirements'),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Upload Your Documet Image",
-                        style: TextStyleConstant.semiBold16(),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: Get.height * 0.030),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              const Text("Upload Picture"),
-                              imageBox(
-                                onTap: () {
-                                  selectImageSourceDialog(
-                                      controller: _controller, imageNo: 1);
-                                },
-                                image: (_controller.selectedImage1 != null)
-                                    ? File(_controller.selectedImage1!.path)
-                                    : File(""),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                const Text("Upload Document Image"),
-                                imageBox(
-                                  onTap: () {
-                                    selectImageSourceDialog(
-                                        controller: _controller, imageNo: 2);
-                                  },
-                                  image: (_controller.selectedImage2 != null)
-                                      ? File(_controller.selectedImage2!.path)
-                                      : File(""),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                const Text("Upload Signature Image"),
-                                imageBox(
-                                  onTap: () {
-                                    selectImageSourceDialog(
-                                        controller: _controller, imageNo: 3);
-                                  },
-                                  image: (_controller.selectedImage3 != null)
-                                      ? File(_controller.selectedImage3!.path)
-                                      : File(""),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Education Details',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    _buildTextEducationField(
-                        _controller.institutionController, 'Institution Name'),
-                    const SizedBox(height: 10),
-                    _buildDatePickerField(
-                        _controller.fromDateController, 'From Date'),
-                    const SizedBox(height: 10),
-                    _buildDatePickerField(
-                        _controller.toDateController, 'To Date'),
-                    const SizedBox(height: 10),
-                    _buildTextEducationField(
-                        _controller.degreeController, 'Degree Obtained'),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _addToList,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Add to List'),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildAcademicTable(),
-                    const SizedBox(height: 20),
-
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _isVerified,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isVerified = value!;
-                            });
-                          },
-                          activeColor: Colors.green,
-                        ),
-                        const Text(
-                          " Please verify the  information .",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: _showTermsAndConditions,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Read Terms and Conditions",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Submit'),
-                    ),
-                  ],
-                ),
+        padding: screenHorizontalPadding,
+        child: Form(
+          key: controller.formKey,
+          child: ListView(
+            children: [
+              // const Icon(Icons.remove_red_eye, color: Colors.blue), // Eye icon
+              // const SizedBox(width: 8), // Space between icon and text
+              // const Text("View Sample From", style: TextStyle(fontSize: 16)),
+              // // Space between the form and the image
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 170),
+              //   child: Image.asset(
+              //     ImagePathConstant.Receipt,
+              //     width: 150,
+              //     height: 150,
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Name", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.nameController,
+                  hintText: "Enter Your Name",
+                  textInputType: TextInputType.name,
+                  validator:
+                      FormValidationServices.validateField(fieldName: "Name")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child:
+                      Text("Nationality", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.nationalityController,
+                  hintText: "Enter Your Nationality",
+                  textInputType: TextInputType.name,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Nationality")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Date of Birth",
+                      style: TextStyleConstant.medium16())),
+              GestureDetector(
+                  onTap: () {
+                    showDatePickerDialog(
+                        textEditingController: controller.dobController);
+                  },
+                  child: CustomTextField(
+                      controller: controller.dobController,
+                      hintText: "Enter Your Date of Birth",
+                      textInputType: TextInputType.name,
+                      enable: false,
+                      validator: FormValidationServices.validateField(
+                          fieldName: "Date of Birth"))),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Select Gender",
+                      style: TextStyleConstant.medium16())),
+              Row(
+                children: [
+                  Expanded(
+                      child: CustomButton(
+                    title: "Male",
+                    backGroundColor: (controller.genderValue.value == "Male")
+                        ? ColorConstant.primary
+                        : ColorConstant.primary.withOpacity(0.1),
+                    textColor: (controller.genderValue.value == "Male")
+                        ? ColorConstant.white
+                        : ColorConstant.primary,
+                    onTap: () {
+                      controller.genderValue.value = "Male";
+                      setState(() {});
+                    },
+                  )),
+                  SizedBox(width: screenWidthPadding),
+                  Expanded(
+                      child: CustomButton(
+                    title: "Female",
+                    backGroundColor: (controller.genderValue.value == "Female")
+                        ? ColorConstant.primary
+                        : ColorConstant.primary.withOpacity(0.1),
+                    textColor: (controller.genderValue.value == "Female")
+                        ? ColorConstant.white
+                        : ColorConstant.primary,
+                    onTap: () {
+                      controller.genderValue.value = "Female";
+                      setState(() {});
+                    },
+                  )),
+                ],
               ),
-            ),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Country and Birth Place",
+                      style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.countryBirthController,
+                  hintText: "Enter Country Birth Place",
+                  textInputType: TextInputType.name,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Country and Birth Place")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Material Status",
+                      style: TextStyleConstant.medium16())),
+              buildMaritalStatusDropdown(),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Address", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.addressController,
+                  hintText: "Enter Street Address",
+                  textInputType: TextInputType.streetAddress,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Address")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Country", style: TextStyleConstant.medium16())),
+              buildGetContryListDropdown(),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("State", style: TextStyleConstant.medium16())),
+              buildStateListDropdown(),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Zip Code", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.zipCodeController,
+                  hintText: "Enter Zip Code",
+                  textInputType: TextInputType.number,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Zip Code")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Phone", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.phoneController,
+                  hintText: "Enter Phone",
+                  textInputType: TextInputType.phone,
+                  validator: FormValidationServices.validatePhone()),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Alternative Phone",
+                      style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.mobileController,
+                  hintText: "Enter Alternative Phone",
+                  textInputType: TextInputType.number,
+                  validator: FormValidationServices.validatePhone()),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Email", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.emailController,
+                  hintText: "Enter Email",
+                  textInputType: TextInputType.emailAddress,
+                  validator: FormValidationServices.validateEmail()),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Alternative Email",
+                      style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.altEmailController,
+                  hintText: "Enter Alternative Email",
+                  textInputType: TextInputType.emailAddress,
+                  validator: FormValidationServices.validateEmail()),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child:
+                      Text("Exam Venue", style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.examvenueController,
+                  hintText: "Enter Exam Venue",
+                  textInputType: TextInputType.streetAddress,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Exam Venue")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Branch", style: TextStyleConstant.medium16())),
+              buildSelectBranchDropdown(),
+
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding),
+                  child: Center(
+                      child: Text('TRAINING COURSES',
+                          style: TextStyleConstant.bold18()))),
+              buildCourseCheckbox('1. Diploma Safety Course', 0),
+              buildCourseCheckbox('2. POST DIPLOMA Safety COURSES', 1),
+              buildCourseCheckbox('3. GRADUATION PROGRAMS (ASP/CSP)', 2),
+              buildCourseCheckbox('4. CERTIFICATE COURSES', 3),
+              buildCourseCheckbox(
+                  '5. NIBOSH IGC (International General Certification) IG1 & IG2',
+                  4),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Mode of Enrollment",
+                      style: TextStyleConstant.medium16())),
+              buildSelectModeeOfEnrollMentDropdown(), // Add some space
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text(
+                      'Do any Delegates have disabilities that will\nrequire special facilities or assistance? If yes,\nplease outline their requirements.',
+                      style: TextStyleConstant.medium16())),
+              CustomTextField(
+                  controller: controller.disabilityRequirementsController,
+                  hintText: "Enter Requirements",
+                  textInputType: TextInputType.text,
+                  validator: FormValidationServices.validateField(
+                      fieldName: "Requirements")),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Upload Your Document Images",
+                      style: TextStyleConstant.semiBold16())),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text("Profile", style: TextStyleConstant.medium16()),
+                      imageBox(
+                          onTap: () {
+                            selectImageSourceDialog(
+                                controller: controller, imageNo: 1);
+                          },
+                          image: (controller.selectedImage1 != null)
+                              ? File(controller.selectedImage1!.path)
+                              : File("")),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text("Document", style: TextStyleConstant.medium16()),
+                      imageBox(
+                        onTap: () {
+                          selectImageSourceDialog(
+                              controller: controller, imageNo: 2);
+                        },
+                        image: (controller.selectedImage2 != null)
+                            ? File(controller.selectedImage2!.path)
+                            : File(""),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text("Signature", style: TextStyleConstant.medium16()),
+                      imageBox(
+                        onTap: () {
+                          selectImageSourceDialog(
+                              controller: controller, imageNo: 3);
+                        },
+                        image: (controller.selectedImage3 != null)
+                            ? File(controller.selectedImage3!.path)
+                            : File(""),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  child: Text("Education Details",
+                      style: TextStyleConstant.semiBold16())),
+              CustomTextField(
+                  controller: controller.institutionController,
+                  hintText: "Institution Name",
+                  textInputType: TextInputType.name),
+              Padding(
+                padding: contentVerticalPadding,
+                child: GestureDetector(
+                    onTap: () {
+                      showDatePickerDialog(
+                          textEditingController: controller.fromDateController);
+                    },
+                    child: CustomTextField(
+                        controller: controller.fromDateController,
+                        hintText: "From Date",
+                        textInputType: TextInputType.name,
+                        enable: false)),
+              ),
+
+              GestureDetector(
+                  onTap: () {
+                    showDatePickerDialog(
+                        textEditingController: controller.toDateController);
+                  },
+                  child: CustomTextField(
+                      controller: controller.toDateController,
+                      hintText: "To Date",
+                      textInputType: TextInputType.name,
+                      enable: false)),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: contentHeightPadding, bottom: screenHeightPadding),
+                child: CustomTextField(
+                    controller: controller.degreeController,
+                    hintText: "Enter Degree Obtained",
+                    textInputType: TextInputType.name),
+              ),
+              CustomButton(title: "Add to List", onTap: addToList),
+              buildAcademicTable(),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Please verify the information",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstant.black.withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+                  Checkbox(
+                    value: _isVerified,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _isVerified = value!;
+                      });
+                    },
+                    activeColor: ColorConstant.green,
+                    checkColor: Colors.white, // White checkmark color
+                    side: BorderSide(
+                        color: ColorConstant.lightGrey, // Subtle border color
+                        width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ],
+              ),
+
+              Padding(
+                padding: screenVerticalPadding,
+                child: GestureDetector(
+                    onTap: showTermsAndConditions,
+                    child: Text("Read Terms and Conditions",
+                        style: TextStyleConstant.bold18(
+                            color: ColorConstant.primary))),
+              ),
+              CustomButton(title: "Submit", onTap: submitForm),
+              SizedBox(height: screenHeightPadding),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCourseCheckbox(String title, int index) {
+  Widget buildCourseCheckbox(String title, int index) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: ColorConstant.black.withOpacity(0.8),
+              ),
             ),
           ),
-          Checkbox(
-            value: courseSelections[index],
-            onChanged: (bool? value) {
-              setState(() {
-                courseSelections[index] = value!;
-                _controller.toggleCourseSelection(title);
-              });
-            },
-            activeColor: Colors.green,
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Checkbox(
+              key: ValueKey(courseSelections[index]),
+              value: courseSelections[index],
+              onChanged: (bool? value) {
+                setState(() {
+                  courseSelections[index] = value!;
+                  controller.toggleCourseSelection(title);
+                });
+              },
+              activeColor: ColorConstant.green,
+              checkColor: Colors.white, // White checkmark color
+              side: BorderSide(
+                color: ColorConstant.lightGrey, // Subtle border color
+                width: 1.5,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
-
   // ... (other existing methods remain unchanged)
 
   TextFormField _buildTextField(TextEditingController controller, String label,
@@ -411,10 +509,10 @@ class _StudentFormViewState extends State<StudentFormView> {
       children: [
         Radio<String>(
           value: 'Male',
-          groupValue: _controller.genderValue.value,
+          groupValue: controller.genderValue.value,
           onChanged: (String? value) {
             setState(() {
-              _controller.genderValue.value = value!;
+              controller.genderValue.value = value!;
             });
           },
         ),
@@ -422,10 +520,10 @@ class _StudentFormViewState extends State<StudentFormView> {
         const SizedBox(width: 20),
         Radio<String>(
           value: 'Female',
-          groupValue: _controller.genderValue.value,
+          groupValue: controller.genderValue.value,
           onChanged: (String? value) {
             setState(() {
-              _controller.genderValue.value = value!;
+              controller.genderValue.value = value!;
             });
           },
         ),
@@ -434,67 +532,164 @@ class _StudentFormViewState extends State<StudentFormView> {
     );
   }
 
-  DropdownButtonFormField<String> _buildMaritalStatusDropdown() {
+  DropdownButtonFormField<String> buildMaritalStatusDropdown() {
     return DropdownButtonFormField<String>(
-      value: _controller.maritalStatusValue.value.isEmpty
+      value: controller.maritalStatusValue.value.isEmpty
           ? null
-          : _controller.maritalStatusValue.value,
+          : controller.maritalStatusValue.value,
       onChanged: (value) {
         setState(() {
-          _controller.maritalStatusValue.value = value!;
+          controller.maritalStatusValue.value = value!;
         });
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Marital Status',
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        hintText: 'Select Marital Status',
+        hintStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.6),
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: ColorConstant.primary, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       items: <String>['', 'Single', 'Married', 'Divorced', 'Widowed']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value.isEmpty ? 'Select Marital Status' : value),
+          child: Text(
+            value.isEmpty ? 'Select Marital Status' : value,
+            style: TextStyle(
+              color: value.isEmpty ? ColorConstant.grey : ColorConstant.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+            ),
+          ),
         );
       }).toList(),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: ColorConstant.primary.withOpacity(0.8),
+      ),
+      iconSize: 24,
+      isExpanded: true,
+      dropdownColor: ColorConstant.white,
     );
   }
 
-  DropdownButtonFormField<String> _buildGetContryListDropdown() {
+  DropdownButtonFormField<String> buildGetContryListDropdown() {
     return DropdownButtonFormField<String>(
-      value: _controller.SelectcountryListValue.value.isEmpty
+      value: controller.SelectcountryListValue.value.isEmpty
           ? null
-          : _controller.SelectcountryListValue.value,
+          : controller.SelectcountryListValue.value,
       onChanged: (value) {
         setState(() {
-          _controller.SelectcountryListValue.value = value!;
+          controller.SelectcountryListValue.value = value!;
         });
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Select Country',
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        hintText: 'Select a country',
+        hintStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.6),
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: ColorConstant.primary, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       items: <String>['', 'India', 'Australia', 'China', 'Colombia', 'Italy']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value.isEmpty ? 'Select country' : value),
+          child: Text(
+            value.isEmpty ? 'Select country' : value,
+            style: TextStyle(
+              color: value.isEmpty ? ColorConstant.grey : ColorConstant.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+            ),
+          ),
         );
       }).toList(),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: ColorConstant.primary.withOpacity(0.8),
+      ),
+      iconSize: 24,
+      isExpanded: true,
+      dropdownColor: ColorConstant.white,
     );
   }
 
-  DropdownButtonFormField<String> _buildStateListDropdown() {
+  DropdownButtonFormField<String> buildStateListDropdown() {
     return DropdownButtonFormField<String>(
-      value: _controller.SelectStateListValue.value.isEmpty
+      value: controller.SelectStateListValue.value.isEmpty
           ? null
-          : _controller.SelectStateListValue.value,
+          : controller.SelectStateListValue.value,
       onChanged: (value) {
         setState(() {
-          _controller.SelectStateListValue.value = value!;
+          controller.SelectStateListValue.value = value!;
         });
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Select State',
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        hintText: 'Select a state',
+        hintStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.6),
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: ColorConstant.primary, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       items: <String>[
         '',
@@ -506,60 +701,166 @@ class _StudentFormViewState extends State<StudentFormView> {
       ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value.isEmpty ? 'Select State' : value),
+          child: Text(
+            value.isEmpty ? 'Select State' : value,
+            style: TextStyle(
+              color: value.isEmpty ? ColorConstant.grey : ColorConstant.black,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+            ),
+          ),
         );
       }).toList(),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: ColorConstant.primary.withOpacity(0.8),
+      ),
+      iconSize: 24,
+      isExpanded: true,
+      dropdownColor: ColorConstant.white,
     );
   }
 
-  DropdownButtonFormField<String> _buildSelectBranchDropdown() {
+  DropdownButtonFormField<String> buildSelectBranchDropdown() {
     return DropdownButtonFormField<String>(
-      value: _controller.selectBranch.value.isEmpty
+      value: controller.selectBranch.value.isEmpty
           ? null
-          : _controller.selectBranch.value,
+          : controller.selectBranch.value,
       onChanged: (value) {
         if (value != null) {
-          _controller.selectBranch.value = value;
+          controller.selectBranch.value = value;
         }
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'Select Branch',
-        border: OutlineInputBorder(),
+        labelStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        hintText: 'Select a branch',
+        hintStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.6),
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: ColorConstant.primary, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
-      items: _controller.getBranchList.branchList != null
-          ? _controller.getBranchList.branchList!
+      items: controller.getBranchList.branchList != null
+          ? controller.getBranchList.branchList!
               .map<DropdownMenuItem<String>>((BranchListItem item) {
               return DropdownMenuItem<String>(
                 value: item.id,
-                child: Text(item.branch ?? ''),
+                child: Text(
+                  item.branch ?? 'Select Branch',
+                  style: TextStyle(
+                    color: item.branch?.isEmpty ?? false
+                        ? ColorConstant.grey
+                        : ColorConstant.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                  ),
+                ),
               );
             }).toList()
           : [],
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: ColorConstant.primary.withOpacity(0.8),
+      ),
+      iconSize: 24,
+      isExpanded: true,
+      dropdownColor: ColorConstant.white,
     );
   }
 
-  DropdownButtonFormField<String> _buildSelectModeeOfEnrollMentDropdown() {
+  DropdownButtonFormField<String> buildSelectModeeOfEnrollMentDropdown() {
     return DropdownButtonFormField<String>(
-      value: _controller.selectModeOfEnrollment.value.isEmpty
+      value: controller.selectModeOfEnrollment.value.isEmpty
           ? null
-          : _controller.selectModeOfEnrollment.value,
+          : controller.selectModeOfEnrollment.value,
       onChanged: (value) {
         setState(() {
-          _controller.selectModeOfEnrollment.value = value!;
+          controller.selectModeOfEnrollment.value = value!;
         });
       },
-      decoration: const InputDecoration(
-        labelText: 'select Mode Of Enrollment',
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: 'Select Mode of Enrollment',
+        labelStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        hintText: 'Select a branch',
+        hintStyle: TextStyle(
+          color: ColorConstant.grey.withOpacity(0.6),
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: ColorConstant.primary, width: 2),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
-      items: <String>['', 'Offline Enrollment ', 'Online Enrollment']
+      items: <String>['', 'Offline Enrollment', 'Online Enrollment']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value.isEmpty ? 'Select Mode of Enrollment ' : value),
+          child: Text(
+            value.isEmpty ? 'Select Mode of Enrollment' : value,
+            style: TextStyle(
+              color: value.isEmpty
+                  ? ColorConstant.grey.withOpacity(0.6)
+                  : ColorConstant.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         );
       }).toList(),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: ColorConstant.primary.withOpacity(0.8),
+      ),
+      iconSize: 24,
+      isExpanded: true,
+      dropdownColor: ColorConstant.white,
     );
+  }
+
+  showDatePickerDialog(
+      {required TextEditingController textEditingController}) async {
+    final DateTime? dateTime = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
+
+    if (dateTime != null) {
+      textEditingController.text = dateTime.toString().split(" ")[0];
+      setState(() {});
+    }
   }
 
   Widget _buildDatePickerField(TextEditingController controller, String label) {
@@ -596,39 +897,37 @@ class _StudentFormViewState extends State<StudentFormView> {
     );
   }
 
-  void _addToList() {
-    if (_controller.formKey.currentState?.validate() ?? false) {
-      setState(() {
-        _controller.educationEntries.add(OrderItem(
-          cartId: _controller.selectCode.value,
-          id: _controller.selectId.value,
-          instituteName: _controller.institutionController.text,
-          fromDate: _controller.fromDateController.text,
-          toDate: _controller.toDateController.text,
-          degree: _controller.degreeController.text,
-        ));
+  void addToList() {
+    setState(() {
+      controller.educationEntries.add(OrderItem(
+        cartId: controller.selectCode.value,
+        id: controller.selectId.value,
+        instituteName: controller.institutionController.text,
+        fromDate: controller.fromDateController.text,
+        toDate: controller.toDateController.text,
+        degree: controller.degreeController.text,
+      ));
 
-        // Clear education form fields
-        _controller.institutionController.clear();
-        _controller.fromDateController.clear();
-        _controller.toDateController.clear();
-        _controller.degreeController.clear();
-      });
-    }
+      // Clear education form fields
+      controller.institutionController.clear();
+      controller.fromDateController.clear();
+      controller.toDateController.clear();
+      controller.degreeController.clear();
+    });
   }
 
-  Widget _buildAcademicTable() {
+  Widget buildAcademicTable() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
-        columns: [
-          const DataColumn(label: Text('Institution Name')),
-          const DataColumn(label: Text('From Date')),
-          const DataColumn(label: Text('To Date')),
-          const DataColumn(label: Text('Degree Obtained')),
-          const DataColumn(label: Text('Action')),
+        columns: const [
+          DataColumn(label: Text('Institution Name')),
+          DataColumn(label: Text('From Date')),
+          DataColumn(label: Text('To Date')),
+          DataColumn(label: Text('Degree Obtained')),
+          DataColumn(label: Text('Action')),
         ],
-        rows: _controller.educationEntries.map((entry) {
+        rows: controller.educationEntries.map((entry) {
           return DataRow(
             cells: [
               DataCell(Text(entry.instituteName)),
@@ -639,7 +938,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   setState(() {
-                    _controller.educationEntries.remove(entry);
+                    controller.educationEntries.remove(entry);
                   });
                 },
               )),
@@ -674,39 +973,36 @@ class _StudentFormViewState extends State<StudentFormView> {
       {required SubmitStudentFormController controller, required int imageNo}) {
     return Get.dialog(AlertDialog(
       title: const Text("Select Image Source Type"),
-      content: Column(
-        children: [
-          Card(
-              child: ListTile(
-            onTap: () {
-              Get.back();
-              controller
-                  .pickImage(imageNo: imageNo, imageSource: ImageSource.camera)
-                  .whenComplete(() => controller.update());
-            },
-            title: const Text("Select From Camera"),
-          )),
-          Card(
-              child: ListTile(
-            onTap: () {
-              Get.back();
-              controller
-                  .pickImage(imageNo: imageNo, imageSource: ImageSource.gallery)
-                  .whenComplete(() => controller.update());
-            },
-            title: const Text("Select From Gallery"),
-          )),
-        ],
-      ),
+      actions: [
+        Card(
+            child: ListTile(
+          onTap: () {
+            Get.back();
+            controller
+                .pickImage(imageNo: imageNo, imageSource: ImageSource.camera)
+                .whenComplete(() => setState(() {}));
+          },
+          title: const Text("Select From Camera"),
+        )),
+        Card(
+            child: ListTile(
+          onTap: () {
+            Get.back();
+            controller
+                .pickImage(imageNo: imageNo, imageSource: ImageSource.gallery)
+                .whenComplete(() => setState(() {}));
+          },
+          title: const Text("Select From Gallery"),
+        )),
+      ],
     ));
   }
 
-  void _showTermsAndConditions() {
+  void showTermsAndConditions() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          // title: const Text("Terms and Conditions of Service"),
           content: SingleChildScrollView(
             child: RichText(
               text: const TextSpan(
@@ -910,41 +1206,12 @@ class _StudentFormViewState extends State<StudentFormView> {
     );
   }
 
-  // void _submitForm() {
-  //   if (_controller.formKey.currentState?.validate() ?? false) {
-  //     if (!_isVerified) {
-  //       // Check if the checkbox is not ticked
-  //       // Show a message to the user
-  //       Get.snackbar(
-  //         "Verification Required",
-  //         "Please verify information .",
-  //         snackPosition: SnackPosition.BOTTOM,
-  //         backgroundColor: Colors.red,
-  //         colorText: Colors.white,
-  //       );
-  //       return; // Exit the function if not verified
-  //     }
-  //
-  //     CustomLoader.openCustomLoader();
-  //     _controller.submitForm(userId: widget.userId,id: widget.id).then((_) {
-  //       CustomLoader.closeCustomLoader();
-  //       Get.to(() => StudentFormThankView(
-  //             userId: widget.userId, id: widget.id,
-  //           ));
-  //     }).catchError((error) {
-  //       CustomLoader.closeCustomLoader();
-  //       log("Error during form submission: $error");
-  //       // Show a toast or some feedback to the user
-  //     });
-  //   }
-  // }
-
-  void _submitForm() {
+  void submitForm() {
     // Check if the form is valid first
-    if (_controller.formKey.currentState?.validate() ?? false) {
+    if (controller.formKey.currentState!.validate()) {
       // Check if all images are uploaded
-      if (_controller.selectedImage1 == null ||
-          _controller.selectedImage1!.path.isEmpty) {
+      if (controller.selectedImage1 == null ||
+          controller.selectedImage1!.path.isEmpty) {
         Get.snackbar(
           "Missing Image",
           "Please upload the first picture before submitting.",
@@ -955,8 +1222,8 @@ class _StudentFormViewState extends State<StudentFormView> {
         return; // Exit the function if the image is not selected
       }
 
-      if (_controller.selectedImage2 == null ||
-          _controller.selectedImage2!.path.isEmpty) {
+      if (controller.selectedImage2 == null ||
+          controller.selectedImage2!.path.isEmpty) {
         Get.snackbar(
           "Missing Document Image",
           "Please upload the document image before submitting.",
@@ -967,8 +1234,8 @@ class _StudentFormViewState extends State<StudentFormView> {
         return; // Exit the function if the document image is not selected
       }
 
-      if (_controller.selectedImage3 == null ||
-          _controller.selectedImage3!.path.isEmpty) {
+      if (controller.selectedImage3 == null ||
+          controller.selectedImage3!.path.isEmpty) {
         Get.snackbar(
           "Missing Signature Image",
           "Please upload the signature image before submitting.",
@@ -993,9 +1260,9 @@ class _StudentFormViewState extends State<StudentFormView> {
 
       // All validations passed, proceed with submission
       CustomLoader.openCustomLoader();
-      _controller.submitForm(userId: widget.userId, id: widget.id).then((_) {
+      controller.submitForm(userId: widget.userId, id: widget.id).then((_) {
         CustomLoader.closeCustomLoader();
-        Get.to(() => StudentFormThankView(
+        Get.offAll(() => StudentFormThankView(
               userId: widget.userId,
               id: widget.id,
             ));

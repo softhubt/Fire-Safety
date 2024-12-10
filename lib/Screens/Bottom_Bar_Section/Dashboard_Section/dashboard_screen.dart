@@ -21,7 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    controller.initialFunctioun();
+    controller.initialFunctioun().whenComplete(() => setState(() {}));
   }
 
   @override
