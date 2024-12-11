@@ -38,7 +38,7 @@ class _MypurchesCatrgotyListscreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "My Purchases Category"),
+      appBar: const CustomAppBar(title: "My Courses"),
       body: Padding(
         padding: screenHorizontalPadding,
         child:
@@ -188,7 +188,7 @@ class _MypurchesCatrgotyListscreenState
                   children: [
                     const Icon(Icons.currency_rupee, color: Colors.green),
                     Text(
-                      "${element?.amount ?? 'N/A'}",
+                      element?.amount ?? 'N/A',
                       style: TextStyleConstant.medium16(),
                     ),
                   ],

@@ -41,7 +41,7 @@ class ReadingTestController extends GetxController {
   final RxList<ReadingTestQuestion> questions = <ReadingTestQuestion>[].obs;
   PostReadingResultModel postReadingResultModel = PostReadingResultModel();
   ReadListenTestTypeWiseModel readListenTestTypeWiseModel =
-  ReadListenTestTypeWiseModel();
+      ReadListenTestTypeWiseModel();
   final RxString paragraph = ''.obs;
   final RxInt correctAnswers = 0.obs;
   final RxInt wrongAnswers = 0.obs;
@@ -95,20 +95,21 @@ class ReadingTestController extends GetxController {
           paragraph.value =
               model.readingListeningTestDetailsList![0].paragraph ?? '';
           questions.value = model
-              .readingListeningTestDetailsList![0].testQuestionDetails
-              ?.map((element) {
-            return ReadingTestQuestion(
-              id: element.id ?? '',
-              question: element.question ?? '',
-              options: [
-                element.option1 ?? '',
-                element.option2 ?? '',
-                element.option3 ?? '',
-                element.option4 ?? '',
-              ],
-              correctAnswer: element.answer ?? '',
-            );
-          }).toList() ?? [];
+                  .readingListeningTestDetailsList![0].testQuestionDetails
+                  ?.map((element) {
+                return ReadingTestQuestion(
+                  id: element.id ?? '',
+                  question: element.question ?? '',
+                  options: [
+                    element.option1 ?? '',
+                    element.option2 ?? '',
+                    element.option3 ?? '',
+                    element.option4 ?? '',
+                  ],
+                  correctAnswer: element.answer ?? '',
+                );
+              }).toList() ??
+              [];
         } else {
           questions.clear();
           log("No reading listening test data available.");
@@ -159,7 +160,9 @@ class ReadingTestController extends GetxController {
           postReadingResultModel.statusCode == "201") {
         log("Quiz results posted successfully.");
 
-         Get.to(() =>   ListeningWithMcqView(userId:userId,id:id),);
+        Get.to(
+          () => ListeningWithMcqView(userId: userId, id: id),
+        );
       } else {
         log("Something went wrong: ${postReadingResultModel.statusCode}");
       }
@@ -179,7 +182,8 @@ class ReadingTestController extends GetxController {
   }
 
   // Method to map ReadingTestQuestion to Question model
-  List<Question> mapToQuestionList(List<ReadingTestQuestion> readingTestQuestions) {
+  List<Question> mapToQuestionList(
+      List<ReadingTestQuestion> readingTestQuestions) {
     return readingTestQuestions.map((e) {
       return Question(
         id: e.id,

@@ -30,7 +30,6 @@ class ListeningTestController extends GetxController {
   final RxString audioUrl = ''.obs;
   final RxDouble progressBarValue = 0.0.obs;
 
-
   RxInt correctAnswers = 0.obs;
   RxInt wrongAnswers = 0.obs;
   RxBool isAnswered = false.obs;
@@ -131,8 +130,8 @@ class ListeningTestController extends GetxController {
       Map<String, dynamic> payload = {
         "type": type,
         "read_listening_test_id": testId,
-        "user_id": userId.value,  // Correctly using userId.value
-        "testpayment_id": id,  // Correctly using userId.value
+        "user_id": userId.value, // Correctly using userId.value
+        "testpayment_id": id, // Correctly using userId.value
         "obtain_marks": correctAnswers.value.toString(),
         "total_marks": questions.length.toString(),
         "right_answers": correctAnswers.value.toString(),
@@ -148,9 +147,11 @@ class ListeningTestController extends GetxController {
         bodyMessage: "Post quiz result response",
       );
 
-      postListeningResultModel = postListeningResultModelFromJson(response["body"]);
+      postListeningResultModel =
+          postListeningResultModelFromJson(response["body"]);
 
-      if (postListeningResultModel.statusCode == "200" || postListeningResultModel.statusCode == "201") {
+      if (postListeningResultModel.statusCode == "200" ||
+          postListeningResultModel.statusCode == "201") {
         log("Quiz results posted successfully.");
       } else {
         log("Something went wrong: ${postListeningResultModel.statusCode}");

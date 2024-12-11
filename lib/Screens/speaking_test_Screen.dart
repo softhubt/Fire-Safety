@@ -1,6 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:camera/camera.dart';
-import 'package:firesafety/Widgets/custom_loader.dart';
-import 'package:firesafety/Widgets/custom_no_data_found.dart';
+import 'package:firesafety/Constant/color_constant.dart';
+import 'package:firesafety/Constant/textstyle_constant.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
+import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
@@ -43,53 +47,75 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
     super.dispose();
   }
 
+  backToDashboard() {
+    Get.offAll(() => const BottomBarScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Speaking Test", isBack: true),
-      body: (controller.isCameraInitilize.value)
-          ? Column(
-              children: [
-                if (controller.cameraController.value.isInitialized)
-                  SizedBox(
-                    height: Get.height * 0.400,
-                    width: Get.width,
-                    child: CameraPreview(controller.cameraController),
-                  )
-                else
-                  const SizedBox(),
-                SizedBox(height: screenHeightPadding),
-                ElevatedButton(
-                    onPressed: () async {
-                      if (!controller.isRecording.value) {
-                        await controller.startVideoRecording();
-                      } else {
-                        await controller.stopVideoRecording();
-                      }
-                      setState(() {}); // Update button text
-                    },
-                    child: Text(controller.isRecording.value
-                        ? "Stop Recording"
-                        : "Start Recording")),
-                if (controller
-                        .getSpeakingTestModel.proficiencyTestDetailsList !=
-                    null)
-                  Padding(
-                      padding: screenPadding,
-                      child: SingleChildScrollView(
-                          child: HtmlWidget(
-                              "${controller.getSpeakingTestModel.proficiencyTestDetailsList?.first.questionDetails}")))
-                else
-                  const SizedBox(),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
+      appBar: const CustomAppBar(title: "Speaking Test", leading: SizedBox()),
+      body: WillPopScope(
+          onWillPop: () => backToDashboard(),
+          child: (controller.isCameraInitilize.value)
+              ? Column(
+                  children: [
+                    if (controller.cameraController.value.isInitialized)
+                      SizedBox(
+                          height: Get.height * 0.400,
+                          width: Get.width,
+                          child: CameraPreview(controller.cameraController))
+                    else
+                      const SizedBox(),
+                    SizedBox(height: screenHeightPadding),
+                    (controller.isRecording.value)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await controller.stopVideoRecording();
+                                    controller.stopTimer();
+                                    setState(() {}); // Update button text
+                                  },
+                                  child: const Text("Stop Recording")),
+                              SizedBox(width: screenWidthPadding),
+                              Obx(() => Text(
+                                  "Seconds: ${controller.elapsedSeconds.value}",
+                                  style: TextStyleConstant.medium16())),
+                            ],
+                          )
+                        : ElevatedButton(
+                            onPressed: () async {
+                              await controller.startVideoRecording();
+                              controller.startTimer();
+                              setState(() {}); // Update button text
+                            },
+                            child: const Text("Start Recording")),
+                    if (controller
+                            .getSpeakingTestModel.proficiencyTestDetailsList !=
+                        null)
+                      Padding(
+                          padding: screenPadding,
+                          child: SingleChildScrollView(
+                              child: HtmlWidget(
+                                  "${controller.getSpeakingTestModel.proficiencyTestDetailsList?.first.questionDetails}",
+                                  textStyle: TextStyleConstant.medium14())))
+                    else
+                      const SizedBox(),
+                  ],
+                )
+              : const Center(child: CircularProgressIndicator())),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CustomButton(
           title: "Submit",
           onTap: () {
-            controller.postSpeakingTest(id: widget.id);
+            if (controller.recordedVideoPath.value.isNotEmpty) {
+              controller.postSpeakingTest(id: widget.id);
+            } else {
+              customToast(message: "Please Record Video");
+            }
           },
         ),
       ),

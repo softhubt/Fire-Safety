@@ -32,7 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title: "Dashboard",
           leading: IconButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
+                Get.to(() => const DrawerView());
               },
               icon:
                   const Icon(Icons.menu_rounded, color: ColorConstant.white))),
@@ -118,6 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   Get.to(() => SelectSubcategoryScreen(
                         categoryId: "${element?.categoryId}",
+                        categoryName: "${element?.categoryName}",
                         userId: widget.userId,
                       ));
                 },

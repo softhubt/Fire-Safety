@@ -1,7 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:developer';
+import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Controllers/ReadingTest_Controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ReadingTestResult_View.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
+import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:firesafety/Widgets/custom_no_data_found.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,10 +17,11 @@ class ReadingScreenWithMCQ extends StatefulWidget {
   final String id;
 
   const ReadingScreenWithMCQ({
-    Key? key,
+    super.key,
     required this.userId,
-    required this.quizType, required this.id,
-  }) : super(key: key);
+    required this.quizType,
+    required this.id,
+  });
 
   @override
   State<ReadingScreenWithMCQ> createState() => _ReadingScreenWithMCQState();
@@ -41,48 +47,52 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
     }
   }
 
+  backToDashboard() {
+    Get.offAll(() => const BottomBarScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Reading Test'),
-      ),
-      body: Obx(() {
-        if (controller.questions.isEmpty) {
-          return const CustomNoDataFound();
-        }
+      appBar: const CustomAppBar(title: "Reading Test"),
+      body: WillPopScope(
+        onWillPop: () => backToDashboard(),
+        child: Obx(() {
+          if (controller.questions.isEmpty) {
+            return const CustomNoDataFound();
+          }
 
-        final currentQuestion =
-            controller.questions[controller.currentQuestionIndex.value];
+          final currentQuestion =
+              controller.questions[controller.currentQuestionIndex.value];
 
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Paragraph Section
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 2.0),
-                      borderRadius: BorderRadius.circular(8.0),
+                      border:
+                          Border.all(color: ColorConstant.primary, width: 2.0),
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: ColorConstant.primary.withOpacity(0.1),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        controller.paragraph.value,
-                        style: TextStyle(fontSize: 18.0),
-                      ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      controller.paragraph.value,
+                      style: const TextStyle(fontSize: 16.0, height: 1.5),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
+                  const SizedBox(height: 20),
+
+                  // Question Section
+                  Row(
                     children: [
                       Text(
-                        "${controller.currentQuestionIndex.value + 1}. ",
+                        "Q ${controller.currentQuestionIndex.value + 1}. ",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
@@ -95,69 +105,108 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                       ),
                     ],
                   ),
-                ),
-                ...currentQuestion.options.map((option) {
-                  return OptionButton(
-                    option: option,
-                    isSelected: controller.selectedAnswer.value == option,
-                    isCorrect: controller.isAnswered.value &&
-                        option == currentQuestion.correctAnswer,
-                    isWrong: controller.isAnswered.value &&
-                        option != currentQuestion.correctAnswer &&
-                        controller.selectedAnswer.value == option,
-                    onPressed: () {
-                      if (!controller.isAnswered.value) {
-                        controller.checkAnswer(option);
-                      }
-                    },
-                  );
-                }).toList(),
-                if (controller.isAnswered.value)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: ElevatedButton(
-                      // Inside the ElevatedButton onPressed:
-                      onPressed: () {
-                        if (controller.currentQuestionIndex.value < controller.questions.length - 1) {
-                          controller.nextQuestion(); // Move to next question
-                        } else {
-                          // Once the last question is reached, submit the result
-                          controller.postReadingTestResult(
-                            testId: controller.questions[0].id,
-                            userId: widget.userId,
-                            type: widget.quizType,
-                            id: widget.id,
-                          ).then((_) {
-                            // Navigate to the result screen
-                            Get.to(() => RedingTestResultView(
-                              testListId: controller.readListenTestTypeWiseModel
-                                  .readingListeningTestDetailsList?[0].id ?? '',
-                              testName: 'Quiz Test',
-                              attemptedQuestions: controller.correctAnswers.value.toDouble(),
-                              unattemptedQuestions: (controller.questions.length - controller.correctAnswers.value).toDouble(),
-                              skippedQuestion: 0.0, // Assuming skipped questions are 0
-                              rightAnswer: controller.correctAnswers.value.toDouble(),
-                              wrongAnswer: controller.wrongAnswers.value.toDouble(),
-                              answeredList: controller.questions,
-                              userId: widget.userId,
-                              id: widget.id,
+                  const SizedBox(height: 16),
 
-                            ));
-                          });
+                  // Options Section
+                  ...currentQuestion.options.map((option) {
+                    return OptionButton(
+                      option: option,
+                      isSelected: controller.selectedAnswer.value == option,
+                      isCorrect: controller.isAnswered.value &&
+                          option == currentQuestion.correctAnswer,
+                      isWrong: controller.isAnswered.value &&
+                          option != currentQuestion.correctAnswer &&
+                          controller.selectedAnswer.value == option,
+                      onPressed: () {
+                        if (!controller.isAnswered.value) {
+                          controller.checkAnswer(option);
                         }
                       },
+                    );
+                  }).toList(),
 
-                      child: (controller.currentQuestionIndex.value <
-                              controller.questions.length - 1)
-                          ? const Text('Next Question')
-                          : const Text('Submit'),
+                  // Next/Submit Button Section
+                  if (controller.isAnswered.value)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14.0, horizontal: 24.0),
+                            backgroundColor: ColorConstant.primary,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          onPressed: () {
+                            if (controller.currentQuestionIndex.value <
+                                controller.questions.length - 1) {
+                              controller
+                                  .nextQuestion(); // Move to next question
+                            } else {
+                              // Submit the result and navigate to result screen
+                              controller
+                                  .postReadingTestResult(
+                                testId: controller.questions[0].id,
+                                userId: widget.userId,
+                                type: widget.quizType,
+                                id: widget.id,
+                              )
+                                  .then((_) {
+                                Get.offAll(() => RedingTestResultView(
+                                      testListId: controller
+                                              .readListenTestTypeWiseModel
+                                              .readingListeningTestDetailsList?[
+                                                  0]
+                                              .id ??
+                                          '',
+                                      testName: 'Quiz Test',
+                                      attemptedQuestions:
+                                          (controller.correctAnswers.value ?? 0)
+                                              .toDouble(),
+                                      unattemptedQuestions:
+                                          (controller.questions.length -
+                                                  (controller.correctAnswers
+                                                          .value ??
+                                                      0))
+                                              .toDouble(),
+                                      skippedQuestion:
+                                          0.0, // Assuming skipped questions are 0
+                                      rightAnswer:
+                                          (controller.correctAnswers.value ?? 0)
+                                              .toDouble(),
+                                      wrongAnswer:
+                                          (controller.wrongAnswers.value ?? 0)
+                                              .toDouble(),
+                                      answeredList: controller
+                                          .questions, // Ensure type matches
+                                      userId: widget.userId,
+                                      id: widget.id,
+                                    ));
+                              });
+                            }
+                          },
+                          child: (controller.currentQuestionIndex.value <
+                                  controller.questions.length - 1)
+                              ? const Text(
+                                  'Next Question',
+                                  style: TextStyle(
+                                      fontSize: 16, color: ColorConstant.white),
+                                )
+                              : const Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                      fontSize: 16, color: ColorConstant.white),
+                                ),
+                        ),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
@@ -173,7 +222,6 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                   'Obtain Marks: ${controller.postReadingResultModel.result?.obtainMarks}'),
             ),
           ),
-          const SizedBox(height: 8.0),
           Card(
             child: ListTile(
               title: Text(
@@ -185,7 +233,6 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
               title: Text('Right Answers: ${controller.correctAnswers}'),
             ),
           ),
-          const SizedBox(height: 8.0),
           Card(
             child: ListTile(
               title: Text('Wrong Answers: ${controller.wrongAnswers}'),
@@ -202,20 +249,17 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
           },
           child: const Text('Restart Quiz'),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ListeningWithMcqView(userId: widget.userId,id:widget.id),
-                ),
-              );
-            },
-            child: const Text('Next page'),
-          ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ListeningWithMcqView(userId: widget.userId, id: widget.id),
+              ),
+            );
+          },
+          child: const Text('Next Page'),
         ),
       ],
     ));
@@ -242,21 +286,35 @@ class OptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isCorrect
-              ? Colors.green
-              : isWrong
-                  ? Colors.red
-                  : isSelected
-                      ? Colors.grey
-                      : null,
+          backgroundColor: (isCorrect)
+              ? ColorConstant.green
+              : (isWrong)
+                  ? ColorConstant.red
+                  : (isSelected)
+                      ? ColorConstant.primary.withOpacity(0.2)
+                      : Colors.grey[200],
+          elevation: 2,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
         onPressed: onPressed,
-        child: Text(option),
+        child: Text(
+          option,
+          style: TextStyle(
+              fontSize: 16,
+              color: (isCorrect)
+                  ? ColorConstant.white
+                  : (isWrong)
+                      ? ColorConstant.white
+                      : (isSelected)
+                          ? ColorConstant.black
+                          : ColorConstant.black),
+        ),
       ),
     );
   }
 }
-
