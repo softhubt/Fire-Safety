@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
@@ -23,6 +24,9 @@ class SpekingTestController extends GetxController {
   late CameraController cameraController;
   late List<CameraDescription> cameras;
 
+  Timer? timer;
+  RxInt elapsedSeconds = 0.obs;
+
   RxBool isRecording = false.obs;
   RxBool isCameraInitilize = false.obs;
   RxString userId = "".obs;
@@ -39,6 +43,16 @@ class SpekingTestController extends GetxController {
     await fetchWritingTest();
     await initializeCamera(currentCameraIndex
         .value); // This will now point to the front camera if available
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      elapsedSeconds++;
+    });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
   }
 
   void switchCamera() async {
@@ -186,7 +200,7 @@ class SpekingTestController extends GetxController {
       if (postSpeakingTestDataModel.statusCode == "200" ||
           postSpeakingTestDataModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
-        Get.to(() => WritingTestPage(userId: '', id: id));
+        Get.offAll(() => WritingTestPage(userId: '', id: id));
       } else {
         CustomLoader.closeCustomLoader();
       }

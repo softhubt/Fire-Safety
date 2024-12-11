@@ -8,7 +8,8 @@ import 'package:firesafety/Widgets/custom_loader.dart';
 
 class SelectSubcategoryController extends GetxController {
   GetSubcategoryModel getSubcategoryModel = GetSubcategoryModel();
-  GetPurchaseSubcategoryModel getPurchaseSubcategoryModel = GetPurchaseSubcategoryModel();
+  GetPurchaseSubcategoryModel getPurchaseSubcategoryModel =
+      GetPurchaseSubcategoryModel();
   RxString userId = "".obs;
   RxBool isLoading = false.obs; // Add a loading indicator
 
@@ -22,7 +23,8 @@ class SelectSubcategoryController extends GetxController {
   // }
 
   // Get subcategory list based on categoryId
-  Future<void> getSubcategory({required String categoryId,required String userId}) async {
+  Future<void> getSubcategory(
+      {required String categoryId, required String userId}) async {
     try {
       isLoading.value = true; // Start loading
       CustomLoader.openCustomLoader(); // Show custom loader
@@ -48,7 +50,8 @@ class SelectSubcategoryController extends GetxController {
         getSubcategoryModel = getSubcategoryModelFromJson(response["body"]);
 
         // Check if the status code indicates success
-        if (getSubcategoryModel.statusCode == "200" || getSubcategoryModel.statusCode == "201") {
+        if (getSubcategoryModel.statusCode == "200" ||
+            getSubcategoryModel.statusCode == "201") {
           CustomLoader.closeCustomLoader(); // Close loader on success
         } else {
           // Log and handle error status codes

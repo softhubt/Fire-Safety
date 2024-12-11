@@ -30,10 +30,12 @@ class _MyCourseListViewState extends State<MyCourseListView> {
   @override
   void initState() {
     super.initState();
-    controller.getCourseList(
-      categoryId: widget.categoryId,
-      subcategoryId: widget.subcategoryId,
-    ).whenComplete(() => setState(() {}));
+    controller
+        .getCourseList(
+          categoryId: widget.categoryId,
+          subcategoryId: widget.subcategoryId,
+        )
+        .whenComplete(() => setState(() {}));
   }
 
   @override
@@ -44,59 +46,62 @@ class _MyCourseListViewState extends State<MyCourseListView> {
         padding: screenHorizontalPadding,
         child: (controller.getCourseListModel.courseList != null)
             ? ListView.builder(
-          itemCount: controller.getCourseListModel.courseList?.length,
-          itemBuilder: (BuildContext context, int index) {
-            final element = controller.getCourseListModel.courseList?[index];
-            return Padding(
-              padding: EdgeInsets.only(top: screenHeightPadding),
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(() => CourseDetailScreen(
-                    courseId: "${element?.courseId}",
-                    testpaymentId: widget.testpaymentId,
-                    isPurchase: '',
-                  ));
-                },
-                child: Container(
-                  padding: contentPadding,
-                  decoration: BoxDecoration(
-                    color: ColorConstant.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: Get.height * 0.120,
-                        width: Get.width,
+                itemCount: controller.getCourseListModel.courseList?.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final element =
+                      controller.getCourseListModel.courseList?[index];
+                  return Padding(
+                    padding: EdgeInsets.only(top: screenHeightPadding),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => CourseDetailScreen(
+                            courseId: "${element?.courseId}",
+                            testpaymentId: widget.testpaymentId,
+                            isPurchase: '',
+                            amount: "0"));
+                      },
+                      child: Container(
+                        padding: contentPadding,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(22),
-                          image: DecorationImage(
-                            image: NetworkImage("${element?.courseImage}"),
-                            fit: BoxFit.fill,
-                          ),
+                          color: ColorConstant.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: Get.height * 0.120,
+                              width: Get.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(22),
+                                image: DecorationImage(
+                                  image:
+                                      NetworkImage("${element?.courseImage}"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: contentHeightPadding),
+                              child: Text(
+                                "${element?.courseName}",
+                                style: TextStyleConstant.medium18(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: contentHeightPadding),
-                        child: Text(
-                          "${element?.courseName}",
-                          style: TextStyleConstant.medium18(),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        )
+                    ),
+                  );
+                },
+              )
             : ListView.builder(
-          itemCount: 4,
-          itemBuilder: (BuildContext context, int index) {
-            return const CustomShimmer(radius: 24);
-          },
-        ),
+                itemCount: 4,
+                itemBuilder: (BuildContext context, int index) {
+                  return const CustomShimmer(radius: 24);
+                },
+              ),
       ),
     );
   }

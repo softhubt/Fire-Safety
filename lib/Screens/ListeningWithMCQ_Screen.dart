@@ -1,6 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+
 import 'package:firesafety/Controllers/ListeningTest_Controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ListeningTestWithQuizRuselt_View.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
+import 'package:firesafety/Widgets/custom_appbar.dart';
+import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:firesafety/Widgets/custom_no_data_found.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -12,7 +17,8 @@ class ListeningWithMcqView extends StatefulWidget {
 
   const ListeningWithMcqView({
     Key? key,
-    required this.userId, required this.id,
+    required this.userId,
+    required this.id,
   }) : super(key: key);
   @override
   _ListeningWithMcqViewState createState() => _ListeningWithMcqViewState();
@@ -57,6 +63,10 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         userId: widget.userId, type: "Listening Test");
   }
 
+  backToDashboard() {
+    Get.offAll(() => const BottomBarScreen());
+  }
+
   @override
   void dispose() {
     _audioPlayer.dispose();
@@ -68,7 +78,6 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
       if (_isPlaying) {
         await _audioPlayer.pause();
       } else {
-        // Use the dynamic audio URL from the controller
         await _audioPlayer.play(UrlSource(controller.audioUrl.value));
       }
     } catch (e) {
@@ -78,29 +87,29 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
   }
 
   void _submitAnswers() {
-    // Submit answers logic
     controller
         .postListeningTestResult(
-          testId: controller.listenTestTypeWiseModel
-                  .readingListeningTestDetailsList?[0].readListeningTestId ??
-              '',
-          type: "Listening Test",
-          id:widget.id
-        )
+            testId: controller.listenTestTypeWiseModel
+                    .readingListeningTestDetailsList?[0].readListeningTestId ??
+                '',
+            type: "Listening Test",
+            id: widget.id)
         .then((_) {
       // Navigate to the result screen
       Get.to(() => ListeningestResultView(
-        testListId: controller.listenTestTypeWiseModel
-            .readingListeningTestDetailsList?[0].id ?? '',
-        testName: 'Quiz Test',
-        attemptedQuestions: controller.correctAnswers.value.toDouble(),
-        unattemptedQuestions: (controller.questions.length - controller.correctAnswers.value).toDouble(),
-        skippedQuestion: 0.0, // Assuming skipped questions are 0
-        rightAnswer: controller.correctAnswers.value.toDouble(),
-        wrongAnswer: controller.wrongAnswers.value.toDouble(),
-        answeredList: controller.questions,
-        userId: widget.userId,
-      ));
+          testListId: controller.listenTestTypeWiseModel
+                  .readingListeningTestDetailsList?[0].id ??
+              '',
+          testName: 'Quiz Test',
+          attemptedQuestions: controller.correctAnswers.value.toDouble(),
+          unattemptedQuestions:
+              (controller.questions.length - controller.correctAnswers.value)
+                  .toDouble(),
+          skippedQuestion: 0.0, // Assuming skipped questions are 0
+          rightAnswer: controller.correctAnswers.value.toDouble(),
+          wrongAnswer: controller.wrongAnswers.value.toDouble(),
+          answeredList: controller.questions,
+          userId: widget.userId));
     });
   }
 
@@ -137,11 +146,11 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
           child: const Text('Restart Quiz'),
         ),
         TextButton(
-          onPressed: () {
-            Get.to(() => MyCourseListView(categoryId: '', subcategoryId: '', testpaymentId: '',));
-          },
-          child: const Text('Next Page'),
-        ),
+            onPressed: () {
+              Get.to(() => const MyCourseListView(
+                  categoryId: '', subcategoryId: '', testpaymentId: ''));
+            },
+            child: const Text('Next Page')),
       ],
     ));
   }
@@ -149,100 +158,104 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.indigo,
-        title: Text('Listening Test', style: TextStyle(color: Colors.white)),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Obx(() {
-          if (controller.questions.isEmpty) {
-            return const CustomNoDataFound();
-          }
+        appBar: const CustomAppBar(title: "Listening Test"),
+        body: WillPopScope(
+          onWillPop: () => backToDashboard(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Obx(() {
+              if (controller.questions.isEmpty) {
+                return const CustomNoDataFound();
+              }
 
-          final currentQuestion =
-              controller.questions[controller.currentQuestionIndex.value];
+              final currentQuestion =
+                  controller.questions[controller.currentQuestionIndex.value];
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 50,
-                  width: 300,
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 5.0),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                        onPressed: _playPauseAudio,
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 70,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: const LinearGradient(
+                              colors: [Colors.blueAccent, Colors.indigo],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight)),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              _isPlaying
+                                  ? Icons.pause_circle
+                                  : Icons.play_circle,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                            onPressed: _playPauseAudio,
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${_position.toString().split('.').first} / ${_audioDuration.toString().split('.').first}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Text(
-                          '${_position.toString().split('.').first} / ${_audioDuration.toString().split('.').first}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 16.0),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                        "Q ${controller.currentQuestionIndex.value + 1}. ${currentQuestion.question}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    ...currentQuestion.options.map((option) {
+                      return OptionButton(
+                        option: option,
+                        isSelected: controller.selectedAnswer.value == option,
+                        isCorrect: controller.isAnswered.value &&
+                            option == currentQuestion.correctAnswer,
+                        isWrong: controller.isAnswered.value &&
+                            option != currentQuestion.correctAnswer &&
+                            controller.selectedAnswer.value == option,
+                        onPressed: () {
+                          if (!controller.isAnswered.value) {
+                            controller.checkAnswer(option);
+                          }
+                        },
+                      );
+                    }).toList(),
+                    if (controller.isAnswered.value)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (controller.currentQuestionIndex.value <
+                                controller.questions.length - 1) {
+                              controller.nextQuestion();
+                            } else {
+                              _submitAnswers();
+                            }
+                          },
+                          child: Text((controller.currentQuestionIndex.value <
+                                  controller.questions.length - 1)
+                              ? 'Next Question'
+                              : 'Submit'),
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
-                SizedBox(height: 16),
-                Text(
-                    "${controller.currentQuestionIndex.value + 1}. ${currentQuestion.question}",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                ...currentQuestion.options.map((option) {
-                  return OptionButton(
-                    option: option,
-                    isSelected: controller.selectedAnswer.value == option,
-                    isCorrect: controller.isAnswered.value &&
-                        option == currentQuestion.correctAnswer,
-                    isWrong: controller.isAnswered.value &&
-                        option != currentQuestion.correctAnswer &&
-                        controller.selectedAnswer.value == option,
-                    onPressed: () {
-                      if (!controller.isAnswered.value) {
-                        controller.checkAnswer(option);
-                      }
-                    },
-                  );
-                }).toList(),
-                if (controller.isAnswered.value)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (controller.currentQuestionIndex.value <
-                            controller.questions.length - 1) {
-                          controller.nextQuestion();
-                        } else {
-                          _submitAnswers();
-                        }
-                      },
-                      child: Text((controller.currentQuestionIndex.value <
-                              controller.questions.length - 1)
-                          ? 'Next Question'
-                          : 'Submit'),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        }),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: _submitAnswers,
-          child: Text('Submit'),
+              );
+            }),
+          ),
         ),
-      ),
-    );
+        bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child:
+                CustomButton(title: "Ssubmit", onTap: () => _submitAnswers())));
   }
 }
 
@@ -264,21 +277,47 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isCorrect
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: isCorrect
               ? Colors.green
               : isWrong
                   ? Colors.red
                   : isSelected
-                      ? Colors.grey
-                      : null,
+                      ? Colors.grey[300]
+                      : Colors.white,
+          border: Border.all(
+            color: isSelected ? Colors.blueAccent : Colors.grey[400]!,
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              blurRadius: 6,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        onPressed: onPressed,
-        child: Text(option),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                option,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: isCorrect || isWrong ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

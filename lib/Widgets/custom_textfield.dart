@@ -63,10 +63,9 @@ class CustomTextField extends StatelessWidget {
             BorderRadius.circular(30), // WhatsApp style with round corners
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: TextFormField(

@@ -1,4 +1,5 @@
 import 'package:firesafety/Constant/color_constant.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/drawer_view.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -30,7 +31,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: CustomAppBar(
           title: "Dashboard",
           leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => const DrawerView());
+              },
               icon:
                   const Icon(Icons.menu_rounded, color: ColorConstant.white))),
       body: ListView(
@@ -115,6 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   Get.to(() => SelectSubcategoryScreen(
                         categoryId: "${element?.categoryId}",
+                        categoryName: "${element?.categoryName}",
                         userId: widget.userId,
                       ));
                 },
