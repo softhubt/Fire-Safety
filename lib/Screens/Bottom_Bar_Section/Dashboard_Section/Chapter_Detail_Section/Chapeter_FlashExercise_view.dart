@@ -41,9 +41,9 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Flash Exercise'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Flash Exercise'),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {

@@ -31,11 +31,11 @@ class _TopicListScreenState extends State<TopicListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            Text('Topics List', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.blueAccent,
-      ),
+      // appBar: AppBar(
+      //   title:
+      //       Text('Topics List', style: TextStyle(fontWeight: FontWeight.bold)),
+      //   backgroundColor: Colors.blueAccent,
+      // ),
       body: Obx(() {
         if (controller.topicList.isEmpty) {
           return Center(child: Text('No Topics Available'));

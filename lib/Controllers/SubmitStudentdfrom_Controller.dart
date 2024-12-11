@@ -222,10 +222,10 @@ class SubmitStudentFormController extends GetxController {
         // Navigate to the thank you view
         Get.to(() => StudentFormThankView(userId: userId, id: id));
       } else {
-        Get.to(() => StudentFormThankView(
-              userId: userId,
-              id: id,
-            ));
+        // Get.to(() => StudentFormThankView(
+        //       userId: userId,
+        //       id: id,
+        //     ));
         CustomLoader.closeCustomLoader();
         customToast(
             message:

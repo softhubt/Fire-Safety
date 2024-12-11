@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/FormativeAsssementResult_View.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -154,6 +155,11 @@ class ChapterFormativeAssessmentController extends GetxController {
         bodyMessage: 'Submit formative assessment response',
       );
 
+      // Get.to(() =>  FormativeAssesmentResultView(testListId: '', testName: '', attemptedQuestions: , unattemptedQuestions: "", skippedQuestion: null, rightAnswer: null, wrongAnswer: null, answeredList: [],
+      //
+      // )
+      // );
+
       // if (response == null) {
       //   throw Exception("Response is null");
       // }
@@ -166,8 +172,8 @@ class ChapterFormativeAssessmentController extends GetxController {
         CustomLoader.closeCustomLoader();
         customToast(message: "Formative assessment submitted successfully!");
 
-        // Clear form fields if needed
-        clearAllFields();
+        // // Clear form fields if needed
+        // clearAllFields();
       } else {
         CustomLoader.closeCustomLoader();
         customToast(
@@ -181,10 +187,10 @@ class ChapterFormativeAssessmentController extends GetxController {
     }
   }
 
-  void clearAllFields() {
-    controllers.forEach((key, controller) => controller.clear());
-    focusNodes.forEach((node) => node.dispose());
-  }
+  // void clearAllFields() {
+  //   controllers.forEach((key, controller) => controller.clear());
+  //   focusNodes.forEach((node) => node.dispose());
+  // }
 
   String? validateAnswer(String? value) {
     if (value == null || value.isEmpty) {

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
+import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
@@ -51,8 +52,15 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Quiz'),
+      appBar: CustomAppBar(
+          title: "Quiz",
+          // leading: IconButton(
+          //     onPressed: () {
+          //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
+          //     },
+          //     icon:
+          //     const Icon(Icons.menu_rounded, color: ColorConstant.white)
+          // )
       ),
       body: Obx(() {
         if (controller.questions.isEmpty) {
@@ -126,7 +134,7 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                           testpaymentid: widget.testpaymentId,
                         )
                             .then((_) {
-                          Get.to(() =>
+                          Get.offAll(() =>
                               TestResultView(
                                 testListId: controller.getChapterQuizListModel
                                     .testDetailsList?[0].testId ?? '',
@@ -137,6 +145,13 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                                 rightAnswer: controller.correctAnswers.value.toDouble(),
                                 wrongAnswer: controller.wrongAnswers.value.toDouble(),
                                 answeredList: controller.questions,
+                                courseid: controller.getChapterQuizListModel
+                                    .testDetailsList?[0].courseName ?? '',
+                                userId: widget.userId,
+                                chapterid: controller.getChapterQuizListModel
+                                    .testDetailsList?[0].chapterId ?? '',
+                                testpaymentid: widget.testpaymentId,
+
                               )
                           );
                         }

@@ -14,13 +14,13 @@ class CourseListController extends GetxController {
   GetCourseListModel getCourseListModel = GetCourseListModel();
   GetSubcategoryPaymentModel getSubcategoryPaymentModel = GetSubcategoryPaymentModel();
 
-  // Variable to hold the purchase ID
+
   RxString Id = ''.obs;
   String _formatDate(String? date) {
-    if (date == null) return '';  // Return an empty string if the date is null
+    if (date == null) return '';
     try {
-      DateTime parsedDate = DateTime.parse(date); // Parse the full datetime string
-      return DateFormat('yyyy-MM-dd').format(parsedDate); // Format only the date part
+      DateTime parsedDate = DateTime.parse(date);
+      return DateFormat('yyyy-MM-dd').format(parsedDate);
     } catch (e) {
       return ''; // Return an empty string in case of an error
     }

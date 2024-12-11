@@ -169,8 +169,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                         "Locked Chapter",
                         "Please purchase the course to access this chapter.",
                         snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.pink,  // Set the background color to red
-                        colorText: Colors.white,  // Optionally, set the text color to white for better contrast
+                        backgroundColor: Colors.black,
+                        colorText: Colors.white,
                       );
 
                     } else {
@@ -227,10 +227,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                                     ),
                                     // Display the lock icon if course is not purchased
                                     if (widget.isPurchase == '0')
-                                      Icon(
-                                        FontAwesomeIcons.lock,
-                                        color: ColorConstant.primary,
-                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 30),
+                                        child: Icon(
+                                          FontAwesomeIcons.lock,
+                                          color: ColorConstant.primary,
+                                          size: 16.0, // Adjust the size as needed
+                                        ),
+                                      )
+
                                   ],
                                 ),
                                 SizedBox(height: 5), // Space between title and description

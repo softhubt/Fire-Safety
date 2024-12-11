@@ -3,6 +3,7 @@ import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
 import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,10 @@ class TestResultView extends StatefulWidget {
   final double skippedQuestion;
   final double rightAnswer;
   final double wrongAnswer;
+  final String courseid;
+  final String userId;
+  final String chapterid;
+  final String testpaymentid;
   final List<Question> answeredList; // Change to List<Question> instead of List<Map>
 
   const TestResultView({
@@ -29,6 +34,10 @@ class TestResultView extends StatefulWidget {
     required this.rightAnswer,
     required this.wrongAnswer,
     required this.answeredList,
+    required this.courseid,
+    required this.userId,
+    required this.chapterid,
+    required this.testpaymentid,
   }) : super(key: key);
 
   @override
@@ -215,7 +224,7 @@ class _TestResultViewState extends State<TestResultView> {
                       child: CustomButton(
                         title: "Next Test",
                         onTap: () {
-                        //  Get.offAll(() => const BottomBarView());
+                          Get.offAll(() =>  ChapterFlashExerciseView(chapterId:widget.chapterid, userId:widget.userId, courseId: widget.courseid, testpaymentId: widget.testpaymentid,));
                         },
                       ),
                     ),

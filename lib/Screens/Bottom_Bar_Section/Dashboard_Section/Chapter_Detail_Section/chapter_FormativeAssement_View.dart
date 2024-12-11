@@ -1,3 +1,4 @@
+import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/Foramative_assessment_Controller.dart';
@@ -60,9 +61,9 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
                   controller.submitFormativeAssesmentTest(
                     userId: widget.userId,
                     chapterId: widget.chapterId,
-                    courseId: widget.courseId, // Pass the actual course ID
-                    testFormativeType: "5", // Replace with actual test formative type
-                    testpaymentid: widget.testpaymentId, // Pass the actual test payment ID
+                    courseId: widget.courseId,
+                    testFormativeType: "5",
+                    testpaymentid: widget.testpaymentId,
                   );
                 }
               },
@@ -77,9 +78,15 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Formative Assessment'),
-      ),
+      // appBar: CustomAppBar(
+      //     title: "Formative Assesment",
+      //     // leading: IconButton(
+      //     //     onPressed: () {
+      //     //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
+      //     //     },
+      //     //     icon:
+      //     //     const Icon(Icons.menu_rounded, color: ColorConstant.white))
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {

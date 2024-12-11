@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_FormativeAssement_View.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -160,6 +161,13 @@ class FlasExerciseController extends GetxController {
           submitFlashExerciseModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
         customToast(message: "Flash exercise submitted successfully!");
+
+        Get.offAll(() => FormativeAssesmentView(
+          userId: userId,
+          chapterId: chapterId,
+          courseId: courseId,
+          testpaymentId: testpaymentId,
+        ));
 
         // Clear form fields if needed
         // clearAllFields();
