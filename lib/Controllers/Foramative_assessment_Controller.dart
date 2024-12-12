@@ -36,14 +36,11 @@ class ChapterFormativeAssessmentController extends GetxController {
   String? testFormativeId;
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onClose() {
     controllers.forEach((key, controller) => controller.dispose());
-    focusNodes.forEach((node) => node.dispose());
+    for (var node in focusNodes) {
+      node.dispose();
+    }
     super.onClose();
   }
 
@@ -87,11 +84,9 @@ class ChapterFormativeAssessmentController extends GetxController {
               }).toList() ??
               [];
 
-          controllers.value = Map.fromIterable(
-            questions,
-            key: (item) => item.id,
-            value: (item) => TextEditingController(),
-          );
+          controllers.value = {
+            for (var item in questions) item.id: TextEditingController()
+          };
 
           focusNodes.value =
               List.generate(questions.length, (_) => FocusNode());
@@ -210,5 +205,4 @@ class ChapterFormativeAssessmentController extends GetxController {
   String getCharacterCount(String value) {
     return '${value.length}/50'; // Returns the character count in the format "X/100"
   }
-
 }

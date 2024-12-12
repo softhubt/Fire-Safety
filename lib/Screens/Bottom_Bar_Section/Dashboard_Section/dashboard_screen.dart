@@ -28,14 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-          title: "Dashboard",
-          leading: IconButton(
-              onPressed: () {
-                Get.to(() => const DrawerView());
-              },
-              icon:
-                  const Icon(Icons.menu_rounded, color: ColorConstant.white))),
+      appBar: const CustomAppBar(title: "Dashboard"),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [

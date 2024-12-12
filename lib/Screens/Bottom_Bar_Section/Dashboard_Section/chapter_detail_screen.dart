@@ -15,10 +15,16 @@ import 'package:firesafety/Widgets/custom_appbar.dart';
 class ChapterDetailScreen extends StatefulWidget {
   final String chapterId;
   final String courseId;
+  final String chapterName;
   final String testpaymentId;
 
-  const ChapterDetailScreen(
-      {super.key, required this.chapterId, required this.courseId, required this.testpaymentId,});
+  const ChapterDetailScreen({
+    super.key,
+    required this.chapterId,
+    required this.courseId,
+    required this.testpaymentId,
+    required this.chapterName,
+  });
 
   @override
   State<ChapterDetailScreen> createState() => _ChapterDetailScreenState();
@@ -65,7 +71,7 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          title: "Chapter Detail",
+          title: widget.chapterName,
           leading: IconButton(
               onPressed: () => Get.back(),
               icon: const Icon(Icons.arrow_back, color: ColorConstant.white))),
@@ -77,7 +83,7 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
         child: userId.isEmpty
             ? const Center(
                 child:
-                    const CircularProgressIndicator()) // Show loader while userId is being fetched
+                    CircularProgressIndicator()) // Show loader while userId is being fetched
             : Column(
                 children: [
                   Container(
@@ -121,7 +127,8 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
                           chapterId: widget.chapterId,
                           userId: userId,
                           courseId: widget.courseId,
-                          testpaymentId: widget.testpaymentId,// Handle null case
+                          testpaymentId:
+                              widget.testpaymentId, // Handle null case
                           // Handle null case
                         ),
                       ],

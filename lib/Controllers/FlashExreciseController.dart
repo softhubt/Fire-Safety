@@ -36,14 +36,11 @@ class FlasExerciseController extends GetxController {
   String? flashExerciseId;
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onClose() {
     controllers.forEach((key, controller) => controller.dispose());
-    focusNodes.forEach((node) => node.dispose());
+    for (var node in focusNodes) {
+      node.dispose();
+    }
     super.onClose();
   }
 
@@ -85,11 +82,9 @@ class FlasExerciseController extends GetxController {
               }).toList() ??
               [];
 
-          controllers.value = Map.fromIterable(
-            questions,
-            key: (item) => item.id,
-            value: (item) => TextEditingController(),
-          );
+          controllers.value = {
+            for (var item in questions) item.id: TextEditingController()
+          };
 
           focusNodes.value =
               List.generate(questions.length, (_) => FocusNode());
@@ -142,7 +137,6 @@ class FlasExerciseController extends GetxController {
         "testpayment_id": testpaymentId,
         "order_item":
             jsonEncode(orderItems.map((item) => item.toJson()).toList()),
-
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -163,11 +157,11 @@ class FlasExerciseController extends GetxController {
         customToast(message: "Flash exercise submitted successfully!");
 
         Get.offAll(() => FormativeAssesmentView(
-          userId: userId,
-          chapterId: chapterId,
-          courseId: courseId,
-          testpaymentId: testpaymentId,
-        ));
+              userId: userId,
+              chapterId: chapterId,
+              courseId: courseId,
+              testpaymentId: testpaymentId,
+            ));
 
         // Clear form fields if needed
         // clearAllFields();
@@ -186,7 +180,9 @@ class FlasExerciseController extends GetxController {
 
   void clearAllFields() {
     controllers.forEach((key, controller) => controller.clear());
-    focusNodes.forEach((node) => node.dispose());
+    for (var node in focusNodes) {
+      node.dispose();
+    }
   }
 
   String? validateAnswer(String? value) {
@@ -207,5 +203,4 @@ class FlasExerciseController extends GetxController {
   String getCharacterCount(String value) {
     return '${value.length}/100'; // Returns the character count in the format "X/100"
   }
-
 }

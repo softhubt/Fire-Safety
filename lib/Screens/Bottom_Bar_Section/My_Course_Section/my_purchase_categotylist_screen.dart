@@ -16,6 +16,7 @@ import 'package:firesafety/Widgets/custom_appbar.dart';
 
 class MypurchesCatrgotyListscreen extends StatefulWidget {
   final String userId;
+
   const MypurchesCatrgotyListscreen({super.key, required this.userId});
 
   @override
@@ -38,11 +39,11 @@ class _MypurchesCatrgotyListscreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "My Courses"),
-      body: Padding(
-        padding: screenHorizontalPadding,
-        child:
-            (controller.getPurchaseSubcategoryModel.myPurchaseSubcategoryList !=
+        appBar: const CustomAppBar(title: "My Courses"),
+        body: Padding(
+            padding: screenHorizontalPadding,
+            child: (controller.getPurchaseSubcategoryModel
+                        .myPurchaseSubcategoryList !=
                     null)
                 ? ListView.builder(
                     itemCount: controller.getPurchaseSubcategoryModel
@@ -61,7 +62,7 @@ class _MypurchesCatrgotyListscreenState
                       if (bookingForm?.toUpperCase() == "N") {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => StudentFormView(
+                            Get.offAll(() => StudentFormView(
                                   userId: widget.userId,
                                   id: element?.testpaymentId ?? '',
                                 ));
@@ -72,7 +73,7 @@ class _MypurchesCatrgotyListscreenState
                           speakingTest?.toUpperCase() == "N") {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => SpeakingTestModule(
+                            Get.offAll(() => SpeakingTestModule(
                                   userId: widget.userId,
                                   id: element?.testpaymentId ?? '',
                                 ));
@@ -83,7 +84,7 @@ class _MypurchesCatrgotyListscreenState
                           writingTest?.toUpperCase() == "N") {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => WritingTestPage(
+                            Get.offAll(() => WritingTestPage(
                                   userId: widget.userId,
                                   id: element?.testpaymentId ?? '',
                                 ));
@@ -94,7 +95,7 @@ class _MypurchesCatrgotyListscreenState
                           readingTest?.toUpperCase() == "N") {
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => ReadingScreenWithMCQ(
+                            Get.offAll(() => ReadingScreenWithMCQ(
                                   userId: widget.userId,
                                   id: element?.testpaymentId ?? '',
                                   quizType: 'Reading Test',
@@ -105,13 +106,12 @@ class _MypurchesCatrgotyListscreenState
                       } else if (readingTest?.toUpperCase() == "Y" &&
                           listeningTest?.toUpperCase() == "N") {
                         return GestureDetector(
-                          onTap: () {
-                            Get.to(() => ListeningWithMcqView(
-                                userId: widget.userId,
-                                id: element?.testpaymentId ?? ''));
-                          },
-                          child: buildDetailedCard(element),
-                        );
+                            onTap: () {
+                              Get.offAll(() => ListeningWithMcqView(
+                                  userId: widget.userId,
+                                  id: element?.testpaymentId ?? ''));
+                            },
+                            child: buildDetailedCard(element));
                       } else if (listeningTest?.toUpperCase() == "Y") {
                         return GestureDetector(
                           onTap: () {
@@ -127,15 +127,13 @@ class _MypurchesCatrgotyListscreenState
 
                       // Default behavior if no condition met
                       return GestureDetector(
-                        onTap: () {
-                          Get.to(() => MyCourseListView(
+                          onTap: () {
+                            Get.to(() => MyCourseListView(
                                 categoryId: "${element?.categoryId}",
                                 subcategoryId: "${element?.subcategoryId}",
-                                testpaymentId: "${element?.testpaymentId}",
-                              ));
-                        },
-                        child: buildDetailedCard(element),
-                      );
+                                testpaymentId: "${element?.testpaymentId}"));
+                          },
+                          child: buildDetailedCard(element));
                     },
                   )
                 : ListView.builder(
@@ -143,35 +141,26 @@ class _MypurchesCatrgotyListscreenState
                     itemBuilder: (BuildContext context, int index) {
                       return const CustomShimmer(radius: 24);
                     },
-                  ),
-      ),
-    );
+                  )));
   }
 
   Widget buildDetailedCard(PurchaseSubcategory? element) {
     return Card(
       color: ColorConstant.white,
       margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: contentPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Course Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                element?.subcategoryImage ?? '',
-                height: Get.height * 0.2,
-                width: Get.width,
-                fit: BoxFit.cover,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(element?.subcategoryImage ?? '',
+                    height: Get.height * 0.2,
+                    width: Get.width,
+                    fit: BoxFit.cover)),
             const SizedBox(height: 10),
-            // Course Name
             Text(
               element?.subcategoryName ?? '',
               style: TextStyleConstant.bold22(),
@@ -187,26 +176,20 @@ class _MypurchesCatrgotyListscreenState
                 Row(
                   children: [
                     const Icon(Icons.currency_rupee, color: Colors.green),
-                    Text(
-                      element?.amount ?? 'N/A',
-                      style: TextStyleConstant.medium16(),
-                    ),
+                    Text(element?.amount ?? 'N/A',
+                        style: TextStyleConstant.medium16()),
                   ],
                 ),
-                // Duration
                 Row(
                   children: [
                     const Icon(Icons.timer, color: Colors.blue),
-                    Text(
-                      "${element?.days ?? 'N/A'} Days",
-                      style: TextStyleConstant.medium16(),
-                    ),
+                    Text("${element?.days ?? 'N/A'} Days",
+                        style: TextStyleConstant.medium16()),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 5),
-            // Purchase and Expiry Date
             Row(
               children: [
                 const Icon(Icons.calendar_today, color: Colors.orange),
@@ -252,67 +235,3 @@ class _MypurchesCatrgotyListscreenState
     );
   }
 }
-
-
-// import 'package:firesafety/Models/get_purches_CategoryList_model.dart';
-// import 'package:firesafety/Widgets/custom_appbar.dart';
-// import 'package:firesafety/Widgets/custom_shimmer.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:firesafety/Constant/color_constant.dart';
-// import 'package:firesafety/Constant/layout_constant.dart';
-// import 'package:firesafety/Constant/textstyle_constant.dart';
-// import 'package:firesafety/Controllers/MyCource_purchescategotylist_Controller.dart';
-
-// class MypurchesCatrgotyListscreen extends StatefulWidget {
-//   final String userId;
-//   const MypurchesCatrgotyListscreen({super.key, required this.userId});
-
-//   @override
-//   State<MypurchesCatrgotyListscreen> createState() =>
-//       _MypurchesCatrgotyListscreenState();
-// }
-
-// class _MypurchesCatrgotyListscreenState
-//     extends State<MypurchesCatrgotyListscreen> {
-//   MypurschaseSubcategoryController controller =
-//       Get.put(MypurschaseSubcategoryController());
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     controller.GetPurchesSubCategory(UserId: widget.userId)
-//         .whenComplete(() => setState(() {}));
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: const CustomAppBar(title: "My Course"),
-//       body: Padding(
-//         padding: screenHorizontalPadding,
-//         child:
-//             (controller.getPurchaseSubcategoryModel.myPurchaseSubcategoryList !=
-//                     null)
-//                 ? ListView.builder(
-//                     itemCount: controller.getPurchaseSubcategoryModel
-//                         .myPurchaseSubcategoryList?.length,
-//                     itemBuilder: (BuildContext context, int index) {
-//                       final element = controller.getPurchaseSubcategoryModel
-//                           .myPurchaseSubcategoryList?[index];
-
-//                       return buildDetailedCard(element);
-//                     },
-//                   )
-//                 : ListView.builder(
-//                     itemCount: 4,
-//                     itemBuilder: (BuildContext context, int index) {
-//                       return const CustomShimmer(radius: 24);
-//                     },
-//                   ),
-//       ),
-//     );
-//   }
-
-//  
-// }

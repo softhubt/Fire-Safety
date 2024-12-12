@@ -24,19 +24,23 @@ class GetFormativeAssessmentModel {
       GetFormativeAssessmentModel(
         statusCode: json["status_code"],
         message: json["message"],
-        formativeAssessmentDetailsList: json["formative_assessment_details_list"] == null
-            ? null
-            : List<FormativeAssessmentDetailsList>.from(
-            json["formative_assessment_details_list"].map((x) => FormativeAssessmentDetailsList.fromJson(x))),
+        formativeAssessmentDetailsList:
+            json["formative_assessment_details_list"] == null
+                ? null
+                : List<FormativeAssessmentDetailsList>.from(
+                    json["formative_assessment_details_list"].map(
+                        (x) => FormativeAssessmentDetailsList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "status_code": statusCode,
-    "message": message,
-    "formative_assessment_details_list": formativeAssessmentDetailsList == null
-        ? null
-        : List<dynamic>.from(formativeAssessmentDetailsList!.map((x) => x.toJson())),
-  };
+        "status_code": statusCode,
+        "message": message,
+        "formative_assessment_details_list":
+            formativeAssessmentDetailsList == null
+                ? null
+                : List<dynamic>.from(
+                    formativeAssessmentDetailsList!.map((x) => x.toJson())),
+      };
 }
 
 // Class for formative assessment details
@@ -47,11 +51,11 @@ class FormativeAssessmentDetailsList {
   String? testFormativeDate;
   String? courseName;
   String? chapterId;
-  dynamic? testFormativeName;
+  dynamic testFormativeName;
   String? mark;
   String? testFormativeTime;
   String? rightMark;
-  dynamic? tresultcount;
+  dynamic tresultcount;
   List<FormativeQuestionDetail>? formativeQuestionDetails;
 
   FormativeAssessmentDetailsList({
@@ -85,25 +89,27 @@ class FormativeAssessmentDetailsList {
         formativeQuestionDetails: json["formative_question_details"] == null
             ? null
             : List<FormativeQuestionDetail>.from(
-            json["formative_question_details"].map((x) => FormativeQuestionDetail.fromJson(x))),
+                json["formative_question_details"]
+                    .map((x) => FormativeQuestionDetail.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "test_formative_id": testFormativeId,
-    "test_formative_type": testFormativeType,
-    "test_formative_date": testFormativeDate,
-    "course_name": courseName,
-    "chapter_id": chapterId,
-    "test_formative_name": testFormativeName,
-    "mark": mark,
-    "test_formative_time": testFormativeTime,
-    "right_mark": rightMark,
-    "tresultcount": tresultcount,
-    "formative_question_details": formativeQuestionDetails == null
-        ? null
-        : List<dynamic>.from(formativeQuestionDetails!.map((x) => x.toJson())),
-  };
+        "id": id,
+        "test_formative_id": testFormativeId,
+        "test_formative_type": testFormativeType,
+        "test_formative_date": testFormativeDate,
+        "course_name": courseName,
+        "chapter_id": chapterId,
+        "test_formative_name": testFormativeName,
+        "mark": mark,
+        "test_formative_time": testFormativeTime,
+        "right_mark": rightMark,
+        "tresultcount": tresultcount,
+        "formative_question_details": formativeQuestionDetails == null
+            ? null
+            : List<dynamic>.from(
+                formativeQuestionDetails!.map((x) => x.toJson())),
+      };
 }
 
 // Class for formative question details
@@ -123,7 +129,7 @@ class FormativeQuestionDetail {
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "question": question,
-  };
+        "id": id,
+        "question": question,
+      };
 }

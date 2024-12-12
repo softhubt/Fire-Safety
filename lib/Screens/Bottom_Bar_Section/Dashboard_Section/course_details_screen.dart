@@ -54,94 +54,131 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-          title: "Course Details",
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
-          ),
+      backgroundColor: ColorConstant.white,
+      appBar: CustomAppBar(
+        title: "Course Details",
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
         ),
-        body: Padding(
-          padding: EdgeInsets.only(
-              top: screenHeightPadding,
-              left: screenWidthPadding,
-              right: screenWidthPadding),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: Get.height * 0.006,
-                    horizontal: Get.width * 0.014),
-                height: Get.height * 0.054,
-                decoration: BoxDecoration(
-                  color: ColorConstant.extraLightPrimary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TabBar(
-                  controller: controller.tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: ColorConstant.primary,
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: screenHeightPadding,
+          horizontal: screenWidthPadding,
+        ),
+        child: Column(
+          children: [
+            // Tab Bar Container with smooth gradient background
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: Get.height * 0.006,
+                horizontal: Get.width * 0.014,
+              ),
+              height: Get.height * 0.06,
+              decoration: BoxDecoration(
+                color: ColorConstant.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TabBar(
+                controller: controller.tabController,
+                indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: ColorConstant.primary),
+                labelColor: ColorConstant.white,
+                unselectedLabelColor: ColorConstant.primary,
+                labelStyle: TextStyleConstant.semiBold16(),
+                tabs: controller.tabList,
+                dividerColor: Colors.transparent,
+              ),
+            ),
+            const SizedBox(height: 10), // Add spacing for aesthetics
+            Expanded(
+              child: TabBarView(
+                controller: controller.tabController,
+                children: [
+                  overviewContent(controller: controller),
+                  courseContent(controller: controller),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: (widget.isPurchase == "0")
+          ? Padding(
+              padding: EdgeInsets.only(
+                  bottom: screenHeightPadding,
+                  left: screenWidthPadding,
+                  right: screenWidthPadding),
+              child: Row(
+                children: [
+                  Text(
+                    "₹ ${widget.amount} /-",
+                    style: TextStyleConstant.bold28(
+                      color: ColorConstant.primary,
+                    ),
                   ),
-                  labelColor: ColorConstant.white,
-                  tabs: controller.tabList,
-                  dividerColor: ColorConstant.transparent,
-                ),
+                  const SizedBox(width: 10), // Space between price and button
+                  Expanded(
+                    child: CustomButton(
+                      title: "Buy Now",
+                      gradient: const LinearGradient(
+                        colors: [ColorConstant.primary, Colors.pink],
+                      ),
+                      onTap: () {
+                        // Add purchase functionality
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: controller.tabController,
-                  children: [
-                    overviewContent(controller: controller),
-                    courseContent(controller: controller),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: (widget.isPurchase == "0")
-            ? Padding(
-                padding: EdgeInsets.only(
-                    bottom: screenHeightPadding,
-                    left: screenWidthPadding,
-                    right: screenWidthPadding),
-                child: Row(
-                  children: [
-                    Text("₹ ${widget.amount} /-",
-                        style: TextStyleConstant.semiBold30()),
-                    SizedBox(
-                        width: screenWidthPadding), // Space between buttons
-                    Expanded(
-                        child: CustomButton(
-                      title: "Buy",
-                      onTap: () {},
-                    )),
-                  ],
-                ))
-            : const SizedBox());
+            )
+          : const SizedBox(),
+    );
   }
 
   Widget overviewContent({required CourseDetailController controller}) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ListTile(
-          leading: Icon(Icons.watch, color: ColorConstant.primary),
-          title: Text("Duration: 6 hours"),
+        const SizedBox(height: 10), // Add spacing
+        Text(
+          "Overview",
+          style: TextStyleConstant.bold20(color: ColorConstant.primary),
         ),
+        const SizedBox(height: 10),
         ListTile(
           leading:
-              Icon(FontAwesomeIcons.certificate, color: ColorConstant.primary),
-          title: Text("Completion Certificate"),
+              const Icon(Icons.watch, color: ColorConstant.primary, size: 30),
+          title: Text(
+            "Duration: 6 hours",
+            style: TextStyleConstant.medium16(),
+          ),
         ),
         ListTile(
-          leading: Icon(Icons.calendar_today, color: ColorConstant.primary),
-          title: Text("90 Days Access"),
+          leading: const Icon(FontAwesomeIcons.certificate,
+              color: ColorConstant.primary, size: 30),
+          title: Text(
+            "Completion Certificate",
+            style: TextStyleConstant.medium16(),
+          ),
         ),
         ListTile(
-          leading: Icon(Icons.card_giftcard, color: ColorConstant.primary),
-          title: Text("Enroll and win rewards"),
+          leading: const Icon(Icons.calendar_today,
+              color: ColorConstant.primary, size: 30),
+          title: Text(
+            "90 Days Access",
+            style: TextStyleConstant.medium16(),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.card_giftcard,
+              color: ColorConstant.primary, size: 30),
+          title: Text(
+            "Enroll and win rewards",
+            style: TextStyleConstant.medium16(),
+          ),
         ),
       ],
     );
@@ -161,37 +198,39 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                     if (index ==
                         controller
                             .getChapterListModel.courseChapterList?.length) {
-                      // This is the additional item for "MOCK EXAMINATION"
                       return GestureDetector(
                         onTap: () {
-                          // Navigate to MockExaminationView when tapped
-                          Get.to(() => MockExaminationView());
+                          Get.to(() => const MockExaminationView());
                         },
                         child: Container(
                           margin: const EdgeInsets.all(16.0),
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           decoration: BoxDecoration(
-                            color: ColorConstant.white,
-                            borderRadius: BorderRadius.circular(10),
+                            color: ColorConstant.primary,
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: const LinearGradient(
+                              colors: [Colors.pink, ColorConstant.primary],
+                            ),
                             boxShadow: const [
                               BoxShadow(
                                 color: ColorConstant.grey,
-                                blurRadius: 5,
+                                blurRadius: 8,
                                 spreadRadius: 2,
-                                offset: Offset(0, 2),
+                                offset: Offset(0, 3),
                               ),
                             ],
                           ),
                           child: Center(
                             child: Text(
                               "MOCK EXAMINATION",
-                              style: TextStyleConstant.bold18(),
+                              style: TextStyleConstant.bold18(
+                                color: ColorConstant.white,
+                              ),
                             ),
                           ),
                         ),
                       );
                     } else {
-                      // This is for the chapter items
                       return GestureDetector(
                         onTap: () {
                           if (widget.isPurchase == '0') {
@@ -199,54 +238,38 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                               "Locked Chapter",
                               "Please purchase the course to access this chapter.",
                               snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors
-                                  .pink, // Set the background color to red
-                              colorText: Colors
-                                  .white, // Optionally, set the text color to white for better contrast
+                              backgroundColor: Colors.pink,
+                              colorText: Colors.white,
                             );
                           } else {
-                            // Navigate to ChapterDetailScreen if purchased
                             Get.to(() => ChapterDetailScreen(
                                   chapterId:
                                       "${controller.getChapterListModel.courseChapterList?[index].chapterId}",
+                                  chapterName:
+                                      "${controller.getChapterListModel.courseChapterList?[index].chapterName}",
                                   courseId: widget.courseId,
                                   testpaymentId: widget.testpaymentId,
                                 ));
                           }
                         },
-                        child: Padding(
-                          padding: contentPadding,
+                        child: Card(
+                          color: ColorConstant.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                           child: Container(
                             padding: contentPadding,
-                            decoration: BoxDecoration(
-                              color: ColorConstant.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: ColorConstant.grey,
-                                  blurRadius: 5,
-                                  spreadRadius: 2,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Image of the Chapter
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
                                     "${controller.getChapterListModel.courseChapterList?[index].chapterImage}",
                                     width: 70,
                                     height: 70,
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                SizedBox(
-                                    width:
-                                        10), // Add some spacing between image and text
-                                // Column for Chapter Information
+                                const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -257,37 +280,21 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                                           Expanded(
                                             child: Text(
                                               "${controller.getChapterListModel.courseChapterList?[index].chapterName}",
-                                              style: TextStyleConstant.bold18(),
+                                              style: TextStyleConstant.bold16(),
                                             ),
                                           ),
-                                          // Display the lock icon if course is not purchased
                                           if (widget.isPurchase == '0')
-                                            Icon(
+                                            const Icon(
                                               FontAwesomeIcons.lock,
-                                              color: ColorConstant.primary,
+                                              color: Colors.red,
                                             ),
                                         ],
                                       ),
-                                      SizedBox(
-                                          height:
-                                              5), // Space between title and description
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.description,
-                                              color: ColorConstant.primary),
-                                          SizedBox(
-                                              width:
-                                                  5), // Space between icon and description text
-                                          Expanded(
-                                            child: Text(
-                                              "${controller.getChapterListModel.courseChapterList?[index].description}",
-                                              style:
-                                                  TextStyleConstant.medium14(),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Prevent overflow
-                                            ),
-                                          ),
-                                        ],
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "${controller.getChapterListModel.courseChapterList?[index].description}",
+                                        style: TextStyleConstant.medium14(),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),

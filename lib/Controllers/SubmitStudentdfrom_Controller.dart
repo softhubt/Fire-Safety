@@ -159,7 +159,7 @@ class SubmitStudentFormController extends GetxController {
         "requirements": disabilityRequirementsController.text,
         "testpayment_id": id,
         "traning_course1":
-            selectedCourses.length > 0 ? selectedCourses[0] : null,
+            selectedCourses.isNotEmpty ? selectedCourses[0] : null,
         "traning_course2":
             selectedCourses.length > 1 ? selectedCourses[1] : null,
         "traning_course3":
@@ -231,7 +231,7 @@ class SubmitStudentFormController extends GetxController {
             message:
                 getSubmitStudentFormModel.message ?? "Something went wrong");
       }
-    } catch (error, st) {
+    } catch (error) {
       CustomLoader.closeCustomLoader();
       log("Error during form submission: $error");
     }

@@ -48,8 +48,9 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
           if (controller.questions.isEmpty) {
-            return Center(
-                child: CircularProgressIndicator()); // Show loader while data is being fetched
+            return const Center(
+                child:
+                    CircularProgressIndicator()); // Show loader while data is being fetched
           }
 
           return Form(
@@ -63,26 +64,26 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         ' Read a paragraph and then write it down exactly as it appears ',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
                         'Question ${index + 1}: ${question.question}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextFormField(
                         controller: controller.controllers[question.id],
                         focusNode: controller.focusNodes[index],
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Type your answer here...',
                         ),
@@ -101,7 +102,7 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
           // Show a confirmation dialog before submitting the test
           _showConfirmationDialog();
         },
-        child: Icon(Icons.send),
+        child: const Icon(Icons.send),
       ),
     );
   }
@@ -112,15 +113,15 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Submission'),
-          content: Text('Are you sure you want to submit your answers?'),
+          title: const Text('Confirm Submission'),
+          content: const Text('Are you sure you want to submit your answers?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 // Close the dialog without doing anything
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -128,7 +129,7 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                 Navigator.of(context).pop();
                 _submitTest();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
@@ -145,7 +146,8 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
         chapterId: widget.chapterId,
         courseId: widget.courseId, // Pass the actual course ID
         flashExerciseType: "5", // Replace with actual flash exercise type
-        testpaymentId: widget.testpaymentId, // Replace with actual flash exercise type
+        testpaymentId:
+            widget.testpaymentId, // Replace with actual flash exercise type
       );
     }
   }

@@ -44,14 +44,14 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Submit Test'),
-          content: Text('Are you sure you want to submit your answers?'),
+          title: const Text('Submit Test'),
+          content: const Text('Are you sure you want to submit your answers?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -67,7 +67,7 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
                   );
                 }
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
@@ -91,9 +91,9 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
           if (controller.questions.isEmpty) {
-            return Center(
+            return const Center(
                 child:
-                CircularProgressIndicator()); // Show loader while data is being fetched
+                    CircularProgressIndicator()); // Show loader while data is being fetched
           }
 
           return Form(
@@ -109,16 +109,16 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
                     children: [
                       Text(
                         'Question ${index + 1}: ${question.question}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextFormField(
                         controller: controller.controllers[question.id],
                         focusNode: controller.focusNodes[index],
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Type your answer here...',
                         ),
@@ -134,7 +134,7 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showConfirmationDialog, // Show confirmation dialog on press
-        child: Icon(Icons.send),
+        child: const Icon(Icons.send),
       ),
     );
   }

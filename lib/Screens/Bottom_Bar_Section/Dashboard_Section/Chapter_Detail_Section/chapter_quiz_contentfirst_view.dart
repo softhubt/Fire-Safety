@@ -99,8 +99,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
 
             //  Get.to(() => SpeakingTestModule(chapterId: ""));
             //  Get.to(() => StudentFormView());
-            Get.to(() => PaymentThankYouView(
-                  userId: '', id: '',
+            Get.to(() => const PaymentThankYouView(
+                  userId: '',
+                  id: '',
                 ));
           },
         ),
@@ -143,7 +144,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                   Get.to(() => ChapterDetailScreen(
                             chapterId:
                                 "${controller.getChapterListModel.courseChapterList?[index].chapterId}",
-                            courseId: widget.courseId, testpaymentId: '',
+                            chapterName:
+                                "${controller.getChapterListModel.courseChapterList?[index].chapterName}",
+                            courseId: widget.courseId,
+                            testpaymentId: '',
                           )
 
                       // SpeakingTestModule(

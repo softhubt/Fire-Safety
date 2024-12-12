@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:firesafety/Models/get_purches_CategoryList_model.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
-import 'package:firesafety/Models/get_course_list_model.dart';
 import 'package:firesafety/Services/http_services.dart';
 
 class MypurschaseSubcategoryController extends GetxController {

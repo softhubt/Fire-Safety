@@ -2,9 +2,11 @@ import 'package:firesafety/Constant/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/bottom_bar_controller.dart';
+import 'package:motion_tab_bar/MotionTabBar.dart';
 
 class BottomBarScreen extends StatefulWidget {
-  const BottomBarScreen({super.key});
+  final int? currentIndex;
+  const BottomBarScreen({super.key, this.currentIndex});
 
   @override
   State<BottomBarScreen> createState() => _BottomBarScreenState();
@@ -15,59 +17,54 @@ class _BottomBarScreenState extends State<BottomBarScreen>
   BottomBarController controller = Get.put(BottomBarController());
 
   @override
+  void initState() {
+    super.initState();
+    controller.initialFunction(vsync: this).whenComplete(() => setState(() {
+          if (widget.currentIndex != null) {
+            controller.motionTabBarController.index = widget.currentIndex!;
+            controller.selectedIndex.value = widget.currentIndex!;
+          } else {
+            controller.motionTabBarController.index = 0;
+            controller.selectedIndex.value = 0;
+          }
+        }));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.motionTabBarController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
+        if (controller.screenList.isEmpty) {
+          return const Center(child: Text("Loading...")); // Fallback content
+        }
         return controller.screenList[controller.selectedIndex.value];
       }),
       bottomNavigationBar: Obx(() {
-        return Container(
-          decoration: BoxDecoration(
-            color: ColorConstant.primary,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 15,
-                  spreadRadius: 5)
-            ],
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            elevation: 0, // Remove default shadow
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white.withOpacity(0.6),
-            currentIndex: controller.selectedIndex.value,
-            onTap: (value) {
+        if (controller.screenList.isEmpty) {
+          return const SizedBox.shrink(); // Hide navigation bar until ready
+        }
+        return MotionTabBar(
+          controller: controller.motionTabBarController,
+          initialSelectedTab:
+              controller.lableList[controller.selectedIndex.value],
+          labels: controller.lableList,
+          icons: controller.iconList,
+          tabIconColor: ColorConstant.primary,
+          tabSelectedColor: ColorConstant.primary,
+          tabIconSelectedColor: ColorConstant.white,
+          tabBarColor: ColorConstant.white,
+          onTabItemSelected: (int value) {
+            setState(() {
+              controller.motionTabBarController.index = value;
               controller.selectedIndex.value = value;
-            },
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                  icon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) =>
-                        ScaleTransition(scale: animation, child: child),
-                    child: controller.selectedIndex.value == 0
-                        ? Icon(Icons.home_rounded, key: UniqueKey(), size: 30)
-                        : Icon(Icons.home_outlined, key: UniqueKey(), size: 24),
-                  ),
-                  label: "Home"),
-              BottomNavigationBarItem(
-                  icon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) => ScaleTransition(
-                      scale: animation,
-                      child: child,
-                    ),
-                    child: controller.selectedIndex.value == 1
-                        ? Icon(Icons.book, key: UniqueKey(), size: 30)
-                        : Icon(Icons.book_outlined, key: UniqueKey(), size: 24),
-                  ),
-                  label: "My Courses"),
-            ],
-          ),
+            });
+          },
         );
       }),
     );

@@ -15,13 +15,13 @@ class ChapterQuizContentView extends StatefulWidget {
   final String testpaymentId;
 
   const ChapterQuizContentView({
-    Key? key,
+    super.key,
     required this.chapterId,
     required this.topicId,
     required this.userId,
     required this.quizType,
     required this.testpaymentId,
-  }) : super(key: key);
+  });
 
   @override
   State<ChapterQuizContentView> createState() => _ChapterQuizContentViewState();
@@ -52,15 +52,15 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-          title: "Quiz",
-          // leading: IconButton(
-          //     onPressed: () {
-          //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
-          //     },
-          //     icon:
-          //     const Icon(Icons.menu_rounded, color: ColorConstant.white)
-          // )
+      appBar: const CustomAppBar(
+        title: "Quiz",
+        // leading: IconButton(
+        //     onPressed: () {
+        //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
+        //     },
+        //     icon:
+        //     const Icon(Icons.menu_rounded, color: ColorConstant.white)
+        // )
       ),
       body: Obx(() {
         if (controller.questions.isEmpty) {
@@ -68,25 +68,26 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
         }
 
         final currentQuestion =
-        controller.questions[controller.currentQuestionIndex.value];
+            controller.questions[controller.currentQuestionIndex.value];
 
         return Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(bottom: 16.0),
+                padding: const EdgeInsets.only(bottom: 16.0),
                 child: Row(
                   children: [
                     Text(
                       "${controller.currentQuestionIndex.value + 1}. ",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     Expanded(
                       child: Text(
                         currentQuestion.text,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                     ),
@@ -97,8 +98,11 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                 return OptionButton(
                   option: option,
                   isSelected: controller.selectedAnswer.value == option,
-                  isCorrect: controller.isAnswered.value && option == currentQuestion.correctAnswer,
-                  isWrong: controller.isAnswered.value && option != currentQuestion.correctAnswer && controller.selectedAnswer.value == option,
+                  isCorrect: controller.isAnswered.value &&
+                      option == currentQuestion.correctAnswer,
+                  isWrong: controller.isAnswered.value &&
+                      option != currentQuestion.correctAnswer &&
+                      controller.selectedAnswer.value == option,
                   onPressed: () {
                     if (!controller.isAnswered.value) {
                       setState(() {
@@ -107,11 +111,10 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                     }
                   },
                 );
-              }).toList(),
-
+              }),
               if (controller.isAnswered.value)
                 Padding(
-                  padding: EdgeInsets.only(top: 16.0),
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (controller.currentQuestionIndex.value <
@@ -120,46 +123,57 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                           controller.nextQuestion();
                         });
                       } else {
-                        controller.postQuizResult(
+                        controller
+                            .postQuizResult(
                           testId: controller.getChapterQuizListModel
-                              .testDetailsList?[0].testId ?? '',
+                                  .testDetailsList?[0].testId ??
+                              '',
                           courseid: controller.getChapterQuizListModel
-                              .testDetailsList?[0].courseName ?? '',
+                                  .testDetailsList?[0].courseName ??
+                              '',
                           chapterid: controller.getChapterQuizListModel
-                              .testDetailsList?[0].chapterId ?? '',
+                                  .testDetailsList?[0].chapterId ??
+                              '',
                           topicid: controller.getChapterQuizListModel
-                              .testDetailsList?[0].topicid ?? '',
+                                  .testDetailsList?[0].topicid ??
+                              '',
                           userId: widget.userId,
                           type: widget.quizType,
                           testpaymentid: widget.testpaymentId,
                         )
                             .then((_) {
-                          Get.offAll(() =>
-                              TestResultView(
+                          Get.offAll(() => TestResultView(
                                 testListId: controller.getChapterQuizListModel
-                                    .testDetailsList?[0].testId ?? '',
+                                        .testDetailsList?[0].testId ??
+                                    '',
                                 testName: 'Quiz Test',
-                                attemptedQuestions: controller.correctAnswers.value.toDouble(),
-                                unattemptedQuestions: (controller.questions.length - controller.correctAnswers.value).toDouble(),
-                                skippedQuestion: 0.0, // Assuming skipped questions are represented as double
-                                rightAnswer: controller.correctAnswers.value.toDouble(),
-                                wrongAnswer: controller.wrongAnswers.value.toDouble(),
+                                attemptedQuestions:
+                                    controller.correctAnswers.value.toDouble(),
+                                unattemptedQuestions:
+                                    (controller.questions.length -
+                                            controller.correctAnswers.value)
+                                        .toDouble(),
+                                skippedQuestion:
+                                    0.0, // Assuming skipped questions are represented as double
+                                rightAnswer:
+                                    controller.correctAnswers.value.toDouble(),
+                                wrongAnswer:
+                                    controller.wrongAnswers.value.toDouble(),
                                 answeredList: controller.questions,
                                 courseid: controller.getChapterQuizListModel
-                                    .testDetailsList?[0].courseName ?? '',
+                                        .testDetailsList?[0].courseName ??
+                                    '',
                                 userId: widget.userId,
                                 chapterid: controller.getChapterQuizListModel
-                                    .testDetailsList?[0].chapterId ?? '',
+                                        .testDetailsList?[0].chapterId ??
+                                    '',
                                 testpaymentid: widget.testpaymentId,
-
-                              )
-                          );
-                        }
-                        );
+                              ));
+                        });
                       }
                     },
                     child: (controller.currentQuestionIndex.value <
-                        controller.questions.length - 1)
+                            controller.questions.length - 1)
                         ? const Text('Next Question')
                         : const Text('Submit'),
                   ),

@@ -16,8 +16,7 @@ import 'package:firesafety/Widgets/custom_button.dart';
 class SpeakingTestModule extends StatefulWidget {
   final String userId;
   final String id;
-  const SpeakingTestModule({Key? key, required this.userId, required this.id})
-      : super(key: key);
+  const SpeakingTestModule({super.key, required this.userId, required this.id});
 
   @override
   _SpeakingTestModuleState createState() => _SpeakingTestModuleState();

@@ -38,7 +38,7 @@ class _CustomPdfViewState extends State<CustomPdfView> {
   Future<void> _downloadFile() async {
     var response = await http.get(Uri.parse(widget.url));
     var dir = await getApplicationDocumentsDirectory();
-    File file = new File("${dir.path}/temp_jesc101.pdf");
+    File file = File("${dir.path}/temp_jesc101.pdf");
 
     await file.writeAsBytes(response.bodyBytes);
     setState(() {

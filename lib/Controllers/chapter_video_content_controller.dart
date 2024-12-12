@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -8,15 +9,29 @@ import 'package:path_provider/path_provider.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Models/get_chapter_video_list_model.dart';
 import 'package:firesafety/Services/http_services.dart';
-import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:video_player/video_player.dart';
 
 class ChapterVideoContentController extends GetxController {
   GetChapterVideoListModel getChapterVideoListModel =
       GetChapterVideoListModel();
 
-  late VideoPlayerController videoPlayerController;
-  late Future<void> initializeVideoPlayerFuture;
+  VideoPlayerController? videoPlayerController; // Change to nullable
+  Future<void>? initializeVideoPlayerFuture; // Change to nullable
+
+  Future playVideo({required String videoPath}) async {
+    if (videoPlayerController != null) {
+      await videoPlayerController!.dispose();
+    }
+
+    videoPlayerController = VideoPlayerController.network(videoPath);
+    initializeVideoPlayerFuture = videoPlayerController!.initialize();
+
+    if (videoPlayerController!.value.isPlaying) {
+      videoPlayerController!.pause();
+    } else {
+      videoPlayerController!.play();
+    }
+  }
 
   final RxString selectedDropdown = "".obs;
   final RxList<String> dropDownList = [
@@ -26,26 +41,14 @@ class ChapterVideoContentController extends GetxController {
 
   skipForward() {
     final newPosition =
-        videoPlayerController.value.position + const Duration(seconds: 10);
-    videoPlayerController.seekTo(newPosition);
+        videoPlayerController!.value.position + const Duration(seconds: 10);
+    videoPlayerController?.seekTo(newPosition);
   }
 
   skipBackward() {
     final newPosition =
-        videoPlayerController.value.position - const Duration(seconds: 10);
-    videoPlayerController.seekTo(newPosition);
-  }
-
-  Future playVideo({required String videoPath}) async {
-    await videoPlayerController.dispose();
-
-    videoPlayerController = VideoPlayerController.network(videoPath);
-
-    initializeVideoPlayerFuture = videoPlayerController.initialize();
-
-    (videoPlayerController.value.isPlaying)
-        ? videoPlayerController.pause()
-        : videoPlayerController.play();
+        videoPlayerController!.value.position - const Duration(seconds: 10);
+    videoPlayerController?.seekTo(newPosition);
   }
 
   Future downloadFile(String url, String fileName) async {
@@ -95,8 +98,6 @@ class ChapterVideoContentController extends GetxController {
 
   Future getVideoList({required String chapterId}) async {
     try {
-      CustomLoader.openCustomLoader();
-
       Map<String, dynamic> payload = {"chapter_id": chapterId};
 
       var response = await HttpServices.postHttpMethod(
@@ -112,13 +113,10 @@ class ChapterVideoContentController extends GetxController {
 
       if (getChapterVideoListModel.statusCode == "200" ||
           getChapterVideoListModel.statusCode == "201") {
-        CustomLoader.closeCustomLoader();
       } else {
-        CustomLoader.closeCustomLoader();
         log("Something went wrong during getting video list ::: ${getChapterVideoListModel.statusCode}");
       }
     } catch (error) {
-      CustomLoader.closeCustomLoader();
       log("Something went wrong during getting video list ::: $error");
     }
   }

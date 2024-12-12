@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 GetFlashExerciseModel getFlashExerciseModelFromJson(String str) =>
     GetFlashExerciseModel.fromJson(json.decode(str));
 
@@ -26,16 +25,18 @@ class GetFlashExerciseModel {
         flashExerciseDetailsList: json["flash_exercise_details_list"] == null
             ? null
             : List<FlashExerciseDetailsList>.from(
-            json["flash_exercise_details_list"].map((x) => FlashExerciseDetailsList.fromJson(x))),
+                json["flash_exercise_details_list"]
+                    .map((x) => FlashExerciseDetailsList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "status_code": statusCode,
-    "message": message,
-    "flash_exercise_details_list": flashExerciseDetailsList == null
-        ? null
-        : List<dynamic>.from(flashExerciseDetailsList!.map((x) => x.toJson())),
-  };
+        "status_code": statusCode,
+        "message": message,
+        "flash_exercise_details_list": flashExerciseDetailsList == null
+            ? null
+            : List<dynamic>.from(
+                flashExerciseDetailsList!.map((x) => x.toJson())),
+      };
 }
 
 // Class for flash exercise details
@@ -46,11 +47,11 @@ class FlashExerciseDetailsList {
   String? flashExerciseDate;
   String? courseName;
   String? chapterId;
-  dynamic? flashExerciseName;
+  dynamic flashExerciseName;
   String? mark;
   String? flashExerciseTime;
   String? rightMark;
-  dynamic? tresultcount;
+  dynamic tresultcount;
   List<FlashExerciseQuestionDetail>? flashExerciseQuestionDetails;
 
   FlashExerciseDetailsList({
@@ -81,28 +82,31 @@ class FlashExerciseDetailsList {
         flashExerciseTime: json["flash_exercise_time"],
         rightMark: json["right_mark"],
         tresultcount: json["tresultcount"],
-        flashExerciseQuestionDetails: json["flash_exercise_question_details"] == null
-            ? null
-            : List<FlashExerciseQuestionDetail>.from(
-            json["flash_exercise_question_details"].map((x) => FlashExerciseQuestionDetail.fromJson(x))),
+        flashExerciseQuestionDetails:
+            json["flash_exercise_question_details"] == null
+                ? null
+                : List<FlashExerciseQuestionDetail>.from(
+                    json["flash_exercise_question_details"]
+                        .map((x) => FlashExerciseQuestionDetail.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "flash_exercise_id": flashExerciseId,
-    "flash_exercise_type": flashExerciseType,
-    "flash_exercise_date": flashExerciseDate,
-    "course_name": courseName,
-    "chapter_id": chapterId,
-    "flash_exercise_name": flashExerciseName,
-    "mark": mark,
-    "flash_exercise_time": flashExerciseTime,
-    "right_mark": rightMark,
-    "tresultcount": tresultcount,
-    "flash_exercise_question_details": flashExerciseQuestionDetails == null
-        ? null
-        : List<dynamic>.from(flashExerciseQuestionDetails!.map((x) => x.toJson())),
-  };
+        "id": id,
+        "flash_exercise_id": flashExerciseId,
+        "flash_exercise_type": flashExerciseType,
+        "flash_exercise_date": flashExerciseDate,
+        "course_name": courseName,
+        "chapter_id": chapterId,
+        "flash_exercise_name": flashExerciseName,
+        "mark": mark,
+        "flash_exercise_time": flashExerciseTime,
+        "right_mark": rightMark,
+        "tresultcount": tresultcount,
+        "flash_exercise_question_details": flashExerciseQuestionDetails == null
+            ? null
+            : List<dynamic>.from(
+                flashExerciseQuestionDetails!.map((x) => x.toJson())),
+      };
 }
 
 // Class for flash exercise question details
@@ -122,7 +126,7 @@ class FlashExerciseQuestionDetail {
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "question": question,
-  };
+        "id": id,
+        "question": question,
+      };
 }

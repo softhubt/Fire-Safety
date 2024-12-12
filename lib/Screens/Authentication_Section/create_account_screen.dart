@@ -119,8 +119,10 @@ class CreateAccountScreen extends StatelessWidget {
                       validator: FormValidationServices.validateField(
                           fieldName: "Bio"),
                     ),
-                  //  const Spacer(),
-                    SizedBox(height: 25,),
+                    //  const Spacer(),
+                    const SizedBox(
+                      height: 25,
+                    ),
                     CustomButton(
                       title: "Create Account",
                       onTap: () {

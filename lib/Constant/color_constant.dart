@@ -14,6 +14,7 @@ class ColorConstant {
   static const Color white = Colors.white;
   static const Color green = Colors.green;
   static const Color red = Colors.red;
+  static const Color pink = Colors.pink;
   static const Color blue = Color(0xff017ddf);
   static const Color orange = Colors.orange;
 }

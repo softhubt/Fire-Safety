@@ -6,16 +6,18 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
 class MockExaminationView extends StatefulWidget {
+  const MockExaminationView({super.key});
+
   @override
   _MockExaminationViewState createState() => _MockExaminationViewState();
 }
 
 class _MockExaminationViewState extends State<MockExaminationView> {
-  List<String> _files = []; // To keep track of downloaded files
+  final List<String> _files = []; // To keep track of downloaded files
 
   Future<void> _downloadFile() async {
     // Example URL (You would replace this with the actual file URL)
-    final url = 'https://www.example.com/sample.pdf';
+    const url = 'https://www.example.com/sample.pdf';
     final response = await HttpClient().getUrl(Uri.parse(url));
     final file = await _saveFile(await response.close(), 'sample.pdf');
     if (file != null) {
@@ -60,7 +62,7 @@ class _MockExaminationViewState extends State<MockExaminationView> {
     final status = await Permission.storage.request();
     if (!status.isGranted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Storage permission is required')),
+        const SnackBar(content: Text('Storage permission is required')),
       );
     }
   }
@@ -68,18 +70,18 @@ class _MockExaminationViewState extends State<MockExaminationView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('File Manager')),
+      appBar: AppBar(title: const Text('File Manager')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             ElevatedButton(
               onPressed: _downloadFile,
-              child: Text('Download File'),
+              child: const Text('Download File'),
             ),
             ElevatedButton(
               onPressed: _uploadFile,
-              child: Text('Upload File'),
+              child: const Text('Upload File'),
             ),
             Expanded(
               child: ListView.builder(
@@ -89,7 +91,7 @@ class _MockExaminationViewState extends State<MockExaminationView> {
                   return ListTile(
                     title: Text(filePath.split('/').last),
                     subtitle: Text(filePath),
-                    leading: Icon(Icons.file_copy),
+                    leading: const Icon(Icons.file_copy),
                   );
                 },
               ),

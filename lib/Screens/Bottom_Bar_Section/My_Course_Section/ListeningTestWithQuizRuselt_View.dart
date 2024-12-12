@@ -23,7 +23,7 @@ class ListeningestResultView extends StatefulWidget {
   final List<ListenTestQuestion> answeredList;
 
   const ListeningestResultView({
-    Key? key,
+    super.key,
     required this.testListId,
     required this.testName,
     required this.attemptedQuestions,
@@ -33,7 +33,7 @@ class ListeningestResultView extends StatefulWidget {
     required this.wrongAnswer,
     required this.answeredList,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   State<ListeningestResultView> createState() => _ListeningestResultViewState();

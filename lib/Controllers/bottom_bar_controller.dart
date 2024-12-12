@@ -1,49 +1,40 @@
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Profile_Section/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/storage_key_constant.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/dashboard_screen.dart';
 import 'package:firesafety/Services/local_storage_services.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
 
 class BottomBarController extends GetxController {
-  RxString userId = "".obs;
   RxList<Widget> screenList = <Widget>[].obs;
+  RxList<IconData> iconList = <IconData>[
+    Icons.home_rounded,
+    Icons.book_rounded,
+    Icons.person_rounded
+  ].obs;
+  RxList<String> lableList = <String>["Dashboard", "My Courses", "Profile"].obs;
+
+  late MotionTabBarController motionTabBarController;
+
+  RxString userId = "".obs;
+
   RxInt selectedIndex = 0.obs;
-  RxBool isLoading = true.obs; // Loading state
 
-  @override
-  void onInit() {
-    super.onInit();
-    initialFunction();
-  }
-
-  Future<void> initialFunction() async {
-    isLoading.value = true; // Start loading
-
-    // Fetch userId from local storage
+  Future<void> initialFunction({required TickerProvider vsync}) async {
     userId.value = await StorageServices.getData(
-          dataType: StorageKeyConstant.stringType,
-          prefKey: StorageKeyConstant.userId,
-        ) ??
+            dataType: StorageKeyConstant.stringType,
+            prefKey: StorageKeyConstant.userId) ??
         "";
 
-    // Populate screenList after fetching userId
     screenList.value = [
       DashboardScreen(userId: userId.value),
-      // const MyCourseListView(),
       MypurchesCatrgotyListscreen(userId: userId.value),
+      const ProfileView()
     ];
 
-    isLoading.value = false; // Stop loading after data is fetched
-  }
-
-  // Optional: Lazily load screens when selected
-  Widget getScreen(int index) {
-    if (screenList.isEmpty || isLoading.value) {
-      return const Center(
-          child: CircularProgressIndicator()); // Show loading spinner
-    } else {
-      return screenList[index];
-    }
+    motionTabBarController = MotionTabBarController(
+        initialIndex: 0, length: screenList.length, vsync: vsync);
   }
 }

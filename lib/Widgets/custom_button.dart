@@ -21,6 +21,7 @@ class CustomButton extends StatelessWidget {
   final double? borderWidth;
   final double? textSize;
   final Color? borderColor;
+  final Gradient? gradient;
 
   const CustomButton(
       {super.key,
@@ -40,8 +41,8 @@ class CustomButton extends StatelessWidget {
       this.boxShadow,
       this.onTap,
       this.textColor,
-      this.textSize});
-
+      this.textSize,
+      this.gradient});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -51,14 +52,14 @@ class CustomButton extends StatelessWidget {
         width: width ?? Get.width,
         alignment: alignment ?? Alignment.center,
         padding: EdgeInsets.only(
-          top: topPadding ?? 0,
-          bottom: bottomPadding ?? 0,
-          left: leftPadding ?? 0,
-          right: rightPadding ?? 0,
-        ),
+            top: topPadding ?? 0,
+            bottom: bottomPadding ?? 0,
+            left: leftPadding ?? 0,
+            right: rightPadding ?? 0),
         decoration: BoxDecoration(
           color: backGroundColor ?? ColorConstant.primary,
           borderRadius: borderRadius ?? BorderRadius.circular(16),
+          gradient: gradient,
           border: Border.all(
             color: borderColor ?? ColorConstant.transparent,
             width: borderWidth ?? 1,

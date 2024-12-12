@@ -123,7 +123,7 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                         }
                       },
                     );
-                  }).toList(),
+                  }),
 
                   // Next/Submit Button Section
                   if (controller.isAnswered.value)
@@ -274,13 +274,13 @@ class OptionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const OptionButton({
-    Key? key,
+    super.key,
     required this.option,
     required this.isSelected,
     required this.isCorrect,
     required this.isWrong,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:firesafety/Models/get_course_list_model.dart';
 import 'package:firesafety/Widgets/custom_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,8 @@ class _MyCourseListViewState extends State<MyCourseListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "My Courses"),
+      backgroundColor: ColorConstant.white,
+      appBar: const CustomAppBar(title: "My Courses", isBack: true),
       body: Padding(
         padding: screenHorizontalPadding,
         child: (controller.getCourseListModel.courseList != null)
@@ -51,48 +53,16 @@ class _MyCourseListViewState extends State<MyCourseListView> {
                   final element =
                       controller.getCourseListModel.courseList?[index];
                   return Padding(
-                    padding: EdgeInsets.only(top: screenHeightPadding),
+                    padding: EdgeInsets.only(top: contentHeightPadding),
                     child: GestureDetector(
-                      onTap: () {
-                        Get.to(() => CourseDetailScreen(
-                            courseId: "${element?.courseId}",
-                            testpaymentId: widget.testpaymentId,
-                            isPurchase: '',
-                            amount: "0"));
-                      },
-                      child: Container(
-                        padding: contentPadding,
-                        decoration: BoxDecoration(
-                          color: ColorConstant.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: Get.height * 0.120,
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(22),
-                                image: DecorationImage(
-                                  image:
-                                      NetworkImage("${element?.courseImage}"),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: contentHeightPadding),
-                              child: Text(
-                                "${element?.courseName}",
-                                style: TextStyleConstant.medium18(),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                        onTap: () {
+                          Get.to(() => CourseDetailScreen(
+                              courseId: "${element?.courseId}",
+                              testpaymentId: widget.testpaymentId,
+                              isPurchase: '',
+                              amount: "0"));
+                        },
+                        child: buildDetailedCard(element)),
                   );
                 },
               )
@@ -102,6 +72,33 @@ class _MyCourseListViewState extends State<MyCourseListView> {
                   return const CustomShimmer(radius: 24);
                 },
               ),
+      ),
+    );
+  }
+
+  Widget buildDetailedCard(CourseList? element) {
+    return Card(
+      color: ColorConstant.white,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: contentPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(element?.courseImage ?? '',
+                    height: Get.height * 0.2,
+                    width: Get.width,
+                    fit: BoxFit.cover)),
+            const SizedBox(height: 10),
+            Text(element?.courseName ?? '',
+                style: TextStyleConstant.bold22(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis),
+          ],
+        ),
       ),
     );
   }

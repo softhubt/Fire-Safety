@@ -16,10 +16,10 @@ class ListeningWithMcqView extends StatefulWidget {
   final String id;
 
   const ListeningWithMcqView({
-    Key? key,
+    super.key,
     required this.userId,
     required this.id,
-  }) : super(key: key);
+  });
   @override
   _ListeningWithMcqViewState createState() => _ListeningWithMcqViewState();
 }
@@ -227,7 +227,7 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
                           }
                         },
                       );
-                    }).toList(),
+                    }),
                     if (controller.isAnswered.value)
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0),
@@ -267,13 +267,13 @@ class OptionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const OptionButton({
-    Key? key,
+    super.key,
     required this.option,
     required this.isSelected,
     required this.isCorrect,
     required this.isWrong,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

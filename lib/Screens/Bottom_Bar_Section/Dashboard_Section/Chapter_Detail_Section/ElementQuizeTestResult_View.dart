@@ -22,10 +22,11 @@ class TestResultView extends StatefulWidget {
   final String userId;
   final String chapterid;
   final String testpaymentid;
-  final List<Question> answeredList; // Change to List<Question> instead of List<Map>
+  final List<Question>
+      answeredList; // Change to List<Question> instead of List<Map>
 
   const TestResultView({
-    Key? key,
+    super.key,
     required this.testListId,
     required this.testName,
     required this.attemptedQuestions,
@@ -38,18 +39,19 @@ class TestResultView extends StatefulWidget {
     required this.userId,
     required this.chapterid,
     required this.testpaymentid,
-  }) : super(key: key);
+  });
 
   @override
   State<TestResultView> createState() => _TestResultViewState();
 }
 
 class _TestResultViewState extends State<TestResultView> {
-  ChapterQuizContentController controller = Get.put(ChapterQuizContentController());
+  ChapterQuizContentController controller =
+      Get.put(ChapterQuizContentController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Test Result')),
+      appBar: AppBar(title: const Text('Test Result')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -57,7 +59,7 @@ class _TestResultViewState extends State<TestResultView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
               //   children: [
@@ -79,8 +81,7 @@ class _TestResultViewState extends State<TestResultView> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    top: screenHeightPadding,
-                    bottom: screenHeightPadding),
+                    top: screenHeightPadding, bottom: screenHeightPadding),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -97,15 +98,15 @@ class _TestResultViewState extends State<TestResultView> {
                 padding: contentPadding,
                 decoration: BoxDecoration(
                     color: (double.parse(
-                        "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                        0)
+                                "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
+                            0)
                         ? ColorConstant.green.withOpacity(0.1)
                         : ColorConstant.red.withOpacity(0.1),
                     border: Border.all(
                         width: 2,
                         color: (double.parse(
-                            "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                            0)
+                                    "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
+                                0)
                             ? ColorConstant.green
                             : ColorConstant.red),
                     borderRadius: BorderRadius.circular(16)),
@@ -115,8 +116,8 @@ class _TestResultViewState extends State<TestResultView> {
                         "${controller.postChapterQuizResultModel.result?.obtainMarks}",
                         style: TextStyleConstant.bold36(
                             color: (double.parse(
-                                "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                                0)
+                                        "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
+                                    0)
                                 ? ColorConstant.green
                                 : ColorConstant.red),
                         textAlign: TextAlign.center),
@@ -128,8 +129,8 @@ class _TestResultViewState extends State<TestResultView> {
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: (double.parse(
-                                  "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                                  0)
+                                          "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
+                                      0)
                                   ? ColorConstant.green
                                   : ColorConstant.red,
                               width: 2),
@@ -140,7 +141,7 @@ class _TestResultViewState extends State<TestResultView> {
                         borderRadius: BorderRadius.circular(10),
                         backgroundColor: ColorConstant.transparent,
                         valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.green),
+                            const AlwaysStoppedAnimation<Color>(Colors.green),
                       ),
                     ),
                   ],
@@ -151,8 +152,7 @@ class _TestResultViewState extends State<TestResultView> {
                 padding: contentPadding,
                 decoration: BoxDecoration(
                     color: ColorConstant.blue.withOpacity(0.1),
-                    border:
-                    Border.all(width: 2, color: ColorConstant.blue),
+                    border: Border.all(width: 2, color: ColorConstant.blue),
                     borderRadius: BorderRadius.circular(16)),
                 child: Column(
                   children: [
@@ -161,17 +161,15 @@ class _TestResultViewState extends State<TestResultView> {
                       child: PieChart(
                         PieChartData(
                           sections: showingSections(
-                              attemptedQuestions:
-                              widget.attemptedQuestions,
-                              unattemptedQuestions:
-                              widget.unattemptedQuestions,
+                              attemptedQuestions: widget.attemptedQuestions,
+                              unattemptedQuestions: widget.unattemptedQuestions,
                               skippedQuestions: widget.skippedQuestion),
                           centerSpaceRadius: 20,
                           sectionsSpace: 2,
                           borderData: FlBorderData(show: false),
                           pieTouchData: PieTouchData(
-                            touchCallback: (FlTouchEvent event,
-                                pieTouchResponse) {},
+                            touchCallback:
+                                (FlTouchEvent event, pieTouchResponse) {},
                           ),
                         ),
                       ),
@@ -180,7 +178,7 @@ class _TestResultViewState extends State<TestResultView> {
                   ],
                 ),
               ),
-        
+
               // SizedBox(height: screenHeightPadding),
               // Container(
               //   padding: contentPadding,
@@ -224,7 +222,12 @@ class _TestResultViewState extends State<TestResultView> {
                       child: CustomButton(
                         title: "Next Test",
                         onTap: () {
-                          Get.offAll(() =>  ChapterFlashExerciseView(chapterId:widget.chapterid, userId:widget.userId, courseId: widget.courseid, testpaymentId: widget.testpaymentid,));
+                          Get.offAll(() => ChapterFlashExerciseView(
+                                chapterId: widget.chapterid,
+                                userId: widget.userId,
+                                courseId: widget.courseid,
+                                testpaymentId: widget.testpaymentid,
+                              ));
                         },
                       ),
                     ),
@@ -232,19 +235,17 @@ class _TestResultViewState extends State<TestResultView> {
                     Expanded(
                       child: CustomButton(
                         title: "Restart Test",
-                         onTap: () {
-                          Get.back();  // Goes back to the previous screen
+                        onTap: () {
+                          Get.back(); // Goes back to the previous screen
                           setState(() {
-                            controller.resetQuiz();  // Resets the quiz
+                            controller.resetQuiz(); // Resets the quiz
                           });
                         },
                       ),
                     )
-
                   ],
                 ),
               ),
-        
             ],
           ),
         ),
@@ -255,22 +256,21 @@ class _TestResultViewState extends State<TestResultView> {
 
 List<PieChartSectionData> showingSections(
     {required double attemptedQuestions,
-      required double unattemptedQuestions,
-      required double skippedQuestions}) {
+    required double unattemptedQuestions,
+    required double skippedQuestions}) {
   return [
     PieChartSectionData(
         color: ColorConstant.green,
         value: attemptedQuestions,
         title: attemptedQuestions.toString().split(".")[0],
         radius: 100,
-        titleStyle:
-        TextStyleConstant.extraBold18(color: ColorConstant.white)),
+        titleStyle: TextStyleConstant.extraBold18(color: ColorConstant.white)),
     PieChartSectionData(
       color: ColorConstant.red,
       value: unattemptedQuestions,
       title: unattemptedQuestions.toString().split(".")[0],
       radius: 100,
-      titleStyle: TextStyle(
+      titleStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -281,7 +281,7 @@ List<PieChartSectionData> showingSections(
       value: skippedQuestions,
       title: skippedQuestions.toString().split(".")[0],
       radius: 100,
-      titleStyle: TextStyle(
+      titleStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -292,22 +292,21 @@ List<PieChartSectionData> showingSections(
 
 List<PieChartSectionData> showingSecondSections(
     {required double rightAnswer,
-      required double wrongAnswer,
-      required double skippedQuestions}) {
+    required double wrongAnswer,
+    required double skippedQuestions}) {
   return [
     PieChartSectionData(
         color: ColorConstant.green,
         value: rightAnswer,
         title: rightAnswer.toString().split(".")[0],
         radius: 100,
-        titleStyle:
-        TextStyleConstant.extraBold18(color: ColorConstant.white)),
+        titleStyle: TextStyleConstant.extraBold18(color: ColorConstant.white)),
     PieChartSectionData(
       color: ColorConstant.red,
       value: wrongAnswer,
       title: wrongAnswer.toString().split(".")[0],
       radius: 100,
-      titleStyle: TextStyle(
+      titleStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -318,7 +317,7 @@ List<PieChartSectionData> showingSecondSections(
       value: skippedQuestions,
       title: skippedQuestions.toString().split(".")[0],
       radius: 100,
-      titleStyle: TextStyle(
+      titleStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -338,7 +337,6 @@ Widget buildLegend() {
   );
 }
 
-
 Widget buildLegendItem(String title, Color color) {
   return Row(
     children: [
@@ -347,10 +345,10 @@ Widget buildLegendItem(String title, Color color) {
         height: 16,
         color: color,
       ),
-      SizedBox(width: 8),
+      const SizedBox(width: 8),
       Text(
         title,
-        style: TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16),
       ),
     ],
   );

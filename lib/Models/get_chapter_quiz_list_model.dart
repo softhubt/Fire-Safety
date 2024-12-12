@@ -41,7 +41,7 @@ class TestDetailsList {
   String? courseName;
   String? chapterId;
   String? topicid;
-  dynamic? testName;
+  dynamic testName;
   String? mark;
   String? testTime;
   String? rightMark;
