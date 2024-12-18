@@ -121,11 +121,10 @@ class FlasExerciseController extends GetxController {
 
       List<SubmitOrderItemnew> orderItems = questions.map((question) {
         return SubmitOrderItemnew(
-          cartId: question.id.isNotEmpty ? int.tryParse(question.id) : null,
-          id: question.id,
-          questionId: question.id,
-          answer: controllers[question.id]?.text ?? "",
-        );
+            cartId: question.id.isNotEmpty ? int.tryParse(question.id) : null,
+            id: question.id,
+            questionId: question.id,
+            answer: controllers[question.id]?.text ?? "");
       }).toList();
 
       Map<String, dynamic> payload = {

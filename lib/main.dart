@@ -33,15 +33,3 @@ class MyApp extends StatelessWidget {
         home: const SplashScreen());
   }
 }
-
-/*
-TODO: Change the design of the drawer screen
-TODO: Change the design of bottom navigation bar to floating
-TODO: Add the profile section in drawer
-TODO: Change to design of the course list screen
-TODO: Change the deisng of the course detail screen [Both Overview and Course]
-TODO: Solve the late video inilization error in vide tab
-TODO: Add the shimmer effects while the video data is empty also channge the design of video tab
-TODO: Solve the render flex error in study material
-TODO: Change the design of the study material tab
- */
