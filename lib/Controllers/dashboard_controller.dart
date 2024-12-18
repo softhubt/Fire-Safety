@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'package:firesafety/Constant/storage_key_constant.dart';
+import 'package:firesafety/Services/local_storage_services.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Models/Get_Advertisement_Model.dart';
@@ -10,6 +13,12 @@ class DashboardController extends GetxController {
   GetadvertiesmentModel getadvertiesmentModel = GetadvertiesmentModel();
 
   Future initialFunctioun() async {
+    String userId = await StorageServices.getData(
+        dataType: StorageKeyConstant.stringType,
+        prefKey: StorageKeyConstant.userId);
+
+    debugPrint("User Id ::: $userId");
+
     await getCategory();
     await AdvertiesmentImages();
   }

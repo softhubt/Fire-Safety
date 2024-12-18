@@ -27,32 +27,31 @@ class CustomTextField extends StatelessWidget {
   final Color? hintColor;
   final TextSelectionControls? textSelectionControls;
 
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    this.hintText,
-    this.onChange,
-    this.enable,
-    this.fillColor,
-    this.focuseBorderColor,
-    this.focusNode,
-    this.hintColor,
-    this.isExpand,
-    this.isReadOnly,
-    this.labelText,
-    this.maxLength,
-    this.maxLine,
-    this.validator,
-    this.isObscureText,
-    this.onTap,
-    this.onSubmitted,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.textFieldBackgroundColor,
-    this.textInputFormatter,
-    this.textInputType,
-    this.textSelectionControls,
-  });
+  const CustomTextField(
+      {super.key,
+      required this.controller,
+      this.hintText,
+      this.onChange,
+      this.enable,
+      this.fillColor,
+      this.focuseBorderColor,
+      this.focusNode,
+      this.hintColor,
+      this.isExpand,
+      this.isReadOnly,
+      this.labelText,
+      this.maxLength,
+      this.maxLine,
+      this.validator,
+      this.isObscureText,
+      this.onTap,
+      this.onSubmitted,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.textFieldBackgroundColor,
+      this.textInputFormatter,
+      this.textInputType,
+      this.textSelectionControls});
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +81,9 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
         keyboardType: textInputType ?? TextInputType.text,
         style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          color: ColorConstant.black,
-        ),
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: ColorConstant.black),
         cursorColor: ColorConstant.primary.withOpacity(0.8),
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
