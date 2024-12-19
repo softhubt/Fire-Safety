@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/FormativeAsssementResult_View.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
-import 'package:firesafety/Models/Post_SubmitStudentForm_Model.dart'; // Assuming this is the right model
 import 'package:firesafety/Models/postSubmitForamtiveAsses_Model.dart';
 import 'package:firesafety/Models/post_FormativeAssessment_model.dart';
 import 'package:firesafety/Services/http_services.dart';
@@ -53,7 +51,7 @@ class ChapterFormativeAssessmentController extends GetxController {
 
       Map<String, dynamic> payload = {
         "chapter_id": chapterId,
-        "user_id": userId,
+        "user_id": userId
       };
 
       var response = await HttpServices.postHttpMethod(

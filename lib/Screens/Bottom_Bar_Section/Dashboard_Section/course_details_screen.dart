@@ -14,7 +14,7 @@ import 'package:firesafety/Widgets/custom_no_data_found.dart';
 class CourseDetailScreen extends StatefulWidget {
   final String courseId;
   final String testpaymentId;
-  final String isPurchase; // New field to track if course is purchased
+  final String isPurchase; // * New field to track if course is purchased
   final String amount;
 
   const CourseDetailScreen({

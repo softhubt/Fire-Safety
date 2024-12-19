@@ -116,6 +116,7 @@ class _MypurchesCatrgotyListscreenState
                         return GestureDetector(
                           onTap: () {
                             Get.to(() => MyCourseListView(
+                                  courseName: "${element?.subcategoryName}",
                                   categoryId: "${element?.categoryId}",
                                   subcategoryId: "${element?.subcategoryId}",
                                   testpaymentId: "${element?.testpaymentId}",
@@ -129,6 +130,7 @@ class _MypurchesCatrgotyListscreenState
                       return GestureDetector(
                           onTap: () {
                             Get.to(() => MyCourseListView(
+                                courseName: "${element?.subcategoryName}",
                                 categoryId: "${element?.categoryId}",
                                 subcategoryId: "${element?.subcategoryId}",
                                 testpaymentId: "${element?.testpaymentId}"));

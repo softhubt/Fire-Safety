@@ -8,9 +8,11 @@ class EndPointConstant {
   static const String languageList = "language_list.php";
   static const String category = "category.php";
   static const String subcategoryList = "subcategory_list.php";
-  static const String mypurchasesubcategorylist = "my_purchase_subcategorylist.php";
+  static const String mypurchasesubcategorylist =
+      "my_purchase_subcategorylist.php";
   static const String courseList = "course_list.php";
-  static const String subcategorycourseubscriptionpayment = "subcategory_course_subscription_payment.php";
+  static const String subcategorycourseubscriptionpayment =
+      "subcategory_course_subscription_payment.php";
   static const String ads = "advertiesment.php";
   static const String chapter = "chapter.php";
   static const String chapterWiseTopicVideo = "chapterwise_topic_video.php";
@@ -20,17 +22,26 @@ class EndPointConstant {
   static const String advertiesment = "advertiesment.php";
   static const String testresultdisplay = "test_result_display.php";
 
-  static const String elementwiseformativeassessmentdetails = "elementwise_formative_assessment_details.php";
+  static const String elementwiseformativeassessmentdetails =
+      "elementwise_formative_assessment_details.php";
   static const String Studentbookingformsubmit = "booking_form_submit.php";
-  static const String formativeassessmentsubmit = "formative_assessment_submit.php";
-  static const String formativeassessmentresult = "formative_assessment_result.php";
-  static const String elementwiseflashexercisedetails = "elementwise_flash_exercise_details.php";
+  static const String formativeassessmentsubmit =
+      "formative_assessment_submit.php";
+  static const String formativeassessmentresult =
+      "formative_assessment_result.php";
+  static const String elementwiseflashexercisedetails =
+      "elementwise_flash_exercise_details.php";
   static const String flashExerciseSubmit = "flash_exercise_submit.php";
-  static const String proficiencyreadlistentesttypewise = "proficiency_read_listen_test_typewise.php";
-  static const String proficiencyreadlistentesttypewisenew = "proficiencyreadlistentesttypewisenew";
-  static const String readinglisteningtestsubmit = "reading_listening_test_submit.php";
-  static const String listentesttypewise = "proficiency_read_listen_test_typewise.php";
-  static const String listeningtestestsubmit = "reading_listening_test_submit.php";
+  static const String proficiencyreadlistentesttypewise =
+      "proficiency_read_listen_test_typewise.php";
+  static const String proficiencyreadlistentesttypewisenew =
+      "proficiencyreadlistentesttypewisenew";
+  static const String readinglisteningtestsubmit =
+      "reading_listening_test_submit.php";
+  static const String listentesttypewise =
+      "proficiency_read_listen_test_typewise.php";
+  static const String listeningtestestsubmit =
+      "reading_listening_test_submit.php";
   static const String branchlist = "branch_list.php";
 
   static const String classes = "classes.php";
@@ -53,7 +64,8 @@ class EndPointConstant {
   static const String proficiencytesttypewise = "proficiency_test_typewise.php";
   static const String proficiencySpeakingTestSubmit =
       "proficiency_speakingtest_submit.php";
-  static const String Spekingproficiencytesttypewise = "proficiency_test_typewise.php";
-  static const String proficiencywritingtestsubmit = "proficiency_writingtest_submit.php";
-
+  static const String Spekingproficiencytesttypewise =
+      "proficiency_test_typewise.php";
+  static const String proficiencywritingtestsubmit =
+      "proficiency_writingtest_submit.php";
 }

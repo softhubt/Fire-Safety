@@ -1,5 +1,3 @@
-import 'package:firesafety/Constant/color_constant.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/drawer_view.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';

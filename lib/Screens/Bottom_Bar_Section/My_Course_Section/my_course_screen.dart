@@ -11,6 +11,7 @@ import 'package:firesafety/Widgets/custom_appbar.dart';
 
 class MyCourseListView extends StatefulWidget {
   final String categoryId;
+  final String courseName;
   final String subcategoryId;
   final String testpaymentId;
 
@@ -19,6 +20,7 @@ class MyCourseListView extends StatefulWidget {
     required this.categoryId,
     required this.subcategoryId,
     required this.testpaymentId,
+    required this.courseName,
   });
 
   @override
@@ -43,7 +45,7 @@ class _MyCourseListViewState extends State<MyCourseListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstant.white,
-      appBar: const CustomAppBar(title: "My Courses", isBack: true),
+      appBar: CustomAppBar(title: widget.courseName, isBack: true),
       body: Padding(
         padding: screenHorizontalPadding,
         child: (controller.getCourseListModel.courseList != null)

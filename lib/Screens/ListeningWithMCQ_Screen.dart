@@ -147,8 +147,7 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         ),
         TextButton(
             onPressed: () {
-              Get.to(() => const MyCourseListView(
-                  categoryId: '', subcategoryId: '', testpaymentId: ''));
+              Get.offAll(() => const BottomBarScreen(currentIndex: 1));
             },
             child: const Text('Next Page')),
       ],
