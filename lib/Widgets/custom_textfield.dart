@@ -27,63 +27,66 @@ class CustomTextField extends StatelessWidget {
   final Color? hintColor;
   final TextSelectionControls? textSelectionControls;
 
-  const CustomTextField(
-      {super.key,
-      required this.controller,
-      this.hintText,
-      this.onChange,
-      this.enable,
-      this.fillColor,
-      this.focuseBorderColor,
-      this.focusNode,
-      this.hintColor,
-      this.isExpand,
-      this.isReadOnly,
-      this.labelText,
-      this.maxLength,
-      this.maxLine,
-      this.validator,
-      this.isObscureText,
-      this.onTap,
-      this.onSubmitted,
-      this.prefixIcon,
-      this.suffixIcon,
-      this.textFieldBackgroundColor,
-      this.textInputFormatter,
-      this.textInputType,
-      this.textSelectionControls});
+  const CustomTextField({
+    super.key,
+    required this.controller,
+    this.hintText,
+    this.onChange,
+    this.enable,
+    this.fillColor,
+    this.focuseBorderColor,
+    this.focusNode,
+    this.hintColor,
+    this.isExpand,
+    this.isReadOnly,
+    this.labelText,
+    this.maxLength,
+    this.maxLine,
+    this.validator,
+    this.isObscureText,
+    this.onTap,
+    this.onSubmitted,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.textFieldBackgroundColor,
+    this.textInputFormatter,
+    this.textInputType,
+    this.textSelectionControls,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: fillColor ?? ColorConstant.white,
-        borderRadius:
-            BorderRadius.circular(30), // WhatsApp style with round corners
+        borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2)),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
         ],
       ),
       child: TextFormField(
         controller: controller,
         obscureText: isObscureText ?? false,
         inputFormatters: textInputFormatter,
-        maxLines: maxLine ?? 1,
+        maxLines: isExpand ?? false ? null : (maxLine ?? 1),
         maxLength: maxLength ?? 1000,
         focusNode: focusNode,
-        minLines: 1,
         onTap: onTap,
         onChanged: onChange,
         onFieldSubmitted: onSubmitted,
         validator: validator,
-        keyboardType: textInputType ?? TextInputType.text,
+        keyboardType: isExpand ?? false
+            ? TextInputType.multiline
+            : (textInputType ?? TextInputType.text),
         style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: ColorConstant.black),
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: ColorConstant.black,
+        ),
         cursorColor: ColorConstant.primary.withOpacity(0.8),
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
@@ -98,25 +101,34 @@ class CustomTextField extends StatelessWidget {
             color: ColorConstant.grey.withOpacity(0.8),
           ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide:
-                  const BorderSide(color: ColorConstant.primary, width: 2)),
+            borderRadius: BorderRadius.circular(30),
+            borderSide:
+                const BorderSide(color: ColorConstant.primary, width: 2),
+          ),
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(
-                  color: ColorConstant.grey.withOpacity(0.4), width: 1)),
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: ColorConstant.grey.withOpacity(0.4),
+              width: 1,
+            ),
+          ),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(
-                  color: ColorConstant.grey.withOpacity(0.4), width: 1)),
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: ColorConstant.grey.withOpacity(0.4),
+              width: 1,
+            ),
+          ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: const BorderSide(color: ColorConstant.red, width: 1),
           ),
           labelText: labelText,
           hintText: hintText,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
           hintStyle: TextStyle(
             fontSize: 14,
             color: hintColor ?? ColorConstant.grey.withOpacity(0.6),

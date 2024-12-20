@@ -24,6 +24,8 @@ class EndPointConstant {
 
   static const String elementwiseformativeassessmentdetails =
       "elementwise_formative_assessment_details.php";
+  static const String formativeAssessmentResult =
+      "formative_assessment_result.php";
   static const String Studentbookingformsubmit = "booking_form_submit.php";
   static const String formativeassessmentsubmit =
       "formative_assessment_submit.php";

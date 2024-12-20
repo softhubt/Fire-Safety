@@ -1,4 +1,11 @@
-import 'package:firesafety/Widgets/custom_appbar.dart';
+import 'package:firesafety/Constant/color_constant.dart';
+import 'package:firesafety/Constant/layout_constant.dart';
+import 'package:firesafety/Constant/textstyle_constant.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
+import 'package:firesafety/Widgets/custom_button.dart';
+import 'package:firesafety/Widgets/custom_no_data_found.dart';
+import 'package:firesafety/Widgets/custom_shimmer.dart';
+import 'package:firesafety/Widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/Foramative_assessment_Controller.dart';
@@ -22,24 +29,252 @@ class FormativeAssesmentView extends StatefulWidget {
 }
 
 class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
-  late final ChapterFormativeAssessmentController controller;
+  final ChapterFormativeAssessmentController controller =
+      Get.put(ChapterFormativeAssessmentController());
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(ChapterFormativeAssessmentController());
-
-    // Fetch formative assessment data here
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.getFormativeAssessmentList(
+    controller.initialFunctioun(
         chapterId: widget.chapterId,
         userId: widget.userId,
-      );
-    });
+        testPaymentId: widget.testpaymentId);
   }
 
-  // Function to show the confirmation dialog
-  void _showConfirmationDialog() {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: screenHorizontalPadding,
+        child: Obx(() {
+          return (controller.isFetchingData.value)
+              ? CustomShimmer(height: Get.height * 0.600)
+              : (controller.resultList.isNotEmpty &&
+                      !controller.isRestartExam.value)
+                  ? ListView(
+                      children: [
+                        // Display Marks
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: screenHeightPadding,
+                                bottom: screenHeightPadding),
+                            child: Card(
+                                color: ColorConstant.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                child: Padding(
+                                    padding: screenPadding,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            "Marks: ${controller.resultList.last.mark}",
+                                            style: TextStyleConstant.bold22(
+                                                color: ColorConstant.blue)),
+                                        Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: Get.height * 0.008),
+                                            child: Text(
+                                                "Obtained Marks: ${controller.resultList.last.obtainMarks}",
+                                                style: TextStyleConstant
+                                                    .medium18())),
+                                        Text(
+                                            "Date: ${controller.resultList.last.tdate.toString().split(" ")[0]}",
+                                            style: TextStyleConstant.medium16(
+                                                color: ColorConstant.grey)),
+                                      ],
+                                    )))),
+
+                        // Formative Result Details
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: controller
+                              .resultList.last.formativeResultDetails?.length,
+                          itemBuilder: (context, index) {
+                            final element = controller
+                                .resultList.last.formativeResultDetails?[index];
+                            return Padding(
+                              padding: EdgeInsets.only(top: Get.height * 0.010),
+                              child: Card(
+                                color: ColorConstant.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                child: Padding(
+                                  padding: screenPadding,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Question
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.question_mark,
+                                              color: ColorConstant.blue),
+                                          SizedBox(width: Get.width * 0.016),
+                                          Expanded(
+                                              child: Text(
+                                                  "Q ${index + 1}: ${element?.question ?? ""}",
+                                                  style: TextStyleConstant
+                                                      .semiBold20())),
+                                        ],
+                                      ),
+
+                                      // Marks
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: Get.height * 0.008),
+                                          child: Row(
+                                            children: [
+                                              const Icon(Icons.star,
+                                                  color: ColorConstant.amber),
+                                              SizedBox(
+                                                  width: Get.width * 0.016),
+                                              Text(
+                                                  "Marks: ${element?.marks ?? ""}",
+                                                  style: TextStyleConstant
+                                                      .medium18()),
+                                            ],
+                                          )),
+
+                                      // Comment
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(Icons.comment,
+                                              color: ColorConstant.green),
+                                          SizedBox(width: Get.width * 0.016),
+                                          Expanded(
+                                            child: Text(
+                                              "Comment: ${element?.comment ?? ""}",
+                                              style: TextStyleConstant.medium18(
+                                                  color: ColorConstant.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // User Answer
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: Get.height * 0.008),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(Icons.edit,
+                                                color: ColorConstant.orange),
+                                            SizedBox(width: Get.width * 0.016),
+                                            Expanded(
+                                              child: Text(
+                                                "Your Answer: ${element?.answer ?? ""}",
+                                                style: TextStyleConstant
+                                                    .regular16(),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: screenHeightPadding,
+                                bottom: Get.height * 0.040),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: CustomButton(
+                                  title: "Restart Test",
+                                  onTap: () {
+                                    controller.isRestartExam.value = true;
+                                  },
+                                )),
+                                SizedBox(width: screenWidthPadding),
+                                Expanded(
+                                    child: CustomButton(
+                                  title: "Finish",
+                                  onTap: () {
+                                    Get.offAll(() => const BottomBarScreen());
+                                  },
+                                ))
+                              ],
+                            )),
+                      ],
+                    )
+                  : (controller.questions.isNotEmpty)
+                      ? ListView(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: screenHeightPadding,
+                                  bottom: Get.height * 0.040),
+                              child: Form(
+                                  key: controller.formKey,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: controller.questions.length,
+                                    itemBuilder: (context, index) {
+                                      final question =
+                                          controller.questions[index];
+                                      return Padding(
+                                          padding: EdgeInsets.only(
+                                              top: screenHeightPadding),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  'Question ${index + 1}: ${question.question}',
+                                                  style: TextStyleConstant
+                                                      .semiBold18()),
+                                              const SizedBox(height: 8),
+                                              CustomTextField(
+                                                  controller:
+                                                      controller.controllers[
+                                                          question.id]!,
+                                                  hintText:
+                                                      "Type Your Answer Here",
+                                                  textInputType:
+                                                      TextInputType.multiline,
+                                                  maxLine: null,
+                                                  isExpand: true,
+                                                  validator: controller
+                                                      .validateFields())
+                                            ],
+                                          ));
+                                    },
+                                  )),
+                            ),
+                            CustomButton(
+                                title: "Submit",
+                                onTap: () {
+                                  if (controller.formKey.currentState!
+                                      .validate()) {
+                                    showConfirmationDialog();
+                                  }
+                                }),
+                            SizedBox(height: Get.height * 0.040),
+                          ],
+                        )
+                      : const CustomNoDataFound();
+        }),
+      ),
+    );
+  }
+
+  void showConfirmationDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -47,95 +282,28 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
           title: const Text('Submit Test'),
           content: const Text('Are you sure you want to submit your answers?'),
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('Cancel'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                // Submit the test if the user confirms
-                if (controller.formKey.currentState!.validate()) {
-                  controller.submitFormativeAssesmentTest(
-                    userId: widget.userId,
-                    chapterId: widget.chapterId,
-                    courseId: widget.courseId,
-                    testFormativeType: "5",
-                    testpaymentid: widget.testpaymentId,
-                  );
-                }
+                Navigator.of(context).pop();
+                controller.submitFormativeAssesmentTest(
+                  userId: widget.userId,
+                  chapterId: widget.chapterId,
+                  courseId: widget.courseId,
+                  testFormativeType: "5",
+                  testpaymentid: widget.testpaymentId,
+                );
               },
               child: const Text('Submit'),
             ),
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: CustomAppBar(
-      //     title: "Formative Assesment",
-      //     // leading: IconButton(
-      //     //     onPressed: () {
-      //     //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
-      //     //     },
-      //     //     icon:
-      //     //     const Icon(Icons.menu_rounded, color: ColorConstant.white))
-      // ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Obx(() {
-          if (controller.questions.isEmpty) {
-            return const Center(
-                child:
-                    CircularProgressIndicator()); // Show loader while data is being fetched
-          }
-
-          return Form(
-            key: controller.formKey,
-            child: ListView.builder(
-              itemCount: controller.questions.length,
-              itemBuilder: (context, index) {
-                final question = controller.questions[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Question ${index + 1}: ${question.question}',
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: controller.controllers[question.id],
-                        focusNode: controller.focusNodes[index],
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Type your answer here...',
-                        ),
-                        validator: (value) => controller.validateAnswer(value),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
-        }),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showConfirmationDialog, // Show confirmation dialog on press
-        child: const Icon(Icons.send),
-      ),
     );
   }
 }

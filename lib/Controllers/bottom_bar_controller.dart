@@ -22,7 +22,10 @@ class BottomBarController extends GetxController {
 
   RxInt selectedIndex = 0.obs;
 
-  Future<void> initialFunction({required TickerProvider vsync}) async {
+  Future<void> initialFunction({
+    required TickerProvider vsync,
+    required int widgetCurrentIndex,
+  }) async {
     userId.value = await StorageServices.getData(
             dataType: StorageKeyConstant.stringType,
             prefKey: StorageKeyConstant.userId) ??
@@ -31,10 +34,21 @@ class BottomBarController extends GetxController {
     screenList.value = [
       DashboardScreen(userId: userId.value),
       MypurchesCatrgotyListscreen(userId: userId.value),
-      const ProfileView()
+      const ProfileView(),
     ];
 
+    // Initialize motionTabBarController
     motionTabBarController = MotionTabBarController(
-        initialIndex: 0, length: screenList.length, vsync: vsync);
+      initialIndex: widgetCurrentIndex,
+      length: screenList.length,
+      vsync: vsync,
+    );
+
+    // Assign widgetCurrentIndex
+    selectedIndex.value = widgetCurrentIndex;
+
+    // Ensure the controller is ready before setting its index
+    await Future.delayed(Duration.zero);
+    motionTabBarController.index = widgetCurrentIndex;
   }
 }

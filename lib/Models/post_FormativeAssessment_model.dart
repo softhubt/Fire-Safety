@@ -1,14 +1,11 @@
 import 'dart:convert';
 
-// Function to convert JSON string to GetFormativeAssessmentModel
 GetFormativeAssessmentModel getFormativeAssessmentModelFromJson(String str) =>
     GetFormativeAssessmentModel.fromJson(json.decode(str));
 
-// Function to convert GetFormativeAssessmentModel to JSON string
 String getFormativeAssessmentModelToJson(GetFormativeAssessmentModel data) =>
     json.encode(data.toJson());
 
-// Main model class
 class GetFormativeAssessmentModel {
   String? statusCode;
   String? message;
@@ -26,9 +23,9 @@ class GetFormativeAssessmentModel {
         message: json["message"],
         formativeAssessmentDetailsList:
             json["formative_assessment_details_list"] == null
-                ? null
+                ? []
                 : List<FormativeAssessmentDetailsList>.from(
-                    json["formative_assessment_details_list"].map(
+                    json["formative_assessment_details_list"]!.map(
                         (x) => FormativeAssessmentDetailsList.fromJson(x))),
       );
 
@@ -37,13 +34,12 @@ class GetFormativeAssessmentModel {
         "message": message,
         "formative_assessment_details_list":
             formativeAssessmentDetailsList == null
-                ? null
+                ? []
                 : List<dynamic>.from(
                     formativeAssessmentDetailsList!.map((x) => x.toJson())),
       };
 }
 
-// Class for formative assessment details
 class FormativeAssessmentDetailsList {
   String? id;
   String? testFormativeId;
@@ -87,9 +83,9 @@ class FormativeAssessmentDetailsList {
         rightMark: json["right_mark"],
         tresultcount: json["tresultcount"],
         formativeQuestionDetails: json["formative_question_details"] == null
-            ? null
+            ? []
             : List<FormativeQuestionDetail>.from(
-                json["formative_question_details"]
+                json["formative_question_details"]!
                     .map((x) => FormativeQuestionDetail.fromJson(x))),
       );
 
@@ -106,13 +102,12 @@ class FormativeAssessmentDetailsList {
         "right_mark": rightMark,
         "tresultcount": tresultcount,
         "formative_question_details": formativeQuestionDetails == null
-            ? null
+            ? []
             : List<dynamic>.from(
                 formativeQuestionDetails!.map((x) => x.toJson())),
       };
 }
 
-// Class for formative question details
 class FormativeQuestionDetail {
   String? id;
   String? question;

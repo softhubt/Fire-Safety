@@ -19,15 +19,12 @@ class _BottomBarScreenState extends State<BottomBarScreen>
   @override
   void initState() {
     super.initState();
-    controller.initialFunction(vsync: this).whenComplete(() => setState(() {
-          if (widget.currentIndex != null) {
-            controller.motionTabBarController.index = widget.currentIndex!;
-            controller.selectedIndex.value = widget.currentIndex!;
-          } else {
-            controller.motionTabBarController.index = 0;
-            controller.selectedIndex.value = 0;
-          }
-        }));
+    controller
+        .initialFunction(
+            vsync: this, widgetCurrentIndex: widget.currentIndex ?? 0)
+        .then((_) {
+      setState(() {}); // Trigger state rebuild after initialization
+    });
   }
 
   @override

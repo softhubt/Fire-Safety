@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firesafety/Models/get_formative_assessment_result_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -9,18 +10,10 @@ import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:firesafety/Widgets/custom_toast.dart';
 
-class FormativeQuestion {
-  final String id;
-  final String question;
-
-  FormativeQuestion({
-    required this.id,
-    required this.question,
-  });
-}
-
 class ChapterFormativeAssessmentController extends GetxController {
   final RxList<FormativeQuestion> questions = <FormativeQuestion>[].obs;
+  final RxList<FormativeAssessmentResultList> resultList =
+      <FormativeAssessmentResultList>[].obs;
   final RxMap<String, TextEditingController> controllers =
       <String, TextEditingController>{}.obs;
   final RxList<FocusNode> focusNodes = <FocusNode>[].obs;
@@ -29,9 +22,14 @@ class ChapterFormativeAssessmentController extends GetxController {
       GetFormativeAssessmentModel();
   SubmitFormativeAssessmentModel submitFormativeAssessmentModel =
       SubmitFormativeAssessmentModel();
+  GetFormativeAssessmentResultListModel getFormativeAssessmentResultListModel =
+      GetFormativeAssessmentResultListModel();
 
   // Add a variable to store testFormativeId
   String? testFormativeId;
+
+  RxBool isFetchingData = true.obs;
+  RxBool isRestartExam = false.obs;
 
   @override
   void onClose() {
@@ -42,37 +40,58 @@ class ChapterFormativeAssessmentController extends GetxController {
     super.onClose();
   }
 
-  Future<void> getFormativeAssessmentList({
-    required String chapterId,
-    required String userId,
-  }) async {
-    try {
-      CustomLoader.openCustomLoader();
+  Future initialFunctioun(
+      {required String chapterId,
+      required String userId,
+      required String testPaymentId}) async {
+    await getFormativeAssessmentList(chapterId: chapterId, userId: userId);
+    await getFormativeAssessmentResultList(
+        userId: userId, testPaymentId: testPaymentId);
 
+    isRestartExam.value = false;
+    isFetchingData.value = false;
+  }
+
+  String? Function(String?)? validateFields() {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return "Field is Required";
+      }
+      if (value.length < 100) {
+        return 'At least 100 charactor required';
+      }
+      return null;
+    };
+  }
+
+  Future<void> getFormativeAssessmentList(
+      {required String chapterId, required String userId}) async {
+    try {
       Map<String, dynamic> payload = {
         "chapter_id": chapterId,
         "user_id": userId
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.elementwiseformativeassessmentdetails,
-        payload: payload,
-        urlMessage: "Get formative assessment list url",
-        payloadMessage: "Get formative assessment list payload",
-        statusMessage: "Get formative assessment list status code",
-        bodyMessage: "Get formative assessment list response",
-      );
+          url: EndPointConstant.elementwiseformativeassessmentdetails,
+          payload: payload,
+          urlMessage: "Get formative assessment list url",
+          payloadMessage: "Get formative assessment list payload",
+          statusMessage: "Get formative assessment list status code",
+          bodyMessage: "Get formative assessment list response");
 
-      var model = getFormativeAssessmentModelFromJson(response["body"]);
+      getFormativeAssessmentModel =
+          getFormativeAssessmentModelFromJson(response["body"]);
 
-      if (model.statusCode == "200" || model.statusCode == "201") {
-        if (model.formativeAssessmentDetailsList != null &&
-            model.formativeAssessmentDetailsList!.isNotEmpty) {
+      if (getFormativeAssessmentModel.statusCode == "200" ||
+          getFormativeAssessmentModel.statusCode == "201") {
+        if (getFormativeAssessmentModel.formativeAssessmentDetailsList !=
+            null) {
           // Store the testFormativeId
-          testFormativeId =
-              model.formativeAssessmentDetailsList![0].testFormativeId;
+          testFormativeId = getFormativeAssessmentModel
+              .formativeAssessmentDetailsList![0].testFormativeId;
 
-          questions.value = model
+          questions.value = getFormativeAssessmentModel
                   .formativeAssessmentDetailsList![0].formativeQuestionDetails
                   ?.map((element) {
                 return FormativeQuestion(
@@ -94,14 +113,79 @@ class ChapterFormativeAssessmentController extends GetxController {
         }
       } else {
         questions.clear();
-        log("Something went wrong: ${model.message}");
+        log("Somethig went wrong during getting formative assessment list ::: ${getFormativeAssessmentModel.message}");
       }
     } catch (error) {
       questions.clear();
-      log("Error fetching formative assessment data: $error");
-    } finally {
-      CustomLoader.closeCustomLoader();
-    }
+      log("Somethig went wrong during getting formative assessment list ::: $error");
+    } finally {}
+  }
+
+  Future<void> getFormativeAssessmentResultList(
+      {required String userId, required String testPaymentId}) async {
+    try {
+      Map<String, dynamic> payload = {
+        "test_formative_id": testFormativeId,
+        "user_id": userId,
+        "testpayment_id": testPaymentId
+      };
+
+      var response = await HttpServices.postHttpMethod(
+          url: EndPointConstant.formativeAssessmentResult,
+          payload: payload,
+          urlMessage: "Get formative assessment result list url",
+          payloadMessage: "Get formative assessment result list payload",
+          statusMessage: "Get formative assessment result list status code",
+          bodyMessage: "Get formative assessment result list response");
+
+      getFormativeAssessmentResultListModel =
+          getFormativeAssessmentResultListModelFromJson(response["body"]);
+
+      if (getFormativeAssessmentResultListModel.statusCode == "200" ||
+          getFormativeAssessmentResultListModel.statusCode == "201") {
+        if (getFormativeAssessmentResultListModel
+                .formativeAssessmentResultList !=
+            null) {
+          getFormativeAssessmentResultListModel.formativeAssessmentResultList
+              ?.forEach(
+            (element) {
+              if (element.obtainMarks != null) {
+                resultList.add(FormativeAssessmentResultList(
+                    chapterId: element.chapterId,
+                    courseId: element.courseId,
+                    formativeResultDetails: element.formativeResultDetails,
+                    ftrNumber: element.ftrNumber,
+                    id: element.id,
+                    mark: element.mark,
+                    obtainMarks: element.obtainMarks,
+                    subcategoryId: element.chapterId,
+                    tdate: element.tdate,
+                    testFormativeId: element.testFormativeId,
+                    testFormativeType: element.testFormativeType,
+                    topicId: element.topicId,
+                    ttime: element.ttime));
+              }
+            },
+          );
+
+          controllers.value = {
+            for (var item in questions) item.id: TextEditingController()
+          };
+
+          focusNodes.value =
+              List.generate(questions.length, (_) => FocusNode());
+        } else {
+          questions.clear();
+          log("No formative assessment data available.");
+        }
+      } else {
+        questions.clear();
+        log("Somethig went wrong during getting formative assessment list ::: ${getFormativeAssessmentModel.message}");
+      }
+    } catch (error) {
+      questions.clear();
+      log("Somethig went wrong during getting formative assessment list ::: $error");
+    } finally {}
   }
 
   Future<void> submitFormativeAssesmentTest({
@@ -140,22 +224,12 @@ class ChapterFormativeAssessmentController extends GetxController {
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.formativeassessmentsubmit,
-        payload: payload,
-        urlMessage: 'Submit formative assessment URL',
-        payloadMessage: 'Submit formative assessment payload',
-        statusMessage: 'Submit formative assessment status code',
-        bodyMessage: 'Submit formative assessment response',
-      );
-
-      // Get.to(() =>  FormativeAssesmentResultView(testListId: '', testName: '', attemptedQuestions: , unattemptedQuestions: "", skippedQuestion: null, rightAnswer: null, wrongAnswer: null, answeredList: [],
-      //
-      // )
-      // );
-
-      // if (response == null) {
-      //   throw Exception("Response is null");
-      // }
+          url: EndPointConstant.formativeassessmentsubmit,
+          payload: payload,
+          urlMessage: 'Submit formative assessment URL',
+          payloadMessage: 'Submit formative assessment payload',
+          statusMessage: 'Submit formative assessment status code',
+          bodyMessage: 'Submit formative assessment response');
 
       submitFormativeAssessmentModel =
           submitFormativeAssessmentModelFromJson(response["body"]);
@@ -163,10 +237,11 @@ class ChapterFormativeAssessmentController extends GetxController {
       if (submitFormativeAssessmentModel.statusCode == "200" ||
           submitFormativeAssessmentModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
-        customToast(message: "Formative assessment submitted successfully!");
-
-        // // Clear form fields if needed
-        // clearAllFields();
+        customToast(
+            message: "Result will display here within 4 to 5 working days!");
+        await getFormativeAssessmentResultList(
+            userId: userId, testPaymentId: testpaymentid);
+        isRestartExam.value = false;
       } else {
         CustomLoader.closeCustomLoader();
         customToast(
@@ -179,28 +254,14 @@ class ChapterFormativeAssessmentController extends GetxController {
       customToast(message: "An error occurred. Please try again.");
     }
   }
+}
 
-  // void clearAllFields() {
-  //   controllers.forEach((key, controller) => controller.clear());
-  //   focusNodes.forEach((node) => node.dispose());
-  // }
+class FormativeQuestion {
+  final String id;
+  final String question;
 
-  String? validateAnswer(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    }
-
-    final charCount = value.length;
-
-    // Check if the character count is less than 100
-    if (charCount < 50) {
-      return 'Please write at least 100 characters';
-    }
-
-    return null;
-  }
-
-  String getCharacterCount(String value) {
-    return '${value.length}/50'; // Returns the character count in the format "X/100"
-  }
+  FormativeQuestion({
+    required this.id,
+    required this.question,
+  });
 }

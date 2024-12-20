@@ -16,5 +16,6 @@ class ColorConstant {
   static const Color red = Colors.red;
   static const Color pink = Colors.pink;
   static const Color blue = Color(0xff017ddf);
+  static const Color amber = Colors.amber;
   static const Color orange = Colors.orange;
 }

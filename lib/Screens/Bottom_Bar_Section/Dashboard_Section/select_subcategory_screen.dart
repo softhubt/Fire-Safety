@@ -45,11 +45,10 @@ class _SelectSubcategoryScreenState extends State<SelectSubcategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "${widget.categoryName} Courses",
-        leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back, color: ColorConstant.white)),
-      ),
+          title: "${widget.categoryName} Courses",
+          leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(Icons.arrow_back, color: ColorConstant.white))),
       body: Padding(
         padding: screenPadding,
         child: (controller.getSubcategoryModel.subcategoryList != null)
