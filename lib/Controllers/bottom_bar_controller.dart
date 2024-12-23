@@ -22,10 +22,8 @@ class BottomBarController extends GetxController {
 
   RxInt selectedIndex = 0.obs;
 
-  Future<void> initialFunction({
-    required TickerProvider vsync,
-    required int widgetCurrentIndex,
-  }) async {
+  Future<void> initialFunction(
+      {required TickerProvider vsync, required int widgetCurrentIndex}) async {
     userId.value = await StorageServices.getData(
             dataType: StorageKeyConstant.stringType,
             prefKey: StorageKeyConstant.userId) ??

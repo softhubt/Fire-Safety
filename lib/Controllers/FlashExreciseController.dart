@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_FormativeAssement_View.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -34,13 +33,21 @@ class FlasExerciseController extends GetxController {
       SubmitFlashExerciseModel();
   String? flashExerciseId;
 
-  @override
-  void onClose() {
-    controllers.forEach((key, controller) => controller.dispose());
-    for (var node in focusNodes) {
-      node.dispose();
-    }
-    super.onClose();
+  Future initialFunctioun(
+      {required String chapterId, required String userId}) async {
+    getFlashExercise(chapterId: chapterId, userId: userId);
+  }
+
+  String? Function(String?)? validateFields() {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+        return "Field is Required";
+      }
+      if (value.length < 100) {
+        return 'At least 100 charactor required';
+      }
+      return null;
+    };
   }
 
   Future<void> getFlashExercise({
@@ -154,12 +161,12 @@ class FlasExerciseController extends GetxController {
         CustomLoader.closeCustomLoader();
         customToast(message: "Flash exercise submitted successfully!");
 
-        Get.offAll(() => FormativeAssesmentView(
-              userId: userId,
-              chapterId: chapterId,
-              courseId: courseId,
-              testpaymentId: testpaymentId,
-            ));
+        // Get.offAll(() => FormativeAssesmentView(
+        //       userId: userId,
+        //       chapterId: chapterId,
+        //       courseId: courseId,
+        //       testpaymentId: testpaymentId,
+        //     ));
 
         // Clear form fields if needed
         // clearAllFields();

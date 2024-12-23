@@ -28,18 +28,12 @@ class _TopicListScreenState extends State<TopicListScreen> {
   void initState() {
     super.initState();
     controller = Get.put(ChapterTopicWiseQuizController());
-    // Load topic list initially
     controller.getTopicWiseList(chapterId: widget.chapterId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title:
-      //       Text('Topics List', style: TextStyle(fontWeight: FontWeight.bold)),
-      //   backgroundColor: Colors.blueAccent,
-      // ),
       body: Obx(() {
         if (controller.topicList.isEmpty) {
           return const Center(child: Text('No Topics Available'));
@@ -73,7 +67,7 @@ class _TopicListScreenState extends State<TopicListScreen> {
                         MaterialPageRoute(
                           builder: (context) => ChapterQuizContentView(
                             chapterId: widget.chapterId,
-                            topicId: topic.topicId!,
+                            topicId: "${topic.topicId}",
                             userId: widget.userId,
                             //  userId: chapterDetailController.userId.value,
                             quizType: "3",

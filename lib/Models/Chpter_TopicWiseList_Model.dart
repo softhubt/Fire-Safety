@@ -25,16 +25,17 @@ class ChapterWiseTopicListModel {
         status: json["status"],
         message: json["message"],
         quizChapterwiseTopicList: List<TopicList>.from(
-            json["quiz_chapterwise_topic_list"].map((x) => TopicList.fromJson(x))),
+            json["quiz_chapterwise_topic_list"]
+                .map((x) => TopicList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "status_code": statusCode,
-    "status": status,
-    "message": message,
-    "quiz_chapterwise_topic_list":
-    List<dynamic>.from(quizChapterwiseTopicList!.map((x) => x.toJson())),
-  };
+        "status_code": statusCode,
+        "status": status,
+        "message": message,
+        "quiz_chapterwise_topic_list": List<dynamic>.from(
+            quizChapterwiseTopicList!.map((x) => x.toJson())),
+      };
 }
 
 class TopicList {
@@ -49,14 +50,14 @@ class TopicList {
   });
 
   factory TopicList.fromJson(Map<String, dynamic> json) => TopicList(
-    topicId: json["topic_id"],
-    topicName: json["topic_name"],
-    chapterId: json["chapter_id"],
-  );
+        topicId: json["topic_id"],
+        topicName: json["topic_name"],
+        chapterId: json["chapter_id"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "topic_id": topicId,
-    "topic_name": topicName,
-    "chapter_id": chapterId,
-  };
+        "topic_id": topicId,
+        "topic_name": topicName,
+        "chapter_id": chapterId,
+      };
 }

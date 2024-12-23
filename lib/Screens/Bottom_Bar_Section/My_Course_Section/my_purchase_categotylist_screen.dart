@@ -2,6 +2,7 @@ import 'package:firesafety/Controllers/MyCource_purchescategotylist_Controller.d
 import 'package:firesafety/Models/get_purches_CategoryList_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Student_Form_View.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/student_dashboard_view.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Screens/ReadingTest_WithMCQ_Screen.dart';
 import 'package:firesafety/Screens/Writting_Test_Screen.dart';
@@ -114,22 +115,21 @@ class _MypurchesCatrgotyListscreenState
                             child: buildDetailedCard(element));
                       } else if (listeningTest?.toUpperCase() == "Y") {
                         return GestureDetector(
-                          onTap: () {
-                            Get.to(() => MyCourseListView(
-                                  courseName: "${element?.subcategoryName}",
-                                  categoryId: "${element?.categoryId}",
-                                  subcategoryId: "${element?.subcategoryId}",
-                                  testpaymentId: "${element?.testpaymentId}",
-                                ));
-                          },
-                          child: buildDetailedCard(element),
-                        );
+                            onTap: () {
+                              Get.to(() => StudentDashboardView(
+                                    courseName: "${element?.subcategoryName}",
+                                    categoryId: "${element?.categoryId}",
+                                    subcategoryId: "${element?.subcategoryId}",
+                                    testpaymentId: "${element?.testpaymentId}",
+                                  ));
+                            },
+                            child: buildDetailedCard(element));
                       }
 
                       // Default behavior if no condition met
                       return GestureDetector(
                           onTap: () {
-                            Get.to(() => MyCourseListView(
+                            Get.to(() => StudentDashboardView(
                                 courseName: "${element?.subcategoryName}",
                                 categoryId: "${element?.categoryId}",
                                 subcategoryId: "${element?.subcategoryId}",

@@ -1,11 +1,16 @@
-import 'dart:developer';
+import 'package:firesafety/Constant/color_constant.dart';
+import 'package:firesafety/Constant/layout_constant.dart';
+import 'package:firesafety/Constant/textstyle_constant.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
+import 'package:firesafety/Widgets/custom_button.dart';
+import 'package:firesafety/Widgets/custom_shimmer.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/ElementQuizeTestResult_View.dart';
-import 'package:firesafety/Widgets/custom_no_data_found.dart';
 
 class ChapterQuizContentView extends StatefulWidget {
   final String chapterId;
@@ -28,160 +33,324 @@ class ChapterQuizContentView extends StatefulWidget {
 }
 
 class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
-  late final ChapterQuizContentController controller;
+  final ChapterQuizContentController controller =
+      Get.put(ChapterQuizContentController());
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(ChapterQuizContentController());
-    _loadQuizData();
-  }
-
-  Future<void> _loadQuizData() async {
-    await controller.getQuizList(
-      chapterId: widget.chapterId,
-      topicId: widget.topicId,
-      userId: widget.userId,
-      type: widget.quizType,
-    );
-    if (controller.questions.isNotEmpty) {
-      log("Question list ::: ${controller.questions}");
-    }
+    controller
+        .initialFunctioun(
+            chapterId: widget.chapterId,
+            topicId: widget.topicId,
+            userId: widget.userId,
+            quizType: widget.quizType)
+        .whenComplete(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentQuestion =
+        controller.questions[controller.currentQuestionIndex.value];
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "Quiz",
-        // leading: IconButton(
-        //     onPressed: () {
-        //       Navigator.push(context, MaterialPageRoute(builder: (context)=>DrawerView()));
-        //     },
-        //     icon:
-        //     const Icon(Icons.menu_rounded, color: ColorConstant.white)
-        // )
-      ),
-      body: Obx(() {
-        if (controller.questions.isEmpty) {
-          return const CustomNoDataFound();
-        }
+      appBar: const CustomAppBar(title: "Quize", isBack: true),
+      body: (controller.isFetchingData.value)
+          ? CustomShimmer(height: Get.height * 0.600)
+          : (controller.resultList.isNotEmpty &&
+                  controller.isRestart.value == false)
+              ? SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
+                        const SizedBox(height: 20),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text('Attempted: ${widget.attemptedQuestions}'),
+                        //     Text('Unattempted: ${widget.unattemptedQuestions}'),
+                        //     Text('Skipped: ${widget.skippedQuestion}'),
+                        //   ],
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                                "Total Marks: ${controller.resultList.last.totalMarks ?? ""}",
+                                style: TextStyleConstant.medium18()),
+                            Text(
+                                "Obtain Marks: ${controller.resultList.last.obtainMarks ?? ""}",
+                                style: TextStyleConstant.medium18()),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeightPadding,
+                              bottom: screenHeightPadding),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                  "Right Answers: ${controller.resultList.last.rightAnswers ?? ""}",
+                                  style: TextStyleConstant.medium18()),
+                              Text(
+                                  "Wrong Answers: ${controller.resultList.last.wrongAnswers ?? ""}",
+                                  style: TextStyleConstant.medium18())
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: contentPadding,
+                          decoration: BoxDecoration(
+                              color: (double.parse(
+                                          "${controller.resultList.last.rightAnswers}") >
+                                      0)
+                                  ? ColorConstant.green.withOpacity(0.1)
+                                  : ColorConstant.red.withOpacity(0.1),
+                              border: Border.all(
+                                  width: 2,
+                                  color: (double.parse(
+                                              "${controller.resultList.last.rightAnswers}") >
+                                          0)
+                                      ? ColorConstant.green
+                                      : ColorConstant.red),
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Column(
+                            children: [
+                              Text("${controller.resultList.last.obtainMarks}",
+                                  style: TextStyleConstant.bold36(
+                                      color: (double.parse(
+                                                  "${controller.resultList.last.obtainMarks}") >
+                                              0)
+                                          ? ColorConstant.green
+                                          : ColorConstant.red),
+                                  textAlign: TextAlign.center),
+                              Text("is your test score",
+                                  style: TextStyleConstant.medium18(),
+                                  textAlign: TextAlign.center),
+                              SizedBox(height: contentHeightPadding),
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: (double.parse(
+                                                    "${controller.resultList.last.obtainMarks}") >
+                                                0)
+                                            ? ColorConstant.green
+                                            : ColorConstant.red,
+                                        width: 2),
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: LinearProgressIndicator(
+                                  value: controller.progressBarValue.value,
+                                  minHeight: 40,
+                                  borderRadius: BorderRadius.circular(10),
+                                  backgroundColor: ColorConstant.transparent,
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
+                                          Colors.green),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeightPadding),
+                        Container(
+                          padding: contentPadding,
+                          decoration: BoxDecoration(
+                              color: ColorConstant.blue.withOpacity(0.1),
+                              border: Border.all(
+                                  width: 2, color: ColorConstant.blue),
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: Get.height * 0.300,
+                                child: PieChart(
+                                  PieChartData(
+                                    sections: showingSections(
+                                        attemptedQuestions: double.parse(
+                                            "${controller.resultList.last.rightAnswers}"),
+                                        unattemptedQuestions: double.parse(
+                                            "${controller.resultList.last.wrongAnswers}"),
+                                        skippedQuestions: double.parse("0")),
+                                    centerSpaceRadius: 20,
+                                    sectionsSpace: 2,
+                                    borderData: FlBorderData(show: false),
+                                    pieTouchData: PieTouchData(
+                                      touchCallback: (FlTouchEvent event,
+                                          pieTouchResponse) {},
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              buildLegend(),
+                            ],
+                          ),
+                        ),
 
-        final currentQuestion =
-            controller.questions[controller.currentQuestionIndex.value];
-
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "${controller.currentQuestionIndex.value + 1}. ",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18),
+                        SizedBox(height: screenHeightPadding),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: screenHeightPadding),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                  title: "Restart Test",
+                                  onTap: () {
+                                    controller.isRestart.value = true;
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: contentWidthPadding),
+                              Expanded(
+                                child: CustomButton(
+                                  title: "Finish",
+                                  onTap: () {
+                                    Get.offAll(() => const BottomBarScreen());
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: Text(
-                        currentQuestion.text,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ...currentQuestion.options.map((option) {
-                return OptionButton(
-                  option: option,
-                  isSelected: controller.selectedAnswer.value == option,
-                  isCorrect: controller.isAnswered.value &&
-                      option == currentQuestion.correctAnswer,
-                  isWrong: controller.isAnswered.value &&
-                      option != currentQuestion.correctAnswer &&
-                      controller.selectedAnswer.value == option,
-                  onPressed: () {
-                    if (!controller.isAnswered.value) {
-                      setState(() {
-                        controller.checkAnswer(option);
-                      });
-                    }
-                  },
-                );
-              }),
-              if (controller.isAnswered.value)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (controller.currentQuestionIndex.value <
-                          controller.questions.length - 1) {
-                        setState(() {
-                          controller.nextQuestion();
-                        });
-                      } else {
-                        controller
-                            .postQuizResult(
-                          testId: controller.getChapterQuizListModel
-                                  .testDetailsList?[0].testId ??
-                              '',
-                          courseid: controller.getChapterQuizListModel
-                                  .testDetailsList?[0].courseName ??
-                              '',
-                          chapterid: controller.getChapterQuizListModel
-                                  .testDetailsList?[0].chapterId ??
-                              '',
-                          topicid: controller.getChapterQuizListModel
-                                  .testDetailsList?[0].topicid ??
-                              '',
-                          userId: widget.userId,
-                          type: widget.quizType,
-                          testpaymentid: widget.testpaymentId,
-                        )
-                            .then((_) {
-                          Get.offAll(() => TestResultView(
-                                testListId: controller.getChapterQuizListModel
-                                        .testDetailsList?[0].testId ??
-                                    '',
-                                testName: 'Quiz Test',
-                                attemptedQuestions:
-                                    controller.correctAnswers.value.toDouble(),
-                                unattemptedQuestions:
-                                    (controller.questions.length -
-                                            controller.correctAnswers.value)
-                                        .toDouble(),
-                                skippedQuestion:
-                                    0.0, // Assuming skipped questions are represented as double
-                                rightAnswer:
-                                    controller.correctAnswers.value.toDouble(),
-                                wrongAnswer:
-                                    controller.wrongAnswers.value.toDouble(),
-                                answeredList: controller.questions,
-                                courseid: controller.getChapterQuizListModel
-                                        .testDetailsList?[0].courseName ??
-                                    '',
-                                userId: widget.userId,
-                                chapterid: controller.getChapterQuizListModel
-                                        .testDetailsList?[0].chapterId ??
-                                    '',
-                                testpaymentid: widget.testpaymentId,
-                              ));
-                        });
-                      }
-                    },
-                    child: (controller.currentQuestionIndex.value <
-                            controller.questions.length - 1)
-                        ? const Text('Next Question')
-                        : const Text('Submit'),
                   ),
-                ),
-            ],
-          ),
-        );
-      }),
+                )
+              : (controller.questions.isNotEmpty)
+                  ? Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "${controller.currentQuestionIndex.value + 1}. ",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    currentQuestion.text,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ...currentQuestion.options.map((option) {
+                            return OptionButton(
+                              option: option,
+                              isSelected:
+                                  controller.selectedAnswer.value == option,
+                              isCorrect: controller.isAnswered.value &&
+                                  option == currentQuestion.correctAnswer,
+                              isWrong: controller.isAnswered.value &&
+                                  option != currentQuestion.correctAnswer &&
+                                  controller.selectedAnswer.value == option,
+                              onPressed: () {
+                                if (!controller.isAnswered.value) {
+                                  setState(() {
+                                    controller.checkAnswer(option);
+                                  });
+                                }
+                              },
+                            );
+                          }),
+                          if (controller.isAnswered.value)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (controller.currentQuestionIndex.value <
+                                      controller.questions.length - 1) {
+                                    setState(() {
+                                      controller.nextQuestion();
+                                    });
+                                  } else {
+                                    controller
+                                        .postQuizResult(
+                                      testId: controller.getChapterQuizListModel
+                                              .testDetailsList?[0].testId ??
+                                          '',
+                                      courseid: controller
+                                              .getChapterQuizListModel
+                                              .testDetailsList?[0]
+                                              .courseName ??
+                                          '',
+                                      chapterid: controller
+                                              .getChapterQuizListModel
+                                              .testDetailsList?[0]
+                                              .chapterId ??
+                                          '',
+                                      topicid: controller
+                                              .getChapterQuizListModel
+                                              .testDetailsList?[0]
+                                              .topicid ??
+                                          '',
+                                      userId: widget.userId,
+                                      type: widget.quizType,
+                                      testpaymentid: widget.testpaymentId,
+                                    )
+                                        .then((_) {
+                                      Get.offAll(() => TestResultView(
+                                            testListId: controller
+                                                    .getChapterQuizListModel
+                                                    .testDetailsList?[0]
+                                                    .testId ??
+                                                '',
+                                            testName: 'Quiz Test',
+                                            attemptedQuestions: controller
+                                                .correctAnswers.value
+                                                .toDouble(),
+                                            unattemptedQuestions:
+                                                (controller.questions.length -
+                                                        controller
+                                                            .correctAnswers
+                                                            .value)
+                                                    .toDouble(),
+                                            skippedQuestion:
+                                                0.0, // Assuming skipped questions are represented as double
+                                            rightAnswer: controller
+                                                .correctAnswers.value
+                                                .toDouble(),
+                                            wrongAnswer: controller
+                                                .wrongAnswers.value
+                                                .toDouble(),
+                                            answeredList: controller.questions,
+                                            courseid: controller
+                                                    .getChapterQuizListModel
+                                                    .testDetailsList?[0]
+                                                    .courseName ??
+                                                '',
+                                            userId: widget.userId,
+                                            chapterid: controller
+                                                    .getChapterQuizListModel
+                                                    .testDetailsList?[0]
+                                                    .chapterId ??
+                                                '',
+                                            testpaymentid: widget.testpaymentId,
+                                          ));
+                                    });
+                                  }
+                                },
+                                child: (controller.currentQuestionIndex.value <
+                                        controller.questions.length - 1)
+                                    ? const Text('Next Question')
+                                    : const Text('Submit'),
+                              ),
+                            ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
     );
   }
 }

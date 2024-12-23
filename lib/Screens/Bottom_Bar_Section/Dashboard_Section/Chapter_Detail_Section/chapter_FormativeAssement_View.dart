@@ -206,7 +206,7 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
                                   onTap: () {
                                     Get.offAll(() => const BottomBarScreen());
                                   },
-                                ))
+                                )),
                               ],
                             )),
                       ],

@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:firesafety/Models/get_quiz_result_list_model.dart';
 import 'package:firesafety/Models/postShowlastResult_model.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -10,11 +10,12 @@ import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
 
 class ChapterQuizContentController extends GetxController {
+  GetQuizResultListModel getQuizResultListModel = GetQuizResultListModel();
   GetChapterQuizListModel getChapterQuizListModel = GetChapterQuizListModel();
   PostChapterQuizResultModel postChapterQuizResultModel =
-  PostChapterQuizResultModel();
+      PostChapterQuizResultModel();
   PostShowlastChapterresultQuizModel postShowlastChapterresultQuizModel =
-  PostShowlastChapterresultQuizModel();
+      PostShowlastChapterresultQuizModel();
 
   final RxDouble progressBarValue = 0.0.obs;
   RxString selectedAnswer = "".obs;
@@ -25,9 +26,24 @@ class ChapterQuizContentController extends GetxController {
   RxInt wrongAnswers = 0.obs;
 
   RxList<Question> questions = <Question>[].obs; // RxList<Question>
+  RxList<TestResultList> resultList =
+      <TestResultList>[].obs; // RxList<Question>
 
   // New variable to store the quiz result
   RxBool isQuizCompleted = false.obs;
+  RxBool isFetchingData = true.obs;
+  RxBool isRestart = false.obs;
+
+  Future initialFunctioun(
+      {required String chapterId,
+      required String topicId,
+      required String userId,
+      required String quizType}) async {
+    await getQuizResultList(userId: userId, topicId: topicId);
+    await getQuizList(
+        chapterId: chapterId, topicId: topicId, userId: userId, type: quizType);
+    isFetchingData.value = false;
+  }
 
   // This function checks the selected answer
   void checkAnswer(String answer) {
@@ -55,7 +71,64 @@ class ChapterQuizContentController extends GetxController {
     selectedAnswer.value = "";
     correctAnswers.value = 0;
     wrongAnswers.value = 0;
-    isQuizCompleted.value = false;  // Reset the completion flag
+    isQuizCompleted.value = false; // Reset the completion flag
+  }
+
+  // Fetch quiz data
+  Future<void> getQuizResultList(
+      {required String userId, required String topicId}) async {
+    try {
+      CustomLoader.openCustomLoader();
+
+      Map<String, dynamic> payload = {"user_id": userId, "test_id": topicId};
+
+      var response = await HttpServices.postHttpMethod(
+          url: EndPointConstant.testResultDisplay,
+          payload: payload,
+          urlMessage: "Get quiz result list url",
+          payloadMessage: "Get quiz result list payload",
+          statusMessage: "Get quiz result list status code",
+          bodyMessage: "Get quiz result list response");
+
+      getQuizResultListModel = getQuizResultListModelFromJson(response["body"]);
+
+      if (getQuizResultListModel.statusCode == "200" ||
+          getQuizResultListModel.statusCode == "201") {
+        if (getQuizResultListModel.testResultList != null) {
+          getQuizResultListModel.testResultList?.forEach(
+            (element) {
+              resultList.add(TestResultList(
+                  answerSheet: element.answerSheet,
+                  chapterId: element.chapterId,
+                  checkedAnswerSheet: element.checkedAnswerSheet,
+                  courseId: element.courseId,
+                  id: element.id,
+                  obtainMarks: element.obtainMarks,
+                  rightAnswers: element.rightAnswers,
+                  tdate: element.tdate,
+                  testId: element.testId,
+                  testName: element.testName,
+                  testType: element.testType,
+                  topicId: element.topicId,
+                  topperObtainMarks: element.topperObtainMarks,
+                  totalMarks: element.totalMarks,
+                  totalQuestion: element.totalQuestion,
+                  ttime: element.ttime,
+                  userId: element.userId,
+                  wrongAnswers: element.wrongAnswers));
+            },
+          );
+        }
+      } else {
+        questions.clear();
+        log("Something went wrong during getting quiz result list ::: ${getQuizResultListModel.message}");
+      }
+    } catch (error) {
+      questions.clear();
+      log("Something went wrong during getting quiz result list ::: $error");
+    } finally {
+      CustomLoader.closeCustomLoader();
+    }
   }
 
   // Fetch quiz data
@@ -92,20 +165,21 @@ class ChapterQuizContentController extends GetxController {
         if (getChapterQuizListModel.testDetailsList != null &&
             getChapterQuizListModel.testDetailsList!.isNotEmpty) {
           questions.value = getChapterQuizListModel
-              .testDetailsList![0].testQuestionDetails
-              ?.map((element) {
-            return Question(
-              text: element.question ?? '',
-              options: [
-                element.option1 ?? '',
-                element.option2 ?? '',
-                element.option3 ?? '',
-                element.option4 ?? '',
-              ],
-              correctAnswer: element.answer ?? '',
-              id: element.id ?? '',
-            );
-          }).toList() ?? [];
+                  .testDetailsList![0].testQuestionDetails
+                  ?.map((element) {
+                return Question(
+                  text: element.question ?? '',
+                  options: [
+                    element.option1 ?? '',
+                    element.option2 ?? '',
+                    element.option3 ?? '',
+                    element.option4 ?? '',
+                  ],
+                  correctAnswer: element.answer ?? '',
+                  id: element.id ?? '',
+                );
+              }).toList() ??
+              [];
         } else {
           questions.clear();
           log("No quiz data available.");
@@ -163,9 +237,9 @@ class ChapterQuizContentController extends GetxController {
 
       if (postChapterQuizResultModel.statusCode == "200" ||
           postChapterQuizResultModel.statusCode == "201") {
-        isQuizCompleted.value = true;  // Mark the quiz as completed
+        isQuizCompleted.value = true; // Mark the quiz as completed
         log("Quiz results posted successfully.");
-      //  Get.to(() =>  WritingTestPage(userId: '',id:id));
+        //  Get.to(() =>  WritingTestPage(userId: '',id:id));
       } else {
         log("Something went wrong: ${postChapterQuizResultModel.statusCode}");
       }
@@ -202,7 +276,7 @@ class ChapterQuizContentController extends GetxController {
 
       if (postShowlastChapterresultQuizModel.statusCode == "200" ||
           postShowlastChapterresultQuizModel.statusCode == "201") {
-        isQuizCompleted.value = true;  // Mark the quiz as completed
+        isQuizCompleted.value = true; // Mark the quiz as completed
         log("Quiz results fetched successfully.");
       } else {
         log("Something went wrong: ${postShowlastChapterresultQuizModel.statusCode}");

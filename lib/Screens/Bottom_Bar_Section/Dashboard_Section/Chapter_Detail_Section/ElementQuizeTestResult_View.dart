@@ -2,7 +2,6 @@ import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
-import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
@@ -178,40 +177,6 @@ class _TestResultViewState extends State<TestResultView> {
                   ],
                 ),
               ),
-
-              // SizedBox(height: screenHeightPadding),
-              // Container(
-              //   padding: contentPadding,
-              //   decoration: BoxDecoration(
-              //       color: ColorConstant.blue.withOpacity(0.1),
-              //       border:
-              //       Border.all(width: 2, color: ColorConstant.blue),
-              //       borderRadius: BorderRadius.circular(16)),
-              //   child: Column(
-              //     children: [
-              //       SizedBox(
-              //         height: Get.height * 0.300,
-              //         child: PieChart(
-              //           PieChartData(
-              //             sections: showingSecondSections(
-              //                 rightAnswer: widget.rightAnswer,
-              //                 wrongAnswer: widget.wrongAnswer,
-              //                 skippedQuestions: widget.skippedQuestion +
-              //                     widget.unattemptedQuestions),
-              //             centerSpaceRadius: 20,
-              //             sectionsSpace: 2,
-              //             borderData: FlBorderData(show: false),
-              //             pieTouchData: PieTouchData(
-              //               touchCallback: (FlTouchEvent event,
-              //                   pieTouchResponse) {},
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //       buildSecondLegend(),
-              //     ],
-              //   ),
-              // ),
 
               SizedBox(height: screenHeightPadding),
               Padding(

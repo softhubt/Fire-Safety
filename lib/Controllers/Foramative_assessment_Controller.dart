@@ -44,9 +44,9 @@ class ChapterFormativeAssessmentController extends GetxController {
       {required String chapterId,
       required String userId,
       required String testPaymentId}) async {
-    await getFormativeAssessmentList(chapterId: chapterId, userId: userId);
     await getFormativeAssessmentResultList(
         userId: userId, testPaymentId: testPaymentId, chapterId: chapterId);
+    await getFormativeAssessmentList(chapterId: chapterId, userId: userId);
 
     isRestartExam.value = false;
     isFetchingData.value = false;
@@ -242,8 +242,7 @@ class ChapterFormativeAssessmentController extends GetxController {
       if (submitFormativeAssessmentModel.statusCode == "200" ||
           submitFormativeAssessmentModel.statusCode == "201") {
         CustomLoader.closeCustomLoader();
-        customToast(
-            message: "Result will display here within 4 to 5 working days!");
+        showInformationDialog();
         await getFormativeAssessmentResultList(
             userId: userId, testPaymentId: testpaymentid, chapterId: chapterId);
         isRestartExam.value = false;
@@ -258,6 +257,22 @@ class ChapterFormativeAssessmentController extends GetxController {
       log("Error during form submission: $error");
       customToast(message: "An error occurred. Please try again.");
     }
+  }
+
+  showInformationDialog() {
+    return showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Note"),
+          content: const Text(
+              "Result will display here within 4 to 5 working days."),
+          actions: [
+            ElevatedButton(onPressed: () => Get.back(), child: const Text("Ok"))
+          ],
+        );
+      },
+    );
   }
 }
 
