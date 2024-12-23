@@ -50,7 +50,7 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
           return (controller.isFetchingData.value)
               ? CustomShimmer(height: Get.height * 0.600)
               : (controller.resultList.isNotEmpty &&
-                      !controller.isRestartExam.value)
+                      controller.isRestartExam.value == false)
                   ? ListView(
                       children: [
                         // Display Marks

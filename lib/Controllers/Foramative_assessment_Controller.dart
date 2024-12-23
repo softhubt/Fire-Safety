@@ -46,7 +46,7 @@ class ChapterFormativeAssessmentController extends GetxController {
       required String testPaymentId}) async {
     await getFormativeAssessmentList(chapterId: chapterId, userId: userId);
     await getFormativeAssessmentResultList(
-        userId: userId, testPaymentId: testPaymentId);
+        userId: userId, testPaymentId: testPaymentId, chapterId: chapterId);
 
     isRestartExam.value = false;
     isFetchingData.value = false;
@@ -87,6 +87,7 @@ class ChapterFormativeAssessmentController extends GetxController {
           getFormativeAssessmentModel.statusCode == "201") {
         if (getFormativeAssessmentModel.formativeAssessmentDetailsList !=
             null) {
+          questions.value = [];
           // Store the testFormativeId
           testFormativeId = getFormativeAssessmentModel
               .formativeAssessmentDetailsList![0].testFormativeId;
@@ -122,12 +123,15 @@ class ChapterFormativeAssessmentController extends GetxController {
   }
 
   Future<void> getFormativeAssessmentResultList(
-      {required String userId, required String testPaymentId}) async {
+      {required String userId,
+      required String testPaymentId,
+      required String chapterId}) async {
     try {
       Map<String, dynamic> payload = {
         "test_formative_id": testFormativeId,
         "user_id": userId,
-        "testpayment_id": testPaymentId
+        "testpayment_id": testPaymentId,
+        "chapter_id": chapterId,
       };
 
       var response = await HttpServices.postHttpMethod(
@@ -146,6 +150,7 @@ class ChapterFormativeAssessmentController extends GetxController {
         if (getFormativeAssessmentResultListModel
                 .formativeAssessmentResultList !=
             null) {
+          resultList.value = [];
           getFormativeAssessmentResultListModel.formativeAssessmentResultList
               ?.forEach(
             (element) {
@@ -240,7 +245,7 @@ class ChapterFormativeAssessmentController extends GetxController {
         customToast(
             message: "Result will display here within 4 to 5 working days!");
         await getFormativeAssessmentResultList(
-            userId: userId, testPaymentId: testpaymentid);
+            userId: userId, testPaymentId: testpaymentid, chapterId: chapterId);
         isRestartExam.value = false;
       } else {
         CustomLoader.closeCustomLoader();
