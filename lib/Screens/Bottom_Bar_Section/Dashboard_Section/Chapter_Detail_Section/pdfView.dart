@@ -14,12 +14,14 @@ class CustomPdfView extends StatefulWidget {
   final String title;
   final String url;
   final bool needToDonloadPdf;
+  final bool? needToShowAppbar;
 
   const CustomPdfView(
       {super.key,
       required this.title,
       required this.url,
-      required this.needToDonloadPdf});
+      required this.needToDonloadPdf,
+      this.needToShowAppbar});
 
   @override
   State<CustomPdfView> createState() => _CustomPdfViewState();
@@ -71,19 +73,21 @@ class _CustomPdfViewState extends State<CustomPdfView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.title,
-        isBack: true,
-        action: [
-          if (widget.needToDonloadPdf)
-            IconButton(
-              icon: const Icon(Icons.download_rounded,
-                  color: ColorConstant.white),
-              onPressed:
-                  _savePdfToStorage, // Call save method when button is pressed
-            ),
-        ],
-      ),
+      appBar: (widget.needToShowAppbar ?? false)
+          ? CustomAppBar(
+              title: widget.title,
+              isBack: true,
+              action: [
+                if (widget.needToDonloadPdf)
+                  IconButton(
+                    icon: const Icon(Icons.download_rounded,
+                        color: ColorConstant.white),
+                    onPressed:
+                        _savePdfToStorage, // Call save method when button is pressed
+                  ),
+              ],
+            )
+          : null,
       body: (localFilePath != null)
           ? PDFView(filePath: localFilePath)
           : const Center(child: CircularProgressIndicator()),

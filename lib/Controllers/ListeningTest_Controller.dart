@@ -36,6 +36,7 @@ class ListeningTestController extends GetxController {
   RxInt currentQuestionIndex = 0.obs;
   RxString selectedAnswer = "".obs;
   RxString userId = "".obs;
+
   Future<void> initialFunction() async {
     userId.value = await StorageServices.getData(
           dataType: StorageKeyConstant.stringType,
@@ -81,14 +82,18 @@ class ListeningTestController extends GetxController {
         bodyMessage: "Get reading listening test details response",
       );
 
-      var model = listenTestTypeWiseModelFromJson(response["body"]);
+      listenTestTypeWiseModel =
+          listenTestTypeWiseModelFromJson(response["body"]);
 
-      if (model.statusCode == "200" || model.statusCode == "201") {
-        if (model.readingListeningTestDetailsList != null &&
-            model.readingListeningTestDetailsList!.isNotEmpty) {
-          audioUrl.value =
-              model.readingListeningTestDetailsList![0].audio ?? '';
-          questions.value = model
+      if (listenTestTypeWiseModel.statusCode == "200" ||
+          listenTestTypeWiseModel.statusCode == "201") {
+        if (listenTestTypeWiseModel.readingListeningTestDetailsList != null &&
+            listenTestTypeWiseModel
+                .readingListeningTestDetailsList!.isNotEmpty) {
+          audioUrl.value = listenTestTypeWiseModel
+                  .readingListeningTestDetailsList![0].audio ??
+              '';
+          questions.value = listenTestTypeWiseModel
                   .readingListeningTestDetailsList![0].testQuestionDetails
                   ?.map((element) {
                 return ListenTestQuestion(
@@ -110,7 +115,7 @@ class ListeningTestController extends GetxController {
         }
       } else {
         questions.clear();
-        log("Something went wrong: ${model.message}");
+        log("Something went wrong: ${listenTestTypeWiseModel.message}");
       }
     } catch (error) {
       questions.clear();

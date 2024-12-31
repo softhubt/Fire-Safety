@@ -126,7 +126,6 @@ class _MypurchesCatrgotyListscreenState
                             child: buildDetailedCard(element));
                       }
 
-                      // Default behavior if no condition met
                       return GestureDetector(
                           onTap: () {
                             Get.to(() => StudentDashboardView(

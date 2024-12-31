@@ -1,4 +1,5 @@
 // ignore_for_file: deprecated_member_use
+
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         home: const SplashScreen());
   }
 }
+
 /*
 
 My Course, Results, My enrollement

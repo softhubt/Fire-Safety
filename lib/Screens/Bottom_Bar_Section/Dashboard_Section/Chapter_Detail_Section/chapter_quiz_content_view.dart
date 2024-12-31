@@ -50,12 +50,12 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestion =
-        controller.questions[controller.currentQuestionIndex.value];
     return Scaffold(
       appBar: const CustomAppBar(title: "Quize", isBack: true),
       body: (controller.isFetchingData.value)
-          ? CustomShimmer(height: Get.height * 0.600)
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: CustomShimmer(height: Get.height * 0.600))
           : (controller.resultList.isNotEmpty &&
                   controller.isRestart.value == false)
               ? SingleChildScrollView(
@@ -64,24 +64,15 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
                         const SizedBox(height: 20),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Text('Attempted: ${widget.attemptedQuestions}'),
-                        //     Text('Unattempted: ${widget.unattemptedQuestions}'),
-                        //     Text('Skipped: ${widget.skippedQuestion}'),
-                        //   ],
-                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                                "Total Marks: ${controller.resultList.last.totalMarks ?? ""}",
+                                "Total Marks: ${controller.resultList.first.totalMarks ?? ""}",
                                 style: TextStyleConstant.medium18()),
                             Text(
-                                "Obtain Marks: ${controller.resultList.last.obtainMarks ?? ""}",
+                                "Obtain Marks: ${controller.resultList.first.obtainMarks ?? ""}",
                                 style: TextStyleConstant.medium18()),
                           ],
                         ),
@@ -93,10 +84,10 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                  "Right Answers: ${controller.resultList.last.rightAnswers ?? ""}",
+                                  "Right Answers: ${controller.resultList.first.rightAnswers ?? ""}",
                                   style: TextStyleConstant.medium18()),
                               Text(
-                                  "Wrong Answers: ${controller.resultList.last.wrongAnswers ?? ""}",
+                                  "Wrong Answers: ${controller.resultList.first.wrongAnswers ?? ""}",
                                   style: TextStyleConstant.medium18())
                             ],
                           ),
@@ -105,24 +96,24 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                           padding: contentPadding,
                           decoration: BoxDecoration(
                               color: (double.parse(
-                                          "${controller.resultList.last.rightAnswers}") >
+                                          "${controller.resultList.first.rightAnswers}") >
                                       0)
                                   ? ColorConstant.green.withOpacity(0.1)
                                   : ColorConstant.red.withOpacity(0.1),
                               border: Border.all(
                                   width: 2,
                                   color: (double.parse(
-                                              "${controller.resultList.last.rightAnswers}") >
+                                              "${controller.resultList.first.rightAnswers}") >
                                           0)
                                       ? ColorConstant.green
                                       : ColorConstant.red),
                               borderRadius: BorderRadius.circular(16)),
                           child: Column(
                             children: [
-                              Text("${controller.resultList.last.obtainMarks}",
+                              Text("${controller.resultList.first.obtainMarks}",
                                   style: TextStyleConstant.bold36(
                                       color: (double.parse(
-                                                  "${controller.resultList.last.obtainMarks}") >
+                                                  "${controller.resultList.first.obtainMarks}") >
                                               0)
                                           ? ColorConstant.green
                                           : ColorConstant.red),
@@ -135,7 +126,7 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: (double.parse(
-                                                    "${controller.resultList.last.obtainMarks}") >
+                                                    "${controller.resultList.first.obtainMarks}") >
                                                 0)
                                             ? ColorConstant.green
                                             : ColorConstant.red,
@@ -156,61 +147,55 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                         ),
                         SizedBox(height: screenHeightPadding),
                         Container(
-                          padding: contentPadding,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.blue.withOpacity(0.1),
-                              border: Border.all(
-                                  width: 2, color: ColorConstant.blue),
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: Get.height * 0.300,
-                                child: PieChart(
-                                  PieChartData(
-                                    sections: showingSections(
-                                        attemptedQuestions: double.parse(
-                                            "${controller.resultList.last.rightAnswers}"),
-                                        unattemptedQuestions: double.parse(
-                                            "${controller.resultList.last.wrongAnswers}"),
-                                        skippedQuestions: double.parse("0")),
-                                    centerSpaceRadius: 20,
-                                    sectionsSpace: 2,
-                                    borderData: FlBorderData(show: false),
-                                    pieTouchData: PieTouchData(
-                                      touchCallback: (FlTouchEvent event,
-                                          pieTouchResponse) {},
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              buildLegend(),
-                            ],
-                          ),
-                        ),
-
+                            padding: contentPadding,
+                            decoration: BoxDecoration(
+                                color: ColorConstant.blue.withOpacity(0.1),
+                                border: Border.all(
+                                    width: 2, color: ColorConstant.blue),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                    height: Get.height * 0.300,
+                                    child: PieChart(PieChartData(
+                                        sections: showingSections(
+                                            attemptedQuestions: double.parse(
+                                                "${controller.resultList.first.rightAnswers}"),
+                                            unattemptedQuestions: double.parse(
+                                                "${controller.resultList.first.wrongAnswers}"),
+                                            skippedQuestions:
+                                                double.parse("0")),
+                                        centerSpaceRadius: 20,
+                                        sectionsSpace: 2,
+                                        borderData: FlBorderData(show: false),
+                                        pieTouchData: PieTouchData(
+                                          touchCallback: (FlTouchEvent event,
+                                              pieTouchResponse) {},
+                                        )))),
+                                buildLegend(),
+                              ],
+                            )),
                         SizedBox(height: screenHeightPadding),
                         Padding(
                           padding: EdgeInsets.only(bottom: screenHeightPadding),
                           child: Row(
                             children: [
                               Expanded(
-                                child: CustomButton(
-                                  title: "Restart Test",
-                                  onTap: () {
-                                    controller.isRestart.value = true;
-                                  },
-                                ),
-                              ),
+                                  child: CustomButton(
+                                title: "Restart Test",
+                                onTap: () {
+                                  controller.isRestart.value = true;
+                                  setState(() {});
+                                },
+                              )),
                               SizedBox(width: contentWidthPadding),
                               Expanded(
-                                child: CustomButton(
-                                  title: "Finish",
-                                  onTap: () {
-                                    Get.offAll(() => const BottomBarScreen());
-                                  },
-                                ),
-                              )
+                                  child: CustomButton(
+                                title: "Finish",
+                                onTap: () {
+                                  Get.offAll(() => const BottomBarScreen());
+                                },
+                              )),
                             ],
                           ),
                         ),
@@ -219,137 +204,160 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                   ),
                 )
               : (controller.questions.isNotEmpty)
-                  ? Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "${controller.currentQuestionIndex.value + 1}. ",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    currentQuestion.text,
+                  ? Obx(() {
+                      final currentQuestion = controller
+                          .questions[controller.currentQuestionIndex.value];
+
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${controller.currentQuestionIndex.value + 1}. ",
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: Text(
+                                      currentQuestion.text,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          ...currentQuestion.options.map((option) {
-                            return OptionButton(
-                              option: option,
-                              isSelected:
-                                  controller.selectedAnswer.value == option,
-                              isCorrect: controller.isAnswered.value &&
-                                  option == currentQuestion.correctAnswer,
-                              isWrong: controller.isAnswered.value &&
-                                  option != currentQuestion.correctAnswer &&
-                                  controller.selectedAnswer.value == option,
-                              onPressed: () {
-                                if (!controller.isAnswered.value) {
-                                  setState(() {
-                                    controller.checkAnswer(option);
-                                  });
-                                }
-                              },
-                            );
-                          }),
-                          if (controller.isAnswered.value)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: ElevatedButton(
+                            ...currentQuestion.options.map((option) {
+                              return OptionButton(
+                                option: option,
+                                isSelected:
+                                    controller.selectedAnswer.value == option,
+                                isCorrect: controller.isAnswered.value &&
+                                    option == currentQuestion.correctAnswer,
+                                isWrong: controller.isAnswered.value &&
+                                    option != currentQuestion.correctAnswer &&
+                                    controller.selectedAnswer.value == option,
                                 onPressed: () {
-                                  if (controller.currentQuestionIndex.value <
-                                      controller.questions.length - 1) {
+                                  if (!controller.isAnswered.value) {
                                     setState(() {
-                                      controller.nextQuestion();
-                                    });
-                                  } else {
-                                    controller
-                                        .postQuizResult(
-                                      testId: controller.getChapterQuizListModel
-                                              .testDetailsList?[0].testId ??
-                                          '',
-                                      courseid: controller
-                                              .getChapterQuizListModel
-                                              .testDetailsList?[0]
-                                              .courseName ??
-                                          '',
-                                      chapterid: controller
-                                              .getChapterQuizListModel
-                                              .testDetailsList?[0]
-                                              .chapterId ??
-                                          '',
-                                      topicid: controller
-                                              .getChapterQuizListModel
-                                              .testDetailsList?[0]
-                                              .topicid ??
-                                          '',
-                                      userId: widget.userId,
-                                      type: widget.quizType,
-                                      testpaymentid: widget.testpaymentId,
-                                    )
-                                        .then((_) {
-                                      Get.offAll(() => TestResultView(
-                                            testListId: controller
-                                                    .getChapterQuizListModel
-                                                    .testDetailsList?[0]
-                                                    .testId ??
-                                                '',
-                                            testName: 'Quiz Test',
-                                            attemptedQuestions: controller
-                                                .correctAnswers.value
-                                                .toDouble(),
-                                            unattemptedQuestions:
-                                                (controller.questions.length -
-                                                        controller
-                                                            .correctAnswers
-                                                            .value)
-                                                    .toDouble(),
-                                            skippedQuestion:
-                                                0.0, // Assuming skipped questions are represented as double
-                                            rightAnswer: controller
-                                                .correctAnswers.value
-                                                .toDouble(),
-                                            wrongAnswer: controller
-                                                .wrongAnswers.value
-                                                .toDouble(),
-                                            answeredList: controller.questions,
-                                            courseid: controller
-                                                    .getChapterQuizListModel
-                                                    .testDetailsList?[0]
-                                                    .courseName ??
-                                                '',
-                                            userId: widget.userId,
-                                            chapterid: controller
-                                                    .getChapterQuizListModel
-                                                    .testDetailsList?[0]
-                                                    .chapterId ??
-                                                '',
-                                            testpaymentid: widget.testpaymentId,
-                                          ));
+                                      controller.checkAnswer(option);
                                     });
                                   }
                                 },
-                                child: (controller.currentQuestionIndex.value <
-                                        controller.questions.length - 1)
-                                    ? const Text('Next Question')
-                                    : const Text('Submit'),
+                              );
+                            }),
+                            if (controller.isAnswered.value)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (controller.currentQuestionIndex.value <
+                                        controller.questions.length - 1) {
+                                      setState(() {
+                                        controller.nextQuestion();
+                                      });
+                                    } else {
+                                      controller
+                                          .postQuizResult(
+                                              testId: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .testId ??
+                                                  '',
+                                              courseid: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .courseName ??
+                                                  '',
+                                              chapterid: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .chapterId ??
+                                                  '',
+                                              topicid: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .topicId ??
+                                                  '',
+                                              userId: widget.userId,
+                                              type: widget.quizType,
+                                              testpaymentid:
+                                                  widget.testpaymentId)
+                                          .then((_) {
+                                        print(
+                                            "Correct Answers: ${controller.correctAnswers.value}");
+                                        print(
+                                            "Questions Length: ${controller.questions.length}");
+                                        print(
+                                            "Wrong Answers: ${controller.wrongAnswers.value}");
+
+                                        Get.offAll(() => TestResultView(
+                                              testListId: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .testId ??
+                                                  '',
+                                              testName: 'Quiz Test',
+                                              attemptedQuestions: double.tryParse(
+                                                      "${controller.correctAnswers.value ?? 0}") ??
+                                                  0.0,
+                                              unattemptedQuestions: (double
+                                                          .tryParse(
+                                                              "${controller.questions.length ?? 0}") ??
+                                                      0.0) -
+                                                  (double.tryParse(
+                                                          "${controller.correctAnswers.value}") ??
+                                                      0.0),
+                                              skippedQuestion: 0.0,
+                                              rightAnswer: double.tryParse(
+                                                      "${controller.correctAnswers.value ?? 0}") ??
+                                                  0.0,
+                                              wrongAnswer: double.tryParse(
+                                                      "${controller.wrongAnswers.value ?? 0}") ??
+                                                  0.0,
+                                              obtainMarks: double.tryParse(
+                                                      "${controller.postChapterQuizResultModel.result?.obtainMarks ?? 0}") ??
+                                                  0.0,
+                                              totalMarks: double.tryParse(
+                                                      "${controller.postChapterQuizResultModel.result?.totalMarks ?? 0}") ??
+                                                  0.0,
+                                              answeredList:
+                                                  controller.questions,
+                                              courseid: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .courseName ??
+                                                  '',
+                                              userId: widget.userId,
+                                              chapterid: controller
+                                                      .getChapterQuizListModel
+                                                      .testDetailsList?[0]
+                                                      .chapterId ??
+                                                  '',
+                                              testpaymentid:
+                                                  widget.testpaymentId,
+                                            ));
+                                      });
+                                    }
+                                  },
+                                  child:
+                                      (controller.currentQuestionIndex.value <
+                                              controller.questions.length - 1)
+                                          ? const Text('Next Question')
+                                          : const Text('Submit'),
+                                ),
                               ),
-                            ),
-                        ],
-                      ),
-                    )
+                          ],
+                        ),
+                      );
+                    })
                   : const SizedBox(),
     );
   }

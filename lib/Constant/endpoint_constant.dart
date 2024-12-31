@@ -70,4 +70,6 @@ class EndPointConstant {
       "proficiency_test_typewise.php";
   static const String proficiencywritingtestsubmit =
       "proficiency_writingtest_submit.php";
+  static const String flashExerciseResult = "flash_exercise_result.php";
+  static const String chapterWiseTabAccess = "chapterwise_tabaccess.php";
 }

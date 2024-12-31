@@ -1,5 +1,6 @@
 import 'package:firesafety/Models/get_subcategory_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -69,9 +70,8 @@ class _SelectSubcategoryScreenState extends State<SelectSubcategoryScreen> {
                       // Check if the subcategory has been purchased (is_purchase == 1)
                       if (subcategory?.isPurchase == 1) {
                         // If is_purchase is 1, navigate to MypurchesCatrgotyListscreen
-                        Get.to(() => MypurchesCatrgotyListscreen(
-                              userId: widget.userId,
-                            ));
+                        Get.offAll(
+                            () => const BottomBarScreen(currentIndex: 1));
                       } else {
                         // If is_purchase is 0, navigate to CourseListScreen
                         Get.to(() => CourseListScreen(

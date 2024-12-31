@@ -2,10 +2,8 @@ import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Controllers/ListeningTest_Controller.dart';
-import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
-import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -52,14 +50,6 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('Attempted: ${widget.attemptedQuestions}'),
-              //     Text('Unattempted: ${widget.unattemptedQuestions}'),
-              //     Text('Skipped: ${widget.skippedQuestion}'),
-              //   ],
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -67,7 +57,7 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
                       "Total Marks: ${controller.postListeningResultModel.result?.totalMarks ?? ""}",
                       style: TextStyleConstant.medium18()),
                   Text(
-                      "Obtain Marks: ${controller.postListeningResultModel.result?.obtainMarks ?? ""}",
+                      "Obtain Marks: ${double.tryParse("${controller.postListeningResultModel.result?.obtainMarks}") ?? 0.0}",
                       style: TextStyleConstant.medium18()),
                 ],
               ),
@@ -127,13 +117,30 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
                                   : ColorConstant.red,
                               width: 2),
                           borderRadius: BorderRadius.circular(12)),
-                      child: LinearProgressIndicator(
-                        value: controller.progressBarValue.value,
-                        minHeight: 40,
-                        borderRadius: BorderRadius.circular(10),
-                        backgroundColor: ColorConstant.transparent,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.green),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: ((double.tryParse(
+                                            "${controller.postListeningResultModel.result?.obtainMarks}") ??
+                                        0) >
+                                    0)
+                                ? ColorConstant.green
+                                : ColorConstant.red,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: LinearProgressIndicator(
+                          value:
+                              controller.progressBarValue.value.clamp(0.0, 1.0),
+                          minHeight: 40,
+                          backgroundColor: ColorConstant.transparent,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            (controller.progressBarValue.value > 0)
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -144,85 +151,44 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
               ),
               SizedBox(height: screenHeightPadding),
               Container(
-                padding: contentPadding,
-                decoration: BoxDecoration(
-                    color: ColorConstant.blue.withOpacity(0.1),
-                    border: Border.all(width: 2, color: ColorConstant.blue),
-                    borderRadius: BorderRadius.circular(16)),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: Get.height * 0.300,
-                      child: PieChart(
-                        PieChartData(
-                          sections: showingSections(
-                              attemptedQuestions: widget.attemptedQuestions,
-                              unattemptedQuestions: widget.unattemptedQuestions,
-                              skippedQuestions: widget.skippedQuestion),
-                          centerSpaceRadius: 20,
-                          sectionsSpace: 2,
-                          borderData: FlBorderData(show: false),
-                          pieTouchData: PieTouchData(
-                            touchCallback:
-                                (FlTouchEvent event, pieTouchResponse) {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    buildLegend(),
-                  ],
-                ),
-              ),
-
-              // SizedBox(height: screenHeightPadding),
-              // Container(
-              //   padding: contentPadding,
-              //   decoration: BoxDecoration(
-              //       color: ColorConstant.blue.withOpacity(0.1),
-              //       border:
-              //       Border.all(width: 2, color: ColorConstant.blue),
-              //       borderRadius: BorderRadius.circular(16)),
-              //   child: Column(
-              //     children: [
-              //       SizedBox(
-              //         height: Get.height * 0.300,
-              //         child: PieChart(
-              //           PieChartData(
-              //             sections: showingSecondSections(
-              //                 rightAnswer: widget.rightAnswer,
-              //                 wrongAnswer: widget.wrongAnswer,
-              //                 skippedQuestions: widget.skippedQuestion +
-              //                     widget.unattemptedQuestions),
-              //             centerSpaceRadius: 20,
-              //             sectionsSpace: 2,
-              //             borderData: FlBorderData(show: false),
-              //             pieTouchData: PieTouchData(
-              //               touchCallback: (FlTouchEvent event,
-              //                   pieTouchResponse) {},
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //       buildSecondLegend(),
-              //     ],
-              //   ),
-              // ),
-
+                  padding: contentPadding,
+                  decoration: BoxDecoration(
+                      color: ColorConstant.blue.withOpacity(0.1),
+                      border: Border.all(width: 2, color: ColorConstant.blue),
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: Get.height * 0.300,
+                          child: PieChart(PieChartData(
+                              sections: showingSections(
+                                  attemptedQuestions: widget.attemptedQuestions,
+                                  unattemptedQuestions:
+                                      widget.unattemptedQuestions,
+                                  skippedQuestions: widget.skippedQuestion),
+                              centerSpaceRadius: 20,
+                              sectionsSpace: 2,
+                              borderData: FlBorderData(show: false),
+                              pieTouchData: PieTouchData(
+                                touchCallback:
+                                    (FlTouchEvent event, pieTouchResponse) {},
+                              )))),
+                      buildLegend(),
+                    ],
+                  )),
               SizedBox(height: screenHeightPadding),
               Padding(
                 padding: EdgeInsets.only(bottom: screenHeightPadding),
                 child: Row(
                   children: [
                     Expanded(
-                      child: CustomButton(
-                        title: "Next ",
-                        onTap: () {
-                          Get.to(() => MypurchesCatrgotyListscreen(
-                                userId: widget.userId,
-                              ));
-                        },
-                      ),
-                    ),
+                        child: CustomButton(
+                      title: "Next ",
+                      onTap: () {
+                        Get.offAll(
+                            () => const BottomBarScreen(currentIndex: 1));
+                      },
+                    )),
                     SizedBox(width: contentWidthPadding),
                     Expanded(
                       child: CustomButton(
@@ -246,21 +212,23 @@ class _ListeningestResultViewState extends State<ListeningestResultView> {
   }
 }
 
-List<PieChartSectionData> showingSections(
-    {required double attemptedQuestions,
-    required double unattemptedQuestions,
-    required double skippedQuestions}) {
+List<PieChartSectionData> showingSections({
+  required double attemptedQuestions,
+  required double unattemptedQuestions,
+  required double skippedQuestions,
+}) {
   return [
     PieChartSectionData(
-        color: ColorConstant.green,
-        value: attemptedQuestions,
-        title: attemptedQuestions.toString().split(".")[0],
-        radius: 100,
-        titleStyle: TextStyleConstant.extraBold18(color: ColorConstant.white)),
+      color: ColorConstant.green,
+      value: attemptedQuestions.clamp(0.0, double.infinity),
+      title: attemptedQuestions.toStringAsFixed(0),
+      radius: 100,
+      titleStyle: TextStyleConstant.extraBold18(color: ColorConstant.white),
+    ),
     PieChartSectionData(
       color: ColorConstant.red,
-      value: unattemptedQuestions,
-      title: unattemptedQuestions.toString().split(".")[0],
+      value: unattemptedQuestions.clamp(0.0, double.infinity),
+      title: unattemptedQuestions.toStringAsFixed(0),
       radius: 100,
       titleStyle: const TextStyle(
         fontSize: 16,
@@ -270,8 +238,8 @@ List<PieChartSectionData> showingSections(
     ),
     PieChartSectionData(
       color: ColorConstant.grey,
-      value: skippedQuestions,
-      title: skippedQuestions.toString().split(".")[0],
+      value: skippedQuestions.clamp(0.0, double.infinity),
+      title: skippedQuestions.toStringAsFixed(0),
       radius: 100,
       titleStyle: const TextStyle(
         fontSize: 16,

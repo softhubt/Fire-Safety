@@ -9,10 +9,8 @@ class CustomNoDataFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        (message) ?? "No Data Found",
-        style: TextStyleConstant.semiBold24(),
-      ),
-    );
+        child: Text((message) ?? "No Data Found",
+            style: TextStyleConstant.semiBold24(),
+            textAlign: TextAlign.center));
   }
 }

@@ -19,20 +19,19 @@ class GetQuizResultListModel {
 
   factory GetQuizResultListModel.fromJson(Map<String, dynamic> json) =>
       GetQuizResultListModel(
-        statusCode: json["status_code"],
-        message: json["message"],
-        testResultList: json["test_result_list"] == null
-            ? []
-            : List<TestResultList>.from(json["test_result_list"]!
-                .map((x) => TestResultList.fromJson(x))),
+        statusCode: json["status_code"] as String?,
+        message: json["message"] as String?,
+        testResultList: json["test_result_list"] != null
+            ? List<TestResultList>.from(
+                (json["test_result_list"] as List<dynamic>)
+                    .map((x) => TestResultList.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
         "status_code": statusCode,
         "message": message,
-        "test_result_list": testResultList == null
-            ? []
-            : List<dynamic>.from(testResultList!.map((x) => x.toJson())),
+        "test_result_list": testResultList?.map((x) => x.toJson()).toList(),
       };
 }
 
@@ -43,9 +42,9 @@ class TestResultList {
   String? testType;
   String? obtainMarks;
   String? totalMarks;
-  dynamic testName;
-  dynamic answerSheet;
-  dynamic checkedAnswerSheet;
+  String? testName;
+  String? answerSheet;
+  String? checkedAnswerSheet;
   String? rightAnswers;
   String? wrongAnswers;
   int? totalQuestion;
@@ -78,24 +77,24 @@ class TestResultList {
   });
 
   factory TestResultList.fromJson(Map<String, dynamic> json) => TestResultList(
-        id: json["id"],
-        userId: json["user_id"],
-        testId: json["test_id"],
-        testType: json["test_type"],
-        obtainMarks: json["obtain_marks"],
-        totalMarks: json["total_marks"],
-        testName: json["test_name"],
-        answerSheet: json["answer_sheet"],
-        checkedAnswerSheet: json["checked_answer_sheet"],
-        rightAnswers: json["right_answers"],
-        wrongAnswers: json["wrong_answers"],
-        totalQuestion: json["total_question"],
-        topperObtainMarks: json["topper_obtain_marks"],
-        courseId: json["course_id"],
-        chapterId: json["chapter_id"],
-        topicId: json["topic_id"],
-        tdate: json["tdate"] == null ? null : DateTime.parse(json["tdate"]),
-        ttime: json["ttime"],
+        id: json["id"] as String?,
+        userId: json["user_id"] as String?,
+        testId: json["test_id"] as String?,
+        testType: json["test_type"] as String?,
+        obtainMarks: json["obtain_marks"] as String?,
+        totalMarks: json["total_marks"] as String?,
+        testName: json["test_name"] ?? "", // Handle null
+        answerSheet: json["answer_sheet"] ?? "", // Handle null
+        checkedAnswerSheet: json["checked_answer_sheet"] ?? "", // Handle null
+        rightAnswers: json["right_answers"] as String?,
+        wrongAnswers: json["wrong_answers"] as String?,
+        totalQuestion: json["total_question"] as int?,
+        topperObtainMarks: json["topper_obtain_marks"] as String?,
+        courseId: json["course_id"] as String?,
+        chapterId: json["chapter_id"] as String?,
+        topicId: json["topic_id"] as String?,
+        tdate: json["tdate"] != null ? DateTime.tryParse(json["tdate"]) : null,
+        ttime: json["ttime"] ?? "", // Handle null
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,9 +104,9 @@ class TestResultList {
         "test_type": testType,
         "obtain_marks": obtainMarks,
         "total_marks": totalMarks,
-        "test_name": testName,
-        "answer_sheet": answerSheet,
-        "checked_answer_sheet": checkedAnswerSheet,
+        "test_name": testName ?? "",
+        "answer_sheet": answerSheet ?? "",
+        "checked_answer_sheet": checkedAnswerSheet ?? "",
         "right_answers": rightAnswers,
         "wrong_answers": wrongAnswers,
         "total_question": totalQuestion,
@@ -115,8 +114,9 @@ class TestResultList {
         "course_id": courseId,
         "chapter_id": chapterId,
         "topic_id": topicId,
-        "tdate":
-            "${tdate!.year.toString().padLeft(4, '0')}-${tdate!.month.toString().padLeft(2, '0')}-${tdate!.day.toString().padLeft(2, '0')}",
+        "tdate": tdate != null
+            ? "${tdate!.year.toString().padLeft(4, '0')}-${tdate!.month.toString().padLeft(2, '0')}-${tdate!.day.toString().padLeft(2, '0')}"
+            : null,
         "ttime": ttime,
       };
 }

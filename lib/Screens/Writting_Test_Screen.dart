@@ -51,27 +51,24 @@ class _WritingTestPageState extends State<WritingTestPage> {
               children: [
                 // Upper part with paragraph (half screen height)
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Display questionDetails from the API using flutter_html
-                        Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: HtmlWidget(
-                                questionDetails ??
-                                    'No question details available',
-                                textStyle: TextStyleConstant.medium14())),
-                      ],
-                    ),
-                  ),
-                ),
+                    child: SingleChildScrollView(
+                        child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: HtmlWidget(
+                            questionDetails ?? 'No question details available',
+                            textStyle: TextStyleConstant.medium14())),
+                  ],
+                ))),
                 Padding(
-                  padding: screenHorizontalPadding,
-                  child: CustomTextField(
-                      controller: answerController,
-                      hintText: "Start Writing Here..."),
-                ),
+                    padding: screenHorizontalPadding,
+                    child: CustomTextField(
+                        controller: answerController,
+                        hintText: "Start Writing Here...",
+                        isExpand: true,
+                        textInputType: TextInputType.multiline)),
               ],
             );
           } else {

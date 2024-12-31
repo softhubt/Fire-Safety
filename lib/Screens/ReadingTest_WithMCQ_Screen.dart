@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Controllers/ReadingTest_Controller.dart';
+import 'package:firesafety/Models/ReadingTestAfterPurchesmodel.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ReadingTestResult_View.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
@@ -38,9 +39,7 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
 
   Future<void> _loadQuizData() async {
     await controller.getReadListeningTest(
-      type: "Reading Test",
-      userId: widget.userId,
-    );
+        type: "Reading Test", userId: widget.userId);
 
     if (controller.questions.isNotEmpty) {
       log("Question list: ${controller.questions}");
@@ -147,12 +146,15 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                               // Submit the result and navigate to result screen
                               controller
                                   .postReadingTestResult(
-                                testId: controller.questions[0].id,
+                                testId:
+                                    "${controller.readListenTestTypeWiseModel.readingListeningTestDetailsList?.first.readListeningTestId}",
                                 userId: widget.userId,
                                 type: widget.quizType,
                                 id: widget.id,
                               )
                                   .then((_) {
+                                debugPrint(
+                                    'Post Reading Test Result successful');
                                 Get.offAll(() => RedingTestResultView(
                                       testListId: controller
                                               .readListenTestTypeWiseModel
@@ -162,27 +164,33 @@ class _ReadingScreenWithMCQState extends State<ReadingScreenWithMCQ> {
                                           '',
                                       testName: 'Quiz Test',
                                       attemptedQuestions:
-                                          (controller.correctAnswers.value ?? 0)
+                                          (controller.correctAnswers.value)
                                               .toDouble(),
-                                      unattemptedQuestions:
-                                          (controller.questions.length -
-                                                  (controller.correctAnswers
-                                                          .value ??
-                                                      0))
-                                              .toDouble(),
+                                      unattemptedQuestions: (controller
+                                                  .questions.length -
+                                              (controller.correctAnswers.value))
+                                          .toDouble(),
                                       skippedQuestion:
                                           0.0, // Assuming skipped questions are 0
                                       rightAnswer:
-                                          (controller.correctAnswers.value ?? 0)
+                                          (controller.correctAnswers.value)
                                               .toDouble(),
                                       wrongAnswer:
-                                          (controller.wrongAnswers.value ?? 0)
+                                          (controller.wrongAnswers.value)
                                               .toDouble(),
-                                      answeredList: controller
-                                          .questions, // Ensure type matches
+                                      answeredList: controller.questions,
                                       userId: widget.userId,
                                       id: widget.id,
+                                      totalMarks: double.tryParse(
+                                              "${controller.postReadingResultModel.result?.totalMarks}") ??
+                                          0.0,
+                                      obtainMarks: double.tryParse(
+                                              "${controller.postReadingResultModel.result?.obtainMarks}") ??
+                                          0.0,
                                     ));
+                              }).catchError((error) {
+                                debugPrint(
+                                    'Error in postReadingTestResult: $error');
                               });
                             }
                           },

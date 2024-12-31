@@ -9,10 +9,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class FormativeTestResultViewController extends GetxController {
- // GetTestResultModel getTestResultModel = GetTestResultModel();
-  PostFormativeAssessmentResultModel postFormativeAssessmentResultModel = PostFormativeAssessmentResultModel();
+  // GetTestResultModel getTestResultModel = GetTestResultModel();
+  PostFormativeAssessmentResultModel postFormativeAssessmentResultModel =
+      PostFormativeAssessmentResultModel();
 
   RxList<BarChartGroupData> testHistoryList = <BarChartGroupData>[].obs;
 
@@ -27,12 +27,12 @@ class FormativeTestResultViewController extends GetxController {
 
   Future initialFunctioun({required String testListId}) async {
     categoryId.value = await StorageServices.getData(
-        dataType: StorageKeyConstant.stringType,
-        prefKey: StorageKeyConstant.categoryId) ??
+            dataType: StorageKeyConstant.stringType,
+            prefKey: StorageKeyConstant.categoryId) ??
         "";
     userId.value = await StorageServices.getData(
-        dataType: StorageKeyConstant.stringType,
-        prefKey: StorageKeyConstant.userId) ??
+            dataType: StorageKeyConstant.stringType,
+            prefKey: StorageKeyConstant.userId) ??
         "";
 
     await getTestResult(testListId: testListId);
@@ -51,17 +51,17 @@ class FormativeTestResultViewController extends GetxController {
       log("Get test result payload ::: $payload");
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.formativeassessmentresult,
-        payload: payload,
-        urlMessage: 'Submit formative assessment URL',
-        payloadMessage: 'Submit formative assessment payload',
-        statusMessage: 'Submit formative assessment status code',
-        bodyMessage: 'Submit formative assessment response',
-      );
+          url: EndPointConstant.formativeassessmentresult,
+          payload: payload,
+          urlMessage: 'Submit formative assessment URL',
+          payloadMessage: 'Submit formative assessment payload',
+          statusMessage: 'Submit formative assessment status code',
+          bodyMessage: 'Submit formative assessment response');
 
       log("Get test result response ::: $response");
 
-      postFormativeAssessmentResultModel = postFormativeAssessmentResultModelFromJson(response["body"]);
+      postFormativeAssessmentResultModel =
+          postFormativeAssessmentResultModelFromJson(response["body"]);
 
       if (postFormativeAssessmentResultModel.statusCode == "200" ||
           postFormativeAssessmentResultModel.statusCode == "201") {
@@ -75,7 +75,11 @@ class FormativeTestResultViewController extends GetxController {
 
         log("Progress bar value ::: ${progressBarValue.value}");
 
-        for (int i = 0; i < postFormativeAssessmentResultModel.formativeAssessmentResultList!.length; i++) {
+        for (int i = 0;
+            i <
+                postFormativeAssessmentResultModel
+                    .formativeAssessmentResultList!.length;
+            i++) {
           if (i <= 10) {
             testHistoryList.add(
               BarChartGroupData(

@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:firesafety/Models/post_Get_Subcategory_PaymentModel.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Payment_thank_you_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -6,10 +8,13 @@ import 'package:firesafety/Models/get_chapter_list_model.dart';
 import 'package:firesafety/Screens/ThankuScreen_page.dart';
 import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
+import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CourseDetailController extends GetxController {
   GetChapterListModel getChapterListModel = GetChapterListModel();
+  GetSubcategoryPaymentModel getSubcategoryPaymentModel =
+      GetSubcategoryPaymentModel();
 
   late TabController tabController;
 
@@ -50,6 +55,69 @@ class CourseDetailController extends GetxController {
     } catch (error) {
       CustomLoader.closeCustomLoader();
       log("Something went wrong during getting chapter list ::: $error");
+    }
+  }
+
+  String _getCurrentDate() {
+    return DateFormat('yyyy-MM-dd').format(DateTime.now());
+  }
+
+  String _getCurrentTime() {
+    return DateFormat('hh:mm a').format(DateTime.now());
+  }
+
+  // Function for handling purchase
+  Future postPurchesCource({
+    required String categoryId,
+    required String subcategoryId,
+    required String userId,
+    required String amount,
+    required String days,
+  }) async {
+    try {
+      CustomLoader.openCustomLoader();
+      Map<String, dynamic> payload = {
+        "category_id": categoryId,
+        "user_id": userId,
+        "subcategory_id": subcategoryId,
+        "amount": amount,
+        "days": days,
+        "payment_id": "pay12334",
+        "tdate": _getCurrentDate(),
+        "ttime": _getCurrentTime(),
+        "order_id": "123456"
+      };
+
+      // Send the request for purchase
+      var response = await HttpServices.postHttpMethod(
+          url: EndPointConstant.subcategorycourseubscriptionpayment,
+          payload: payload,
+          urlMessage: "Get purchase course URL",
+          payloadMessage: "Get purchase course payload",
+          statusMessage: "Get purchase status code",
+          bodyMessage: "Get purchase response");
+
+      // Check if the response is valid and parse it
+      getSubcategoryPaymentModel =
+          getSubcategoryPaymentModelFromJson(response["body"]);
+
+      if (getSubcategoryPaymentModel.statusCode == "200" ||
+          getSubcategoryPaymentModel.statusCode == "201") {
+        // Close the loader
+        CustomLoader.closeCustomLoader();
+
+        // Navigate to the PaymentThankYouView screen and pass the userId and purchaseId
+        Get.to(() => PaymentThankYouView(
+              userId: userId,
+              id: "${getSubcategoryPaymentModel.subcategoryPurchasePaymentResult?.id}",
+            ));
+      } else {
+        CustomLoader.closeCustomLoader();
+        log("Something went wrong during payment ::: ${getSubcategoryPaymentModel.statusCode}");
+      }
+    } catch (error) {
+      CustomLoader.closeCustomLoader();
+      log("Something went wrong during payment ::: $error");
     }
   }
 

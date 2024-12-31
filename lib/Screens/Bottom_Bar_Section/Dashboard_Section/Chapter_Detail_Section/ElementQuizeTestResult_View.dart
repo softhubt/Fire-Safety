@@ -4,6 +4,7 @@ import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/chapter_detail_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -17,6 +18,8 @@ class TestResultView extends StatefulWidget {
   final double skippedQuestion;
   final double rightAnswer;
   final double wrongAnswer;
+  final double totalMarks;
+  final double obtainMarks;
   final String courseid;
   final String userId;
   final String chapterid;
@@ -38,6 +41,8 @@ class TestResultView extends StatefulWidget {
     required this.userId,
     required this.chapterid,
     required this.testpaymentid,
+    required this.totalMarks,
+    required this.obtainMarks,
   });
 
   @override
@@ -57,24 +62,13 @@ class _TestResultViewState extends State<TestResultView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
               const SizedBox(height: 20),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('Attempted: ${widget.attemptedQuestions}'),
-              //     Text('Unattempted: ${widget.unattemptedQuestions}'),
-              //     Text('Skipped: ${widget.skippedQuestion}'),
-              //   ],
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
-                      "Total Marks: ${controller.postChapterQuizResultModel.result?.totalMarks ?? ""}",
+                  Text("Total Marks: ${widget.totalMarks}",
                       style: TextStyleConstant.medium18()),
-                  Text(
-                      "Obtain Marks: ${controller.postChapterQuizResultModel.result?.obtainMarks ?? ""}",
+                  Text("Obtain Marks: ${widget.obtainMarks}",
                       style: TextStyleConstant.medium18()),
                 ],
               ),
@@ -84,11 +78,9 @@ class _TestResultViewState extends State<TestResultView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                        "Right Answers: ${controller.postChapterQuizResultModel.result?.rightAnswers ?? ""}",
+                    Text("Right Answers: ${widget.rightAnswer}",
                         style: TextStyleConstant.medium18()),
-                    Text(
-                        "Wrong Answers: ${controller.postChapterQuizResultModel.result?.wrongAnswers ?? ""}",
+                    Text("Wrong Answers: ${widget.wrongAnswer}",
                         style: TextStyleConstant.medium18())
                   ],
                 ),
@@ -96,27 +88,20 @@ class _TestResultViewState extends State<TestResultView> {
               Container(
                 padding: contentPadding,
                 decoration: BoxDecoration(
-                    color: (double.parse(
-                                "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                            0)
+                    color: (widget.obtainMarks > 0)
                         ? ColorConstant.green.withOpacity(0.1)
                         : ColorConstant.red.withOpacity(0.1),
                     border: Border.all(
                         width: 2,
-                        color: (double.parse(
-                                    "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                                0)
+                        color: (widget.obtainMarks > 0)
                             ? ColorConstant.green
                             : ColorConstant.red),
                     borderRadius: BorderRadius.circular(16)),
                 child: Column(
                   children: [
-                    Text(
-                        "${controller.postChapterQuizResultModel.result?.obtainMarks}",
+                    Text("${widget.obtainMarks}",
                         style: TextStyleConstant.bold36(
-                            color: (double.parse(
-                                        "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                                    0)
+                            color: (widget.obtainMarks > 0)
                                 ? ColorConstant.green
                                 : ColorConstant.red),
                         textAlign: TextAlign.center),
@@ -127,9 +112,7 @@ class _TestResultViewState extends State<TestResultView> {
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: (double.parse(
-                                          "${controller.postChapterQuizResultModel.result?.obtainMarks}") >
-                                      0)
+                              color: (double.parse("${widget.obtainMarks}") > 0)
                                   ? ColorConstant.green
                                   : ColorConstant.red,
                               width: 2),
@@ -177,25 +160,30 @@ class _TestResultViewState extends State<TestResultView> {
                   ],
                 ),
               ),
-
               SizedBox(height: screenHeightPadding),
               Padding(
                 padding: EdgeInsets.only(bottom: screenHeightPadding),
                 child: Row(
                   children: [
                     Expanded(
-                      child: CustomButton(
-                        title: "Next Test",
-                        onTap: () {
-                          Get.offAll(() => ChapterFlashExerciseView(
-                                chapterId: widget.chapterid,
-                                userId: widget.userId,
-                                courseId: widget.courseid,
-                                testpaymentId: widget.testpaymentid,
-                              ));
-                        },
-                      ),
-                    ),
+                        child: CustomButton(
+                      title: "Next Test",
+                      onTap: () {
+                        // Get.offAll(() => ChapterFlashExerciseView(
+                        //       chapterId: widget.chapterid,
+                        //       userId: widget.userId,
+                        //       courseId: widget.courseid,
+                        //       testpaymentId: widget.testpaymentid,
+                        //     ));
+
+                        Get.offAll(() => ChapterDetailScreen(
+                            initialIndex: 2,
+                            chapterId: widget.chapterid,
+                            courseId: widget.userId,
+                            testpaymentId: widget.testpaymentid,
+                            chapterName: widget.testName));
+                      },
+                    )),
                     SizedBox(width: contentWidthPadding),
                     Expanded(
                       child: CustomButton(

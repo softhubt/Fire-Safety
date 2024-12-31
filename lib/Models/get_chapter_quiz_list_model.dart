@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final getChapterQuizListModel = getChapterQuizListModelFromJson(jsonString);
+
 import 'dart:convert';
 
 GetChapterQuizListModel getChapterQuizListModelFromJson(String str) =>
@@ -21,15 +25,18 @@ class GetChapterQuizListModel {
       GetChapterQuizListModel(
         statusCode: json["status_code"],
         message: json["message"],
-        testDetailsList: List<TestDetailsList>.from(
-            json["test_details_list"].map((x) => TestDetailsList.fromJson(x))),
+        testDetailsList: json["test_details_list"] == null
+            ? []
+            : List<TestDetailsList>.from(json["test_details_list"]!
+                .map((x) => TestDetailsList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "status_code": statusCode,
         "message": message,
-        "test_details_list":
-            List<dynamic>.from(testDetailsList!.map((x) => x.toJson())),
+        "test_details_list": testDetailsList == null
+            ? []
+            : List<dynamic>.from(testDetailsList!.map((x) => x.toJson())),
       };
 }
 
@@ -40,7 +47,7 @@ class TestDetailsList {
   DateTime? testDate;
   String? courseName;
   String? chapterId;
-  String? topicid;
+  String? topicId;
   dynamic testName;
   String? mark;
   String? testTime;
@@ -55,7 +62,7 @@ class TestDetailsList {
     this.testDate,
     this.courseName,
     this.chapterId,
-    this.topicid,
+    this.topicId,
     this.testName,
     this.mark,
     this.testTime,
@@ -69,17 +76,20 @@ class TestDetailsList {
         id: json["id"],
         testId: json["test_id"],
         testType: json["test_type"],
-        testDate: DateTime.parse(json["test_date"]),
+        testDate: json["test_date"] == null
+            ? null
+            : DateTime.parse(json["test_date"]),
         courseName: json["course_name"],
         chapterId: json["chapter_id"],
-        topicid: json["topic_id"],
+        topicId: json["topic_id"],
         testName: json["test_name"],
         mark: json["mark"],
         testTime: json["test_time"],
         rightMark: json["right_mark"],
         tresultcount: json["tresultcount"],
-        testQuestionDetails: List<TestQuestionDetail>.from(
-            json["test_question_details"]
+        testQuestionDetails: json["test_question_details"] == null
+            ? []
+            : List<TestQuestionDetail>.from(json["test_question_details"]!
                 .map((x) => TestQuestionDetail.fromJson(x))),
       );
 
@@ -88,17 +98,18 @@ class TestDetailsList {
         "test_id": testId,
         "test_type": testType,
         "test_date":
-            "${testDate?.year.toString().padLeft(4, '0')}-${testDate?.month.toString().padLeft(2, '0')}-${testDate?.day.toString().padLeft(2, '0')}",
+            "${testDate!.year.toString().padLeft(4, '0')}-${testDate!.month.toString().padLeft(2, '0')}-${testDate!.day.toString().padLeft(2, '0')}",
         "course_name": courseName,
         "chapter_id": chapterId,
-        "topic_id": topicid,
+        "topic_id": topicId,
         "test_name": testName,
         "mark": mark,
         "test_time": testTime,
         "right_mark": rightMark,
         "tresultcount": tresultcount,
-        "test_question_details":
-            List<dynamic>.from(testQuestionDetails!.map((x) => x.toJson())),
+        "test_question_details": testQuestionDetails == null
+            ? []
+            : List<dynamic>.from(testQuestionDetails!.map((x) => x.toJson())),
       };
 }
 

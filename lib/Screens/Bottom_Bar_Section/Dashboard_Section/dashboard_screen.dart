@@ -62,32 +62,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
-                    left: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        "${element?.description}",
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                  ),
+                      bottom: 10,
+                      left: 10,
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text("${element?.description}",
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 14)))),
                 ],
               );
             },
             options: CarouselOptions(
-              autoPlay: true,
-              height: 180,
-              viewportFraction: 0.9,
-              enlargeCenterPage: true,
-            ),
-          )
+                autoPlay: true,
+                height: 180,
+                viewportFraction: 0.9,
+                enlargeCenterPage: true))
         : const CustomShimmer(height: 180, width: double.infinity);
   }
 

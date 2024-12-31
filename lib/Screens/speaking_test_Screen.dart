@@ -67,30 +67,34 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
                     else
                       const SizedBox(),
                     SizedBox(height: screenHeightPadding),
-                    (controller.isRecording.value)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    await controller.stopVideoRecording();
-                                    controller.stopTimer();
-                                    setState(() {}); // Update button text
-                                  },
-                                  child: const Text("Stop Recording")),
-                              SizedBox(width: screenWidthPadding),
-                              Obx(() => Text(
-                                  "Seconds: ${controller.elapsedSeconds.value}",
-                                  style: TextStyleConstant.medium16())),
-                            ],
-                          )
-                        : ElevatedButton(
-                            onPressed: () async {
-                              await controller.startVideoRecording();
-                              controller.startTimer();
-                              setState(() {}); // Update button text
-                            },
-                            child: const Text("Start Recording")),
+                    Obx(
+                      () {
+                        return (controller.isRecording.value)
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        await controller.stopVideoRecording();
+                                        controller.stopTimer();
+                                        setState(() {});
+                                      },
+                                      child: const Text("Stop Recording")),
+                                  SizedBox(width: screenWidthPadding),
+                                  Obx(() => Text(
+                                      "Seconds: ${controller.elapsedSeconds.value}",
+                                      style: TextStyleConstant.medium16())),
+                                ],
+                              )
+                            : ElevatedButton(
+                                onPressed: () async {
+                                  await controller.startVideoRecording();
+                                  controller.startTimer();
+                                  setState(() {});
+                                },
+                                child: const Text("Start Recording"));
+                      },
+                    ),
                     if (controller
                             .getSpeakingTestModel.proficiencyTestDetailsList !=
                         null)

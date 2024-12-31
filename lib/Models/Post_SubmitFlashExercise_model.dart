@@ -36,12 +36,12 @@ class SubmitFlashExerciseModel {
       );
 
   Map<String, dynamic> toJson() => {
-    "status_code": statusCode,
-    "status": status,
-    "message": message,
-    "fe_data_submit": feDataSubmit,
-    "result": result?.toJson(),
-  };
+        "status_code": statusCode,
+        "status": status,
+        "message": message,
+        "fe_data_submit": feDataSubmit,
+        "result": result?.toJson(),
+      };
 }
 
 // Class for result details
@@ -80,23 +80,23 @@ class SubmitFlashExerciseResult {
         ttime: json["ttime"],
         orderItem: json["order_item"] == null
             ? null
-            : List<SubmitOrderItemnew>.from(
-            jsonDecode(json["order_item"]).map((x) => SubmitOrderItemnew.fromJson(x))),
+            : List<SubmitOrderItemnew>.from(jsonDecode(json["order_item"])
+                .map((x) => SubmitOrderItemnew.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "course_id": courseId,
-    "chapter_id": chapterId,
-    "user_id": userId,
-    "flash_exercise_id": flashExerciseId,
-    "flash_exercise_type": flashExerciseType,
-    "tdate": tdate,
-    "ttime": ttime,
-    "order_item": orderItem == null
-        ? null
-        : jsonEncode(orderItem!.map((x) => x.toJson()).toList()),
-  };
+        "id": id,
+        "course_id": courseId,
+        "chapter_id": chapterId,
+        "user_id": userId,
+        "flash_exercise_id": flashExerciseId,
+        "flash_exercise_type": flashExerciseType,
+        "tdate": tdate,
+        "ttime": ttime,
+        "order_item": orderItem == null
+            ? null
+            : jsonEncode(orderItem!.map((x) => x.toJson()).toList()),
+      };
 }
 
 // Class for order item details
@@ -122,9 +122,9 @@ class SubmitOrderItemnew {
       );
 
   Map<String, dynamic> toJson() => {
-    "cartId": cartId,
-    "id": id,
-    "question_id": questionId,
-    "answer": answer,
-  };
+        "cartId": cartId,
+        "id": id,
+        "question_id": questionId,
+        "answer": answer,
+      };
 }

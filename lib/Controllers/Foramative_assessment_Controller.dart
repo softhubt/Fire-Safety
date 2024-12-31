@@ -16,8 +16,6 @@ class ChapterFormativeAssessmentController extends GetxController {
       <FormativeAssessmentResultList>[].obs;
   final RxMap<String, TextEditingController> controllers =
       <String, TextEditingController>{}.obs;
-  final RxList<FocusNode> focusNodes = <FocusNode>[].obs;
-  final formKey = GlobalKey<FormState>();
   GetFormativeAssessmentModel getFormativeAssessmentModel =
       GetFormativeAssessmentModel();
   SubmitFormativeAssessmentModel submitFormativeAssessmentModel =
@@ -25,25 +23,26 @@ class ChapterFormativeAssessmentController extends GetxController {
   GetFormativeAssessmentResultListModel getFormativeAssessmentResultListModel =
       GetFormativeAssessmentResultListModel();
 
+  final formKey = GlobalKey<FormState>();
   // Add a variable to store testFormativeId
   String? testFormativeId;
 
   RxBool isFetchingData = true.obs;
   RxBool isRestartExam = false.obs;
 
-  @override
-  void onClose() {
-    controllers.forEach((key, controller) => controller.dispose());
-    for (var node in focusNodes) {
-      node.dispose();
-    }
-    super.onClose();
-  }
-
   Future initialFunctioun(
       {required String chapterId,
       required String userId,
       required String testPaymentId}) async {
+    questions.clear();
+    resultList.clear();
+    isFetchingData.value = true;
+    isRestartExam.value = false;
+    controllers.clear();
+    getFormativeAssessmentModel.formativeAssessmentDetailsList = null;
+    submitFormativeAssessmentModel.result = null;
+    getFormativeAssessmentResultListModel.formativeAssessmentResultList = null;
+
     await getFormativeAssessmentResultList(
         userId: userId, testPaymentId: testPaymentId, chapterId: chapterId);
     await getFormativeAssessmentList(chapterId: chapterId, userId: userId);
@@ -105,9 +104,6 @@ class ChapterFormativeAssessmentController extends GetxController {
           controllers.value = {
             for (var item in questions) item.id: TextEditingController()
           };
-
-          focusNodes.value =
-              List.generate(questions.length, (_) => FocusNode());
         } else {
           questions.clear();
           log("No formative assessment data available.");
@@ -116,9 +112,10 @@ class ChapterFormativeAssessmentController extends GetxController {
         questions.clear();
         log("Somethig went wrong during getting formative assessment list ::: ${getFormativeAssessmentModel.message}");
       }
-    } catch (error) {
+    } catch (error, st) {
       questions.clear();
       log("Somethig went wrong during getting formative assessment list ::: $error");
+      log("Somethig went wrong during getting formative assessment list ::: $st");
     } finally {}
   }
 
@@ -154,31 +151,22 @@ class ChapterFormativeAssessmentController extends GetxController {
           getFormativeAssessmentResultListModel.formativeAssessmentResultList
               ?.forEach(
             (element) {
-              if (element.obtainMarks != null) {
-                resultList.add(FormativeAssessmentResultList(
-                    chapterId: element.chapterId,
-                    courseId: element.courseId,
-                    formativeResultDetails: element.formativeResultDetails,
-                    ftrNumber: element.ftrNumber,
-                    id: element.id,
-                    mark: element.mark,
-                    obtainMarks: element.obtainMarks,
-                    subcategoryId: element.chapterId,
-                    tdate: element.tdate,
-                    testFormativeId: element.testFormativeId,
-                    testFormativeType: element.testFormativeType,
-                    topicId: element.topicId,
-                    ttime: element.ttime));
-              }
+              resultList.add(FormativeAssessmentResultList(
+                  chapterId: element.chapterId,
+                  courseId: element.courseId,
+                  formativeResultDetails: element.formativeResultDetails,
+                  ftrNumber: element.ftrNumber,
+                  id: element.id,
+                  mark: element.mark,
+                  obtainMarks: element.obtainMarks,
+                  subcategoryId: element.chapterId,
+                  tdate: element.tdate,
+                  testFormativeId: element.testFormativeId,
+                  testFormativeType: element.testFormativeType,
+                  topicId: element.topicId,
+                  ttime: element.ttime));
             },
           );
-
-          controllers.value = {
-            for (var item in questions) item.id: TextEditingController()
-          };
-
-          focusNodes.value =
-              List.generate(questions.length, (_) => FocusNode());
         } else {
           questions.clear();
           log("No formative assessment data available.");

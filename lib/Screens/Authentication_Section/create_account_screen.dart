@@ -24,13 +24,13 @@ class CreateAccountScreen extends StatelessWidget {
               key: controller.formKey,
               child: Padding(
                 padding: screenPadding,
-                child: Column(
+                child: ListView(
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          top: Get.height * 0.100, bottom: Get.height * 0.020),
+                          top: Get.height * 0.100, bottom: Get.height * 0.050),
                       child: SizedBox(
-                          height: Get.height * 0.150,
+                          height: Get.height * 0.200,
                           width: Get.width * 0.400,
                           child: Image.asset(ImagePathConstant.logo,
                               fit: BoxFit.fill)),

@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:firesafety/Constant/storage_key_constant.dart';
 import 'package:firesafety/Models/post_Get_Subcategory_PaymentModel.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Payment_thank_you_view.dart';
+import 'package:firesafety/Services/local_storage_services.dart';
 import 'package:firesafety/Widgets/custom_loader.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
@@ -12,6 +14,8 @@ class CourseListController extends GetxController {
   GetCourseListModel getCourseListModel = GetCourseListModel();
   GetSubcategoryPaymentModel getSubcategoryPaymentModel =
       GetSubcategoryPaymentModel();
+
+  RxString userId = "".obs;
 
   // Variable to hold the purchase ID
   RxString Id = ''.obs;
@@ -41,6 +45,10 @@ class CourseListController extends GetxController {
     required String subcategoryId,
   }) async {
     try {
+      userId.value = await StorageServices.getData(
+          dataType: StorageKeyConstant.stringType,
+          prefKey: StorageKeyConstant.userId);
+
       Map<String, dynamic> payload = {
         "category_id": categoryId,
         "subcategory_id": subcategoryId

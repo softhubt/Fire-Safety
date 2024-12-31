@@ -37,10 +37,9 @@ class BottomBarController extends GetxController {
 
     // Initialize motionTabBarController
     motionTabBarController = MotionTabBarController(
-      initialIndex: widgetCurrentIndex,
-      length: screenList.length,
-      vsync: vsync,
-    );
+        initialIndex: widgetCurrentIndex,
+        length: screenList.length,
+        vsync: vsync);
 
     // Assign widgetCurrentIndex
     selectedIndex.value = widgetCurrentIndex;

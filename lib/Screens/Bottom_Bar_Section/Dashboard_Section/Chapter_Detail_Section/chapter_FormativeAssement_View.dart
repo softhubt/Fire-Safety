@@ -16,13 +16,12 @@ class FormativeAssesmentView extends StatefulWidget {
   final String courseId;
   final String testpaymentId;
 
-  const FormativeAssesmentView({
-    super.key,
-    required this.chapterId,
-    required this.userId,
-    required this.courseId,
-    required this.testpaymentId,
-  });
+  const FormativeAssesmentView(
+      {super.key,
+      required this.chapterId,
+      required this.userId,
+      required this.courseId,
+      required this.testpaymentId});
 
   @override
   State<FormativeAssesmentView> createState() => _FormativeAssesmentViewState();
@@ -51,166 +50,184 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
               ? CustomShimmer(height: Get.height * 0.600)
               : (controller.resultList.isNotEmpty &&
                       controller.isRestartExam.value == false)
-                  ? ListView(
-                      children: [
-                        // Display Marks
-                        Padding(
-                            padding: EdgeInsets.only(
-                                top: screenHeightPadding,
-                                bottom: screenHeightPadding),
-                            child: Card(
-                                color: ColorConstant.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                    padding: screenPadding,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "Marks: ${controller.resultList.last.mark}",
-                                            style: TextStyleConstant.bold22(
-                                                color: ColorConstant.blue)),
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: Get.height * 0.008),
-                                            child: Text(
-                                                "Obtained Marks: ${controller.resultList.last.obtainMarks}",
-                                                style: TextStyleConstant
-                                                    .medium18())),
-                                        Text(
-                                            "Date: ${controller.resultList.last.tdate.toString().split(" ")[0]}",
-                                            style: TextStyleConstant.medium16(
-                                                color: ColorConstant.grey)),
-                                      ],
-                                    )))),
+                  ? (controller.resultList.last.obtainMarks != null)
+                      ? ListView(
+                          children: [
+                            // Display Marks
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: screenHeightPadding,
+                                    bottom: screenHeightPadding),
+                                child: Card(
+                                    color: ColorConstant.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    child: Padding(
+                                        padding: screenPadding,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "Marks: ${controller.resultList.last.mark}",
+                                                style: TextStyleConstant.bold22(
+                                                    color: ColorConstant.blue)),
+                                            Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical:
+                                                        Get.height * 0.008),
+                                                child: Text(
+                                                    "Obtained Marks: ${controller.resultList.last.obtainMarks}",
+                                                    style: TextStyleConstant
+                                                        .medium18())),
+                                            Text(
+                                                "Date: ${controller.resultList.last.tdate.toString().split(" ")[0]}",
+                                                style:
+                                                    TextStyleConstant.medium16(
+                                                        color: ColorConstant
+                                                            .grey)),
+                                          ],
+                                        )))),
 
-                        // Formative Result Details
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller
-                              .resultList.last.formativeResultDetails?.length,
-                          itemBuilder: (context, index) {
-                            final element = controller
-                                .resultList.last.formativeResultDetails?[index];
-                            return Padding(
-                              padding: EdgeInsets.only(top: Get.height * 0.010),
-                              child: Card(
-                                color: ColorConstant.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding: screenPadding,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Question
-                                      Row(
+                            // Formative Result Details
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controller.resultList.last
+                                  .formativeResultDetails?.length,
+                              itemBuilder: (context, index) {
+                                final element = controller.resultList.last
+                                    .formativeResultDetails?[index];
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.only(top: Get.height * 0.010),
+                                  child: Card(
+                                    color: ColorConstant.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    child: Padding(
+                                      padding: screenPadding,
+                                      child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Icon(Icons.question_mark,
-                                              color: ColorConstant.blue),
-                                          SizedBox(width: Get.width * 0.016),
-                                          Expanded(
-                                              child: Text(
-                                                  "Q ${index + 1}: ${element?.question ?? ""}",
-                                                  style: TextStyleConstant
-                                                      .semiBold20())),
-                                        ],
-                                      ),
-
-                                      // Marks
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: Get.height * 0.008),
-                                          child: Row(
+                                          // Question
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              const Icon(Icons.star,
-                                                  color: ColorConstant.amber),
+                                              const Icon(Icons.question_mark,
+                                                  color: ColorConstant.blue),
                                               SizedBox(
                                                   width: Get.width * 0.016),
-                                              Text(
-                                                  "Marks: ${element?.marks ?? ""}",
-                                                  style: TextStyleConstant
-                                                      .medium18()),
+                                              Expanded(
+                                                  child: Text(
+                                                      "Q ${index + 1}: ${element?.question ?? ""}",
+                                                      style: TextStyleConstant
+                                                          .semiBold20())),
                                             ],
-                                          )),
+                                          ),
 
-                                      // Comment
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Icon(Icons.comment,
-                                              color: ColorConstant.green),
-                                          SizedBox(width: Get.width * 0.016),
-                                          Expanded(
-                                            child: Text(
-                                              "Comment: ${element?.comment ?? ""}",
-                                              style: TextStyleConstant.medium18(
-                                                  color: ColorConstant.grey),
+                                          // Marks
+                                          Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: Get.height * 0.008),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(Icons.star,
+                                                      color:
+                                                          ColorConstant.amber),
+                                                  SizedBox(
+                                                      width: Get.width * 0.016),
+                                                  Text(
+                                                      "Marks: ${element?.marks ?? ""}",
+                                                      style: TextStyleConstant
+                                                          .medium18()),
+                                                ],
+                                              )),
+
+                                          // Comment
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Icon(Icons.comment,
+                                                  color: ColorConstant.green),
+                                              SizedBox(
+                                                  width: Get.width * 0.016),
+                                              Expanded(
+                                                child: Text(
+                                                  "Comment: ${element?.comment ?? ""}",
+                                                  style: TextStyleConstant
+                                                      .medium18(
+                                                          color: ColorConstant
+                                                              .grey),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          // User Answer
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: Get.height * 0.008),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Icon(Icons.edit,
+                                                    color:
+                                                        ColorConstant.orange),
+                                                SizedBox(
+                                                    width: Get.width * 0.016),
+                                                Expanded(
+                                                  child: Text(
+                                                    "Your Answer: ${element?.answer ?? ""}",
+                                                    style: TextStyleConstant
+                                                        .regular16(),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
-
-                                      // User Answer
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: Get.height * 0.008),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(Icons.edit,
-                                                color: ColorConstant.orange),
-                                            SizedBox(width: Get.width * 0.016),
-                                            Expanded(
-                                              child: Text(
-                                                "Your Answer: ${element?.answer ?? ""}",
-                                                style: TextStyleConstant
-                                                    .regular16(),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(
-                                top: screenHeightPadding,
-                                bottom: Get.height * 0.040),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    child: CustomButton(
-                                  title: "Restart Test",
-                                  onTap: () {
-                                    controller.isRestartExam.value = true;
-                                  },
+                                );
+                              },
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: screenHeightPadding,
+                                    bottom: Get.height * 0.040),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: CustomButton(
+                                      title: "Restart Test",
+                                      onTap: () {
+                                        controller.isRestartExam.value = true;
+                                      },
+                                    )),
+                                    SizedBox(width: screenWidthPadding),
+                                    Expanded(
+                                        child: CustomButton(
+                                      title: "Finish",
+                                      onTap: () {
+                                        Get.offAll(
+                                            () => const BottomBarScreen());
+                                      },
+                                    )),
+                                  ],
                                 )),
-                                SizedBox(width: screenWidthPadding),
-                                Expanded(
-                                    child: CustomButton(
-                                  title: "Finish",
-                                  onTap: () {
-                                    Get.offAll(() => const BottomBarScreen());
-                                  },
-                                )),
-                              ],
-                            )),
-                      ],
-                    )
+                          ],
+                        )
+                      : const CustomNoDataFound(
+                          message:
+                              "Your Give test is in Review\nResult will apper here soon")
                   : (controller.questions.isNotEmpty)
                       ? ListView(
                           children: [

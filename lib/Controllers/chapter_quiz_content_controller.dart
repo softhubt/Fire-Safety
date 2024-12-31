@@ -7,7 +7,6 @@ import 'package:firesafety/Models/get_chapter_quiz_list_model.dart';
 import 'package:firesafety/Models/post_chapter_quiz_result_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 import 'package:firesafety/Services/http_services.dart';
-import 'package:firesafety/Widgets/custom_loader.dart';
 
 class ChapterQuizContentController extends GetxController {
   GetQuizResultListModel getQuizResultListModel = GetQuizResultListModel();
@@ -17,19 +16,21 @@ class ChapterQuizContentController extends GetxController {
   PostShowlastChapterresultQuizModel postShowlastChapterresultQuizModel =
       PostShowlastChapterresultQuizModel();
 
-  final RxDouble progressBarValue = 0.0.obs;
-  RxString selectedAnswer = "".obs;
-  RxInt currentQuestionIndex = 0.obs;
-  RxBool isAnswered = false.obs;
-
-  RxInt correctAnswers = 0.obs;
-  RxInt wrongAnswers = 0.obs;
-
   RxList<Question> questions = <Question>[].obs; // RxList<Question>
   RxList<TestResultList> resultList =
       <TestResultList>[].obs; // RxList<Question>
 
+  RxString selectedAnswer = "".obs;
+  RxString testQiuzeId = "".obs;
+
+  final RxDouble progressBarValue = 0.0.obs;
+
+  RxInt correctAnswers = 0.obs;
+  RxInt wrongAnswers = 0.obs;
+  RxInt currentQuestionIndex = 0.obs;
+
   // New variable to store the quiz result
+  RxBool isAnswered = false.obs;
   RxBool isQuizCompleted = false.obs;
   RxBool isFetchingData = true.obs;
   RxBool isRestart = false.obs;
@@ -39,7 +40,6 @@ class ChapterQuizContentController extends GetxController {
       required String topicId,
       required String userId,
       required String quizType}) async {
-    await getQuizResultList(userId: userId, topicId: topicId);
     await getQuizList(
         chapterId: chapterId, topicId: topicId, userId: userId, type: quizType);
     isFetchingData.value = false;
@@ -75,87 +75,28 @@ class ChapterQuizContentController extends GetxController {
   }
 
   // Fetch quiz data
-  Future<void> getQuizResultList(
-      {required String userId, required String topicId}) async {
+  Future<void> getQuizList(
+      {required String chapterId,
+      required String userId,
+      required String type,
+      required String topicId}) async {
     try {
-      CustomLoader.openCustomLoader();
-
-      Map<String, dynamic> payload = {"user_id": userId, "test_id": topicId};
-
-      var response = await HttpServices.postHttpMethod(
-          url: EndPointConstant.testResultDisplay,
-          payload: payload,
-          urlMessage: "Get quiz result list url",
-          payloadMessage: "Get quiz result list payload",
-          statusMessage: "Get quiz result list status code",
-          bodyMessage: "Get quiz result list response");
-
-      getQuizResultListModel = getQuizResultListModelFromJson(response["body"]);
-
-      if (getQuizResultListModel.statusCode == "200" ||
-          getQuizResultListModel.statusCode == "201") {
-        if (getQuizResultListModel.testResultList != null) {
-          getQuizResultListModel.testResultList?.forEach(
-            (element) {
-              resultList.add(TestResultList(
-                  answerSheet: element.answerSheet,
-                  chapterId: element.chapterId,
-                  checkedAnswerSheet: element.checkedAnswerSheet,
-                  courseId: element.courseId,
-                  id: element.id,
-                  obtainMarks: element.obtainMarks,
-                  rightAnswers: element.rightAnswers,
-                  tdate: element.tdate,
-                  testId: element.testId,
-                  testName: element.testName,
-                  testType: element.testType,
-                  topicId: element.topicId,
-                  topperObtainMarks: element.topperObtainMarks,
-                  totalMarks: element.totalMarks,
-                  totalQuestion: element.totalQuestion,
-                  ttime: element.ttime,
-                  userId: element.userId,
-                  wrongAnswers: element.wrongAnswers));
-            },
-          );
-        }
-      } else {
-        questions.clear();
-        log("Something went wrong during getting quiz result list ::: ${getQuizResultListModel.message}");
-      }
-    } catch (error) {
-      questions.clear();
-      log("Something went wrong during getting quiz result list ::: $error");
-    } finally {
-      CustomLoader.closeCustomLoader();
-    }
-  }
-
-  // Fetch quiz data
-  Future<void> getQuizList({
-    required String chapterId,
-    required String userId,
-    required String type,
-    required String topicId,
-  }) async {
-    try {
-      CustomLoader.openCustomLoader();
-
       Map<String, dynamic> payload = {
         "type": type,
         "chapter_id": chapterId,
         "topic_id": topicId,
-        "user_id": userId,
+        "user_id": userId
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.testQuestionDetails,
-        payload: payload,
-        urlMessage: "Get quiz list url",
-        payloadMessage: "Get quiz list payload",
-        statusMessage: "Get quiz list status code",
-        bodyMessage: "Get quiz list response",
-      );
+          url: EndPointConstant.testQuestionDetails,
+          payload: payload,
+          urlMessage: "Get quiz list url",
+          payloadMessage: "Get quiz list payload",
+          statusMessage: "Get quiz list status code",
+          bodyMessage: "Get quiz list response");
+
+      getChapterQuizListModel.testDetailsList = null;
 
       getChapterQuizListModel =
           getChapterQuizListModelFromJson(response["body"]);
@@ -164,6 +105,8 @@ class ChapterQuizContentController extends GetxController {
           getChapterQuizListModel.statusCode == "201") {
         if (getChapterQuizListModel.testDetailsList != null &&
             getChapterQuizListModel.testDetailsList!.isNotEmpty) {
+          testQiuzeId.value =
+              getChapterQuizListModel.testDetailsList?.first.testId ?? '';
           questions.value = getChapterQuizListModel
                   .testDetailsList![0].testQuestionDetails
                   ?.map((element) {
@@ -180,7 +123,13 @@ class ChapterQuizContentController extends GetxController {
                 );
               }).toList() ??
               [];
+
+          await getQuizResultList(
+              userId: userId,
+              testId:
+                  getChapterQuizListModel.testDetailsList?.first.testId ?? "");
         } else {
+          testQiuzeId.value = ''; // Ensure a non-null value is set
           questions.clear();
           log("No quiz data available.");
         }
@@ -191,8 +140,68 @@ class ChapterQuizContentController extends GetxController {
     } catch (error) {
       questions.clear();
       log("Error fetching quiz data: $error");
-    } finally {
-      CustomLoader.closeCustomLoader();
+    }
+  }
+
+  Future<void> getQuizResultList(
+      {required String userId, required String testId}) async {
+    try {
+      Map<String, dynamic> payload = {"user_id": userId, "test_id": testId};
+
+      var response = await HttpServices.postHttpMethod(
+          url: EndPointConstant.testResultDisplay,
+          payload: payload,
+          urlMessage: "Get quiz result list url",
+          payloadMessage: "Get quiz result list payload",
+          statusMessage: "Get quiz result list status code",
+          bodyMessage: "Get quiz result list response");
+
+      log("Response body: ${response['body']}");
+
+      if (response["body"] == null || response["body"] == "") {
+        throw Exception("Response body is null or empty.");
+      }
+
+      getQuizResultListModel.testResultList = null;
+
+      getQuizResultListModel = getQuizResultListModelFromJson(response["body"]);
+
+      if (getQuizResultListModel.statusCode == "200" ||
+          getQuizResultListModel.statusCode == "201") {
+        if (getQuizResultListModel.testResultList != null &&
+            getQuizResultListModel.testResultList!.isNotEmpty) {
+          getQuizResultListModel.testResultList?.forEach((element) {
+            if (element.obtainMarks != null) {
+              resultList.add(TestResultList(
+                  id: element.id ?? "",
+                  userId: element.userId ?? "",
+                  testId: element.testId ?? "",
+                  testType: element.testType ?? "",
+                  obtainMarks: element.obtainMarks ?? "0",
+                  totalMarks: element.totalMarks ?? "0",
+                  testName: element.testName ?? "",
+                  answerSheet: element.answerSheet ?? "",
+                  checkedAnswerSheet: element.checkedAnswerSheet ?? "",
+                  rightAnswers: element.rightAnswers ?? "0",
+                  wrongAnswers: element.wrongAnswers ?? "0",
+                  totalQuestion: element.totalQuestion ?? 0,
+                  topperObtainMarks: element.topperObtainMarks ?? "0",
+                  courseId: element.courseId ?? "",
+                  chapterId: element.chapterId ?? "",
+                  topicId: element.topicId ?? "",
+                  tdate: element.tdate,
+                  ttime: element.ttime ?? ""));
+            }
+          });
+        } else {
+          log("Test result list is empty or null.");
+        }
+      } else {
+        log("Failed to get quiz result: ${getQuizResultListModel.message}");
+      }
+    } catch (error) {
+      questions.clear();
+      log("Something went wrong during getting quiz result list ::: $error");
     }
   }
 
@@ -207,8 +216,6 @@ class ChapterQuizContentController extends GetxController {
     required String testpaymentid,
   }) async {
     try {
-      CustomLoader.openCustomLoader();
-
       Map<String, dynamic> payload = {
         "test_type": type,
         "course_id": courseid,
@@ -220,17 +227,16 @@ class ChapterQuizContentController extends GetxController {
         "total_marks": "${questions.length}",
         "right_answers": "${correctAnswers.value}",
         "wrong_answers": "${wrongAnswers.value}",
-        "testpayment_id": testpaymentid,
+        "testpayment_id": testpaymentid
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.testSubmit,
-        payload: payload,
-        urlMessage: "Post quiz result url",
-        payloadMessage: "Post quiz result payload",
-        statusMessage: "Post quiz result status code",
-        bodyMessage: "Post quiz result response",
-      );
+          url: EndPointConstant.testSubmit,
+          payload: payload,
+          urlMessage: "Post quiz result url",
+          payloadMessage: "Post quiz result payload",
+          statusMessage: "Post quiz result status code",
+          bodyMessage: "Post quiz result response");
 
       postChapterQuizResultModel =
           postChapterQuizResultModelFromJson(response["body"]);
@@ -245,9 +251,7 @@ class ChapterQuizContentController extends GetxController {
       }
     } catch (error) {
       log("Error posting quiz results: $error");
-    } finally {
-      CustomLoader.closeCustomLoader();
-    }
+    } finally {}
   }
 
   Future<void> ShowresultQuizResult({
@@ -255,8 +259,6 @@ class ChapterQuizContentController extends GetxController {
     required String userId,
   }) async {
     try {
-      CustomLoader.openCustomLoader();
-
       Map<String, dynamic> payload = {
         "test_id": testId,
         "user_id": userId,
@@ -283,8 +285,6 @@ class ChapterQuizContentController extends GetxController {
       }
     } catch (error) {
       log("Error fetching quiz results: $error");
-    } finally {
-      CustomLoader.closeCustomLoader();
-    }
+    } finally {}
   }
 }

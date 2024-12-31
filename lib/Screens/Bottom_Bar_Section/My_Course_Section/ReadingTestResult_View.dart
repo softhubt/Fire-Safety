@@ -20,6 +20,8 @@ class RedingTestResultView extends StatefulWidget {
   final double skippedQuestion;
   final double rightAnswer;
   final double wrongAnswer;
+  final double totalMarks;
+  final double obtainMarks;
   // final double userId;
   final List<ReadingTestQuestion>
       answeredList; // Change to List<Question> instead of List<Map>
@@ -36,6 +38,8 @@ class RedingTestResultView extends StatefulWidget {
     required this.answeredList,
     required this.userId,
     required this.id,
+    required this.totalMarks,
+    required this.obtainMarks,
     // required this.userId,
   });
 
@@ -62,24 +66,13 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text('Test: ${widget.testName}', style: TextStyle(fontSize: 22)),
                 const SizedBox(height: 20),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text('Attempted: ${widget.attemptedQuestions}'),
-                //     Text('Unattempted: ${widget.unattemptedQuestions}'),
-                //     Text('Skipped: ${widget.skippedQuestion}'),
-                //   ],
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                        "Total Marks: ${controller.postReadingResultModel.result?.totalMarks ?? ""}",
+                    Text("Total Marks: ${widget.totalMarks}",
                         style: TextStyleConstant.medium18()),
-                    Text(
-                        "Obtain Marks: ${controller.postReadingResultModel.result?.obtainMarks ?? ""}",
+                    Text("Obtain Marks: ${widget.obtainMarks}",
                         style: TextStyleConstant.medium18()),
                   ],
                 ),
@@ -89,11 +82,9 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                          "Right Answers: ${controller.postReadingResultModel.result?.rightAnswers ?? ""}",
+                      Text("Right Answers: ${widget.rightAnswer}",
                           style: TextStyleConstant.medium18()),
-                      Text(
-                          "Wrong Answers: ${controller.postReadingResultModel.result?.wrongAnswers ?? ""}",
+                      Text("Wrong Answers: ${widget.wrongAnswer}",
                           style: TextStyleConstant.medium18())
                     ],
                   ),
@@ -104,48 +95,51 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
                 Container(
                   padding: contentPadding,
                   decoration: BoxDecoration(
-                      color: (double.parse(
-                                  "${controller.postReadingResultModel.result?.obtainMarks}") >
-                              0)
-                          ? ColorConstant.green.withOpacity(0.1)
-                          : ColorConstant.red.withOpacity(0.1),
-                      border: Border.all(
-                          width: 2,
-                          color: (double.parse(
-                                      "${controller.postReadingResultModel.result?.obtainMarks}") >
-                                  0)
-                              ? ColorConstant.green
-                              : ColorConstant.red),
-                      borderRadius: BorderRadius.circular(16)),
+                    color: (double.tryParse("${widget.obtainMarks}") ?? 0) > 0
+                        ? ColorConstant.green.withOpacity(0.1)
+                        : ColorConstant.red.withOpacity(0.1),
+                    border: Border.all(
+                        width: 2,
+                        color:
+                            (double.tryParse("${widget.obtainMarks}") ?? 0) > 0
+                                ? ColorConstant.green
+                                : ColorConstant.red),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Column(
                     children: [
                       Text(
-                          "${controller.postReadingResultModel.result?.obtainMarks}",
-                          style: TextStyleConstant.bold36(
-                              color: (double.parse(
-                                          "${controller.postReadingResultModel.result?.obtainMarks}") >
-                                      0)
-                                  ? ColorConstant.green
-                                  : ColorConstant.red),
-                          textAlign: TextAlign.center),
-                      Text("is your test score",
-                          style: TextStyleConstant.medium18(),
-                          textAlign: TextAlign.center),
+                        controller.postReadingResultModel.result?.obtainMarks ??
+                            '0',
+                        style: TextStyleConstant.bold36(
+                            color: (double.tryParse("${widget.obtainMarks}") ??
+                                        0) >
+                                    0
+                                ? ColorConstant.green
+                                : ColorConstant.red),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "is your test score",
+                        style: TextStyleConstant.medium18(),
+                        textAlign: TextAlign.center,
+                      ),
                       SizedBox(height: contentHeightPadding),
                       Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: (double.parse(
-                                            "${controller.postReadingResultModel.result?.obtainMarks}") >
-                                        0)
-                                    ? ColorConstant.green
-                                    : ColorConstant.red,
-                                width: 2),
-                            borderRadius: BorderRadius.circular(12)),
+                          border: Border.all(
+                              color:
+                                  (double.tryParse("${widget.obtainMarks}") ??
+                                              0) >
+                                          0
+                                      ? ColorConstant.green
+                                      : ColorConstant.red,
+                              width: 2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: LinearProgressIndicator(
                           value: controller.progressBarValue.value,
                           minHeight: 40,
-                          borderRadius: BorderRadius.circular(10),
                           backgroundColor: ColorConstant.transparent,
                           valueColor:
                               const AlwaysStoppedAnimation<Color>(Colors.green),
@@ -186,41 +180,7 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
                     ],
                   ),
                 ),
-
                 SizedBox(height: screenHeightPadding),
-                // Container(
-                //   padding: contentPadding,
-                //   decoration: BoxDecoration(
-                //       color: ColorConstant.blue.withOpacity(0.1),
-                //       border:
-                //       Border.all(width: 2, color: ColorConstant.blue),
-                //       borderRadius: BorderRadius.circular(16)),
-                //   child: Column(
-                //     children: [
-                //       SizedBox(
-                //         height: Get.height * 0.300,
-                //         child: PieChart(
-                //           PieChartData(
-                //             sections: showingSecondSections(
-                //                 rightAnswer: widget.rightAnswer,
-                //                 wrongAnswer: widget.wrongAnswer,
-                //                 skippedQuestions: widget.skippedQuestion +
-                //                     widget.unattemptedQuestions),
-                //             centerSpaceRadius: 20,
-                //             sectionsSpace: 2,
-                //             borderData: FlBorderData(show: false),
-                //             pieTouchData: PieTouchData(
-                //               touchCallback: (FlTouchEvent event,
-                //                   pieTouchResponse) {},
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //       buildSecondLegend(),
-                //     ],
-                //   ),
-                // ),
-
                 SizedBox(height: screenHeightPadding),
                 Padding(
                   padding: EdgeInsets.only(bottom: screenHeightPadding),

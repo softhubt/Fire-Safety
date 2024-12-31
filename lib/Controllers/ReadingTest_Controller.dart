@@ -79,22 +79,26 @@ class ReadingTestController extends GetxController {
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.proficiencyreadlistentesttypewise,
-        payload: payload,
-        urlMessage: "Get reading listening test details URL",
-        payloadMessage: "Get reading listening test details payload",
-        statusMessage: "Get reading listening test details status code",
-        bodyMessage: "Get reading listening test details response",
-      );
+          url: EndPointConstant.proficiencyreadlistentesttypewise,
+          payload: payload,
+          urlMessage: "Get reading listening test details URL",
+          payloadMessage: "Get reading listening test details payload",
+          statusMessage: "Get reading listening test details status code",
+          bodyMessage: "Get reading listening test details response");
 
-      var model = readListenTestTypeWiseModelFromJson(response["body"]);
+      readListenTestTypeWiseModel =
+          readListenTestTypeWiseModelFromJson(response["body"]);
 
-      if (model.statusCode == "200" || model.statusCode == "201") {
-        if (model.readingListeningTestDetailsList != null &&
-            model.readingListeningTestDetailsList!.isNotEmpty) {
-          paragraph.value =
-              model.readingListeningTestDetailsList![0].paragraph ?? '';
-          questions.value = model
+      if (readListenTestTypeWiseModel.statusCode == "200" ||
+          readListenTestTypeWiseModel.statusCode == "201") {
+        if (readListenTestTypeWiseModel.readingListeningTestDetailsList !=
+                null &&
+            readListenTestTypeWiseModel
+                .readingListeningTestDetailsList!.isNotEmpty) {
+          paragraph.value = readListenTestTypeWiseModel
+                  .readingListeningTestDetailsList![0].paragraph ??
+              '';
+          questions.value = readListenTestTypeWiseModel
                   .readingListeningTestDetailsList![0].testQuestionDetails
                   ?.map((element) {
                 return ReadingTestQuestion(
@@ -116,7 +120,7 @@ class ReadingTestController extends GetxController {
         }
       } else {
         questions.clear();
-        log("Something went wrong: ${model.message}");
+        log("Something went wrong: ${readListenTestTypeWiseModel.message}");
       }
     } catch (error) {
       questions.clear();

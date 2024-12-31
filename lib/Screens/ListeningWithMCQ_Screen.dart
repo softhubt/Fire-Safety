@@ -2,7 +2,6 @@
 
 import 'package:firesafety/Controllers/ListeningTest_Controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/ListeningTestWithQuizRuselt_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
@@ -56,6 +55,8 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         _isPlaying = false;
       });
     });
+
+    controller.initialFunction().whenComplete(() => setState(() {}));
   }
 
   Future<void> _loadQuizData() async {
@@ -89,9 +90,8 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
   void _submitAnswers() {
     controller
         .postListeningTestResult(
-            testId: controller.listenTestTypeWiseModel
-                    .readingListeningTestDetailsList?[0].readListeningTestId ??
-                '',
+            testId:
+                "${controller.listenTestTypeWiseModel.readingListeningTestDetailsList?.first.readListeningTestId}",
             type: "Listening Test",
             id: widget.id)
         .then((_) {
@@ -101,13 +101,14 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
                   .readingListeningTestDetailsList?[0].id ??
               '',
           testName: 'Quiz Test',
-          attemptedQuestions: controller.correctAnswers.value.toDouble(),
-          unattemptedQuestions:
-              (controller.questions.length - controller.correctAnswers.value)
-                  .toDouble(),
-          skippedQuestion: 0.0, // Assuming skipped questions are 0
-          rightAnswer: controller.correctAnswers.value.toDouble(),
-          wrongAnswer: controller.wrongAnswers.value.toDouble(),
+          attemptedQuestions: (controller.correctAnswers.value ?? 0).toDouble(),
+          unattemptedQuestions: ((controller.questions.length -
+                      (controller.correctAnswers.value)) ??
+                  0)
+              .toDouble(),
+          skippedQuestion: 0.0,
+          rightAnswer: (controller.correctAnswers.value ?? 0).toDouble(),
+          wrongAnswer: (controller.wrongAnswers.value ?? 0).toDouble(),
           answeredList: controller.questions,
           userId: widget.userId));
     });

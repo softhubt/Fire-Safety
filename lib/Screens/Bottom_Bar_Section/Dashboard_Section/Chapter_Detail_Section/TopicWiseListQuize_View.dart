@@ -1,7 +1,9 @@
+import 'package:firesafety/Constant/color_constant.dart';
+import 'package:firesafety/Constant/layout_constant.dart';
+import 'package:firesafety/Widgets/custom_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/chapter_TopicWise_quize_Controller.dart';
-import 'package:firesafety/Controllers/chapter_detail_controller.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 
 class TopicListScreen extends StatefulWidget {
@@ -9,93 +11,72 @@ class TopicListScreen extends StatefulWidget {
   final String userId;
   final String testpaymentId;
 
-  const TopicListScreen({
-    super.key,
-    required this.chapterId,
-    required this.userId,
-    required this.testpaymentId,
-  });
+  const TopicListScreen(
+      {super.key,
+      required this.chapterId,
+      required this.userId,
+      required this.testpaymentId});
 
   @override
   _TopicListScreenState createState() => _TopicListScreenState();
 }
 
 class _TopicListScreenState extends State<TopicListScreen> {
-  late final ChapterTopicWiseQuizController controller;
-  final ChapterDetailController chapterDetailController = Get.find();
+  final ChapterTopicWiseQuizController controller =
+      Get.put(ChapterTopicWiseQuizController());
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(ChapterTopicWiseQuizController());
-    controller.getTopicWiseList(chapterId: widget.chapterId);
+    controller
+        .initialFunctiioun(chapterId: widget.chapterId)
+        .whenComplete(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() {
-        if (controller.topicList.isEmpty) {
-          return const Center(child: Text('No Topics Available'));
-        }
-
-        return Container(
-          color: Colors.grey[100],
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16.0),
-            separatorBuilder: (context, index) =>
-                Divider(thickness: 1, color: Colors.grey[300]),
-            itemCount: controller.topicList.length,
-            itemBuilder: (context, index) {
-              final topic = controller.topicList[index];
-              return Card(
-                elevation: 5,
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: Colors.blueAccent,
-                    child: Icon(Icons.topic, color: Colors.white),
-                  ),
-                  title: Text(topic.topicName ?? 'Unknown',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w500)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  onTap: () {
-                    if (topic.topicId != null && topic.topicId!.isNotEmpty) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChapterQuizContentView(
+      body: (controller.chapterWiseTopicListModel.quizChapterwiseTopicList !=
+              null)
+          ? ListView.builder(
+              itemCount: controller
+                  .chapterWiseTopicListModel.quizChapterwiseTopicList?.length,
+              itemBuilder: (context, index) {
+                final element = controller
+                    .chapterWiseTopicListModel.quizChapterwiseTopicList?[index];
+                return Padding(
+                  padding: EdgeInsets.only(top: contentHeightPadding),
+                  child: Card(
+                    color: ColorConstant.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    child: ListTile(
+                      onTap: () {
+                        Get.to(() => ChapterQuizContentView(
                             chapterId: widget.chapterId,
-                            topicId: "${topic.topicId}",
+                            topicId: "${element?.topicId}",
                             userId: widget.userId,
-                            //  userId: chapterDetailController.userId.value,
                             quizType: "3",
-                            testpaymentId: widget.testpaymentId,
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('No quizzes available for this topic')),
-                      );
-                    }
-                  },
-                ),
-              );
-            },
-          ),
-        );
-      }),
+                            testpaymentId: widget.testpaymentId));
+                      },
+                      leading:
+                          const Icon(Icons.book, color: ColorConstant.primary),
+                      title: Text("${element?.topicName}"),
+                      trailing: const Icon(Icons.arrow_forward_ios_rounded,
+                          color: ColorConstant.primary),
+                    ),
+                  ),
+                );
+              },
+            )
+          : ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return CustomShimmer(
+                    topPadding: contentHeightPadding,
+                    height: Get.height * 0.100);
+              },
+            ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Optionally clear the topic list when the screen is disposed
-    Get.delete<ChapterTopicWiseQuizController>();
-    super.dispose();
   }
 }

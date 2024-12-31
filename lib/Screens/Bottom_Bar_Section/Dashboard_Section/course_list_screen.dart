@@ -70,7 +70,11 @@ class _CourseListScreenState extends State<CourseListScreen> {
                                 "${controller.getCourseListModel.courseList?[index].courseId}",
                             testpaymentId: "widget.testpaymentId,",
                             isPurchase: widget.isPurchase,
-                            amount: widget.amount));
+                            amount: widget.amount,
+                            categoryId: widget.categoryId,
+                            days: widget.days,
+                            subCategoryId: widget.subcategoryId,
+                            userId: widget.userId));
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(

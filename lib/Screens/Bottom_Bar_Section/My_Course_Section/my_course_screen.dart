@@ -33,6 +33,7 @@ class _MyCourseListViewState extends State<MyCourseListView> {
   @override
   void initState() {
     super.initState();
+
     controller
         .getCourseList(
           categoryId: widget.categoryId,
@@ -59,10 +60,15 @@ class _MyCourseListViewState extends State<MyCourseListView> {
                     child: GestureDetector(
                         onTap: () {
                           Get.to(() => CourseDetailScreen(
-                              courseId: "${element?.courseId}",
-                              testpaymentId: widget.testpaymentId,
-                              isPurchase: '',
-                              amount: "0"));
+                                courseId: "${element?.courseId}",
+                                testpaymentId: widget.testpaymentId,
+                                isPurchase: '',
+                                amount: "0",
+                                categoryId: "${element?.categoryId}",
+                                days: "",
+                                subCategoryId: "${element?.subcategoryId}",
+                                userId: controller.userId.value,
+                              ));
                         },
                         child: buildDetailedCard(element)),
                   );

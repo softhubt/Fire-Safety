@@ -45,14 +45,22 @@ class SpekingTestController extends GetxController {
         .value); // This will now point to the front camera if available
   }
 
-  void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      elapsedSeconds++;
+  Future startTimer() async {
+    timer = Timer.periodic(const Duration(seconds: 1), (time) async {
+      elapsedSeconds.value++;
+
+      if (elapsedSeconds.value >= 120) {
+        // Check if 2 minutes (120 seconds) have passed
+        await stopVideoRecording();
+        stopTimer();
+      }
     });
   }
 
   void stopTimer() {
+    elapsedSeconds.value = 0;
     timer?.cancel();
+    print("Timer stopped");
   }
 
   void switchCamera() async {
