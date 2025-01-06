@@ -55,64 +55,59 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.chapterName,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
+        appBar: CustomAppBar(
+          title: widget.chapterName,
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
+          ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: screenHeightPadding,
-          left: screenWidthPadding,
-          right: screenWidthPadding,
-        ),
-        child: controller.userId.value.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : Obx(() {
-                final tabs = controller.getTabListWithAccess();
-                return Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: Get.height * 0.006,
-                        horizontal: Get.width * 0.014,
-                      ),
-                      height: Get.height * 0.054,
-                      decoration: BoxDecoration(
-                        color: ColorConstant.extraLightPrimary,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TabBar(
-                        controller: controller.tabController,
-                        isScrollable: true,
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6.0),
-                          color: ColorConstant.primary,
-                        ),
-                        labelColor: ColorConstant.white,
-                        tabs: tabs.map<Widget>((tab) => tab['widget']).toList(),
-                        dividerColor: ColorConstant.transparent,
-                      ),
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: controller.tabController,
-                        children: tabs.map<Widget>((tab) {
-                          return tab['isAccessible']
-                              ? tab['view']
-                              : const CustomNoDataFound(
-                                  message:
-                                      "Please complete previous excersices to access this one.",
-                                );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-      ),
-    );
+        body: Padding(
+          padding: EdgeInsets.only(
+            top: screenHeightPadding,
+            left: screenWidthPadding,
+            right: screenWidthPadding,
+          ),
+          child: controller.userId.value.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : Obx(() {
+                  final tabs = controller.getTabListWithAccess();
+                  return Column(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: Get.height * 0.006,
+                            horizontal: Get.width * 0.014,
+                          ),
+                          height: Get.height * 0.054,
+                          decoration: BoxDecoration(
+                            color: ColorConstant.extraLightPrimary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TabBar(
+                              controller: controller.tabController,
+                              isScrollable: true,
+                              indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  color: ColorConstant.primary),
+                              labelColor: ColorConstant.white,
+                              tabs: tabs
+                                  .map<Widget>((tab) => tab['widget'])
+                                  .toList(),
+                              dividerColor: ColorConstant.transparent)),
+                      Expanded(
+                          child: TabBarView(
+                              controller: controller.tabController,
+                              children: tabs.map<Widget>((tab) {
+                                return tab['isAccessible']
+                                    ? tab['view']
+                                    : const CustomNoDataFound(
+                                        message:
+                                            "Please complete previous excersices to access this one.");
+                              }).toList())),
+                    ],
+                  );
+                }),
+        ));
   }
 }
