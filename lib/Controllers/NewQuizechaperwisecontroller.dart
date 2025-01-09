@@ -83,11 +83,11 @@ class NewquizechapeterwiseController extends GetxController {
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
-    Get.to(() => ThankYouScreen(fromWhere: ''));
+    Get.to(() => const ThankYouScreen(fromWhere: ''));
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    Get.to(() => ThankYouScreen(fromWhere: ''));
+    Get.to(() => const ThankYouScreen(fromWhere: ''));
   }
 
   void handleExternalWallet(ExternalWalletResponse response) {

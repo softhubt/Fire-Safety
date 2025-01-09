@@ -1,7 +1,6 @@
 import 'package:firesafety/Controllers/MyCource_purchescategotylist_Controller.dart';
 import 'package:firesafety/Models/get_purches_CategoryList_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Student_Form_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/student_dashboard_view.dart';
 import 'package:firesafety/Screens/ListeningWithMCQ_Screen.dart';
 import 'package:firesafety/Screens/ReadingTest_WithMCQ_Screen.dart';

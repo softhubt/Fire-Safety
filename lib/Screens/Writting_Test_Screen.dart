@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:firesafety/Constant/layout_constant.dart';
-import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:firesafety/Widgets/custom_textfield.dart';

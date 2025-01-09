@@ -57,7 +57,7 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
+        child: const Text(
           'Next',
           style: TextStyle(
               fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
