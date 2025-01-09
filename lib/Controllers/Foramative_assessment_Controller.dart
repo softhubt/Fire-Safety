@@ -243,7 +243,6 @@ class ChapterFormativeAssessmentController extends GetxController {
     } catch (error) {
       CustomLoader.closeCustomLoader();
       log("Error during form submission: $error");
-      customToast(message: "An error occurred. Please try again.");
     }
   }
 

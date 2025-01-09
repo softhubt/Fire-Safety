@@ -4,11 +4,6 @@ import 'package:get/get.dart';
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Controllers/chapter_detail_controller.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_StudyMaterial_view.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_video_content_view.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_FormativeAssement_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/TopicWiseListQuize_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 
 class ChapterDetailScreen extends StatefulWidget {
@@ -18,14 +13,13 @@ class ChapterDetailScreen extends StatefulWidget {
   final String chapterName;
   final String testpaymentId;
 
-  const ChapterDetailScreen({
-    super.key,
-    required this.chapterId,
-    required this.courseId,
-    required this.testpaymentId,
-    required this.chapterName,
-    this.initialIndex,
-  });
+  const ChapterDetailScreen(
+      {super.key,
+      required this.chapterId,
+      required this.courseId,
+      required this.testpaymentId,
+      required this.chapterName,
+      this.initialIndex});
 
   @override
   State<ChapterDetailScreen> createState() => _ChapterDetailScreenState();
@@ -56,22 +50,29 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.chapterName,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
-        ),
-      ),
+          title: widget.chapterName,
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
+          )),
       body: Padding(
         padding: EdgeInsets.only(
-          top: screenHeightPadding,
-          left: screenWidthPadding,
-          right: screenWidthPadding,
-        ),
+            top: screenHeightPadding,
+            left: screenWidthPadding,
+            right: screenWidthPadding),
         child: controller.userId.value.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : Obx(() {
                 final tabs = controller.getTabListWithAccess();
+                if (tabs.isEmpty) {
+                  // If no tabs are accessible, show a "No Content" message
+                  return const Center(
+                    child: CustomNoDataFound(
+                      message: "No content available for this chapter.",
+                    ),
+                  );
+                }
+
                 return Column(
                   children: [
                     Container(
@@ -99,14 +100,8 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
                     Expanded(
                       child: TabBarView(
                         controller: controller.tabController,
-                        children: tabs.map<Widget>((tab) {
-                          return tab['isAccessible']
-                              ? tab['view']
-                              : const CustomNoDataFound(
-                                  message:
-                                      "Please complete previous excersices to access this one.",
-                                );
-                        }).toList(),
+                        children:
+                            tabs.map<Widget>((tab) => tab['view']).toList(),
                       ),
                     ),
                   ],

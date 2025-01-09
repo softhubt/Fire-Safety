@@ -1,5 +1,4 @@
 import 'package:firesafety/Models/get_subcategory_model.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_purchase_categotylist_screen.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';

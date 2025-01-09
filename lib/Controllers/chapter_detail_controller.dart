@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Constant/storage_key_constant.dart';
 import 'package:firesafety/Models/get_tab_access_list_model.dart';
@@ -37,18 +36,18 @@ class ChapterDetailController extends GetxController {
     required int initialIndex,
     required TickerProvider vsync,
   }) async {
-    tabController = TabController(
-      length: tabList.length,
-      vsync: vsync,
-      initialIndex: initialIndex,
-    );
-
     userId.value = await StorageServices.getData(
       dataType: StorageKeyConstant.stringType,
       prefKey: StorageKeyConstant.userId,
     );
 
     await getChapterAccess(chapterId: chapterId);
+
+    tabController = TabController(
+      length: getTabListWithAccess().length,
+      vsync: vsync,
+      initialIndex: initialIndex,
+    );
   }
 
   Future<void> getChapterAccess({required String chapterId}) async {
@@ -83,7 +82,8 @@ class ChapterDetailController extends GetxController {
     final accessList = getTabAccessListModel.elementwiseTabaccessList?.first;
     if (accessList == null) return [];
 
-    return [
+    // Filter tabs based on access keys
+    final List<Map<String, dynamic>> allTabs = [
       {
         'widget': const CustomTabBox(title: "Video", isExpandTab: false),
         'isAccessible': accessList.videoAccess == "Yes",
@@ -126,5 +126,8 @@ class ChapterDetailController extends GetxController {
         ),
       },
     ];
+
+    // Return only accessible tabs
+    return allTabs.where((tab) => tab['isAccessible'] == true).toList();
   }
 }

@@ -6,7 +6,7 @@ import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Controllers/SpekingTest_Controller.dart';
@@ -101,9 +101,10 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
                       Padding(
                           padding: screenPadding,
                           child: SingleChildScrollView(
-                              child: HtmlWidget(
-                                  "${controller.getSpeakingTestModel.proficiencyTestDetailsList?.first.questionDetails}",
-                                  textStyle: TextStyleConstant.medium14())))
+                              child: Markdown(
+                            data:
+                                "${controller.getSpeakingTestModel.proficiencyTestDetailsList?.first.questionDetails}",
+                          )))
                     else
                       const SizedBox(),
                   ],

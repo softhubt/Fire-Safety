@@ -1,4 +1,6 @@
 // ignore: file_names
+import 'dart:developer';
+
 import 'package:firesafety/Widgets/custom_no_data_found.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -176,9 +178,8 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                                     Expanded(
                                       child: Text(
                                         "Comment: ${element?.comment ?? ""}",
-                                        style: TextStyleConstant.medium18(
-                                          color: ColorConstant.grey,
-                                        ),
+                                        style: TextStyleConstant.semiBold18(
+                                            color: ColorConstant.black),
                                       ),
                                     ),
                                   ],
@@ -232,13 +233,12 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                         ),
                         SizedBox(width: screenWidthPadding),
                         Expanded(
-                          child: CustomButton(
-                            title: "Finish",
-                            onTap: () {
-                              Get.offAll(() => const BottomBarScreen());
-                            },
-                          ),
-                        ),
+                            child: CustomButton(
+                          title: "Finish",
+                          onTap: () {
+                            Get.offAll(() => const BottomBarScreen());
+                          },
+                        )),
                       ],
                     ),
                   ),
@@ -246,9 +246,13 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
               );
             } else {
               // Show "Test in Review" message
-              return const CustomNoDataFound(
-                message:
-                    "Your Give Test in Review\nResult will appear here soon",
+              return GestureDetector(
+                onTap: () {
+                  log("Data ::: ${controller.getFlashExcersiceResultListModel.flashExerciseResultList?.length}");
+                },
+                child: const CustomNoDataFound(
+                    message:
+                        "Your Give Test in Review\nResult will appear here soon"),
               );
             }
           }

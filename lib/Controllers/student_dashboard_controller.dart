@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
+import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:firesafety/Widgets/custom_web_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -59,7 +60,11 @@ class StudentDashboardController extends GetxController {
       DashboardElementListModel(
           title: "My Batches", icon: Icons.groups_sharp, onTap: () {}),
       DashboardElementListModel(
-          title: "Messages", icon: Icons.message_rounded, onTap: () {}),
+          title: "Messages",
+          icon: Icons.message_rounded,
+          onTap: () {
+            customToast(message: "Comming Soon");
+          }),
     ];
 
     userId.value = await StorageServices.getData(

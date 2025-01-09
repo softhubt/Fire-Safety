@@ -161,9 +161,9 @@ class _FormativeAssesmentViewState extends State<FormativeAssesmentView> {
                                                 child: Text(
                                                   "Comment: ${element?.comment ?? ""}",
                                                   style: TextStyleConstant
-                                                      .medium18(
+                                                      .semiBold18(
                                                           color: ColorConstant
-                                                              .grey),
+                                                              .black),
                                                 ),
                                               ),
                                             ],
