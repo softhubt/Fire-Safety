@@ -72,4 +72,5 @@ class EndPointConstant {
       "proficiency_writingtest_submit.php";
   static const String flashExerciseResult = "flash_exercise_result.php";
   static const String chapterWiseTabAccess = "chapterwise_tabaccess.php";
+  static const String myBatchDetails = "my_batch_details.php";
 }

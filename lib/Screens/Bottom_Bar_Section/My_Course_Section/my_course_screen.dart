@@ -15,13 +15,12 @@ class MyCourseListView extends StatefulWidget {
   final String subcategoryId;
   final String testpaymentId;
 
-  const MyCourseListView({
-    super.key,
-    required this.categoryId,
-    required this.subcategoryId,
-    required this.testpaymentId,
-    required this.courseName,
-  });
+  const MyCourseListView(
+      {super.key,
+      required this.categoryId,
+      required this.subcategoryId,
+      required this.testpaymentId,
+      required this.courseName});
 
   @override
   State<MyCourseListView> createState() => _MyCourseListViewState();
@@ -33,12 +32,9 @@ class _MyCourseListViewState extends State<MyCourseListView> {
   @override
   void initState() {
     super.initState();
-
     controller
         .getCourseList(
-          categoryId: widget.categoryId,
-          subcategoryId: widget.subcategoryId,
-        )
+            categoryId: widget.categoryId, subcategoryId: widget.subcategoryId)
         .whenComplete(() => setState(() {}));
   }
 
@@ -56,10 +52,10 @@ class _MyCourseListViewState extends State<MyCourseListView> {
                   final element =
                       controller.getCourseListModel.courseList?[index];
                   return Padding(
-                    padding: EdgeInsets.only(top: contentHeightPadding),
-                    child: GestureDetector(
-                        onTap: () {
-                          Get.to(() => CourseDetailScreen(
+                      padding: EdgeInsets.only(top: contentHeightPadding),
+                      child: GestureDetector(
+                          onTap: () {
+                            Get.to(() => CourseDetailScreen(
                                 courseId: "${element?.courseId}",
                                 testpaymentId: widget.testpaymentId,
                                 isPurchase: '',
@@ -67,11 +63,9 @@ class _MyCourseListViewState extends State<MyCourseListView> {
                                 categoryId: "${element?.categoryId}",
                                 days: "",
                                 subCategoryId: "${element?.subcategoryId}",
-                                userId: controller.userId.value,
-                              ));
-                        },
-                        child: buildDetailedCard(element)),
-                  );
+                                userId: controller.userId.value));
+                          },
+                          child: buildDetailedCard(element)));
                 },
               )
             : ListView.builder(
@@ -86,28 +80,30 @@ class _MyCourseListViewState extends State<MyCourseListView> {
 
   Widget buildDetailedCard(CourseList? element) {
     return Card(
-      color: ColorConstant.white,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: contentPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(element?.courseImage ?? '',
-                    height: Get.height * 0.2,
-                    width: Get.width,
-                    fit: BoxFit.cover)),
-            const SizedBox(height: 10),
-            Text(element?.courseName ?? '',
-                style: TextStyleConstant.bold22(),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis),
-          ],
-        ),
-      ),
-    );
+        color: ColorConstant.white,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+            padding: contentPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(element?.courseImage ?? '',
+                        height: Get.height * 0.2,
+                        width: Get.width,
+                        fit: BoxFit.cover)),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: responsiveWidth(width: 20),
+                      top: responsiveHeight(height: 14)),
+                  child: Text(element?.courseName ?? '',
+                      style: TextStyleConstant.bold22(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            )));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firesafety/Models/get_batch_details_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
 import 'package:firesafety/Widgets/custom_web_view.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,9 @@ import 'package:firesafety/Services/http_services.dart';
 import 'package:firesafety/Constant/endpoint_constant.dart';
 import 'package:firesafety/Constant/storage_key_constant.dart';
 import 'package:firesafety/Services/local_storage_services.dart';
-import 'package:firesafety/Models/get_purches_CategoryList_model.dart';
 
 class StudentDashboardController extends GetxController {
-  GetPurchaseSubcategoryModel getPurchaseSubcategoryModel =
-      GetPurchaseSubcategoryModel();
+  GetBatchDetailsModel getBatchDetailsModel = GetBatchDetailsModel();
 
   RxString userId = "".obs;
 
@@ -65,31 +64,34 @@ class StudentDashboardController extends GetxController {
     userId.value = await StorageServices.getData(
         dataType: StorageKeyConstant.stringType,
         prefKey: StorageKeyConstant.userId);
-    await getPurchesSubCategoryList();
+
+    await getBatchDetails(testPaymentId: testPaymentId);
   }
 
-  Future getPurchesSubCategoryList() async {
+  Future getBatchDetails({required String testPaymentId}) async {
     try {
-      Map<String, dynamic> payload = {"user_id": userId.value};
+      Map<String, dynamic> payload = {
+        "testpayment_id": testPaymentId,
+        "user_id": userId.value
+      };
 
       var response = await HttpServices.postHttpMethod(
-          url: EndPointConstant.mypurchasesubcategorylist,
+          url: EndPointConstant.myBatchDetails,
           payload: payload,
-          urlMessage: "Get course list url",
-          payloadMessage: "Get course list payload",
-          statusMessage: "Get course list status code",
-          bodyMessage: "Get course list response");
+          urlMessage: "Get batch details url",
+          payloadMessage: "Get batch details payload",
+          statusMessage: "Get batch details status code",
+          bodyMessage: "Get batch details response");
 
-      getPurchaseSubcategoryModel =
-          getPurchaseSubcategoryModelFromJson(response["body"]);
+      getBatchDetailsModel = getBatchDetailsModelFromJson(response["body"]);
 
-      if (getPurchaseSubcategoryModel.statusCode == "200" ||
-          getPurchaseSubcategoryModel.statusCode == "201") {
+      if (getBatchDetailsModel.statusCode == "200" ||
+          getBatchDetailsModel.statusCode == "201") {
       } else {
-        log("Something went wrong during getting course list ::: ${getPurchaseSubcategoryModel.statusCode}");
+        log("Something went wrong during getting Get batch details ::: ${getBatchDetailsModel.statusCode}");
       }
     } catch (error) {
-      log("Something went wrong during getting course list ::: $error");
+      log("Something went wrong during getting Get batch details ::: $error");
     }
   }
 }

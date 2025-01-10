@@ -4,7 +4,7 @@ import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/image_path_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Student_Form_View.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/Sudent_Form_Section/Student_Form_View.dart';
 import 'package:firesafety/Widgets/custom_asset_image.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
 
@@ -56,7 +56,6 @@ class PaymentThankYouView extends StatelessWidget {
                 title: "Next",
                 onTap: () {
                   Get.to(() => StudentFormView(
-                        userId: userId,
                         id: id,
                       ));
                 },

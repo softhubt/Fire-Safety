@@ -18,9 +18,8 @@ import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_
 import 'package:firesafety/Widgets/custom_loader.dart';
 
 class StudentFormView extends StatefulWidget {
-  final String userId;
   final String id;
-  const StudentFormView({super.key, required this.userId, required this.id});
+  const StudentFormView({super.key, required this.id});
 
   @override
   State<StudentFormView> createState() => _StudentFormViewState();
@@ -30,17 +29,12 @@ class _StudentFormViewState extends State<StudentFormView> {
   SubmitStudentFormController controller =
       Get.put(SubmitStudentFormController());
 
-  // State to keep track of checkbox selections
-  List<bool> courseSelections = List.generate(5, (index) => false);
-  bool _isVerified = false;
-
   @override
   void initState() {
     super.initState();
-    controller = Get.put(SubmitStudentFormController());
-    controller.userId.value = widget.userId;
-    controller.id.value = widget.id;
-    controller.getBranchListform();
+    controller
+        .initialFunctioun(widgetId: widget.id)
+        .whenComplete(() => setState(() {}));
   }
 
   @override
@@ -53,22 +47,12 @@ class _StudentFormViewState extends State<StudentFormView> {
           key: controller.formKey,
           child: ListView(
             children: [
-              // const Icon(Icons.remove_red_eye, color: Colors.blue), // Eye icon
-              // const SizedBox(width: 8), // Space between icon and text
-              // const Text("View Sample From", style: TextStyle(fontSize: 16)),
-              // // Space between the form and the image
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 170),
-              //   child: Image.asset(
-              //     ImagePathConstant.Receipt,
-              //     width: 150,
-              //     height: 150,
-              //     fit: BoxFit.cover,
-              //   ),
-              // ),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Name", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Name", style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.nameController,
                   hintText: "Enter Your Name",
@@ -76,9 +60,12 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator:
                       FormValidationServices.validateField(fieldName: "Name")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child:
-                      Text("Nationality", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Nationality",
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.nationalityController,
                   hintText: "Enter Your Nationality",
@@ -86,9 +73,12 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator: FormValidationServices.validateField(
                       fieldName: "Nationality")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Date of Birth",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               GestureDetector(
                   onTap: () {
                     showDatePickerDialog(
@@ -102,9 +92,12 @@ class _StudentFormViewState extends State<StudentFormView> {
                       validator: FormValidationServices.validateField(
                           fieldName: "Date of Birth"))),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Select Gender",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               Row(
                 children: [
                   Expanded(
@@ -121,7 +114,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                       setState(() {});
                     },
                   )),
-                  SizedBox(width: screenWidthPadding),
+                  SizedBox(width: responsiveWidth(width: 40)),
                   Expanded(
                       child: CustomButton(
                     title: "Female",
@@ -139,23 +132,33 @@ class _StudentFormViewState extends State<StudentFormView> {
                 ],
               ),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Country and Birth Place",
-                      style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Birth Place",
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.countryBirthController,
-                  hintText: "Enter Country Birth Place",
+                  hintText: "Enter Birth Place",
                   textInputType: TextInputType.name,
                   validator: FormValidationServices.validateField(
-                      fieldName: "Country and Birth Place")),
+                      fieldName: "Birth Place")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Material Status",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               buildMaritalStatusDropdown(),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Address", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child:
+                      Text("Address", style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.addressController,
                   hintText: "Enter Street Address",
@@ -163,16 +166,27 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator: FormValidationServices.validateField(
                       fieldName: "Address")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Country", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child:
+                      Text("Country", style: TextStyleConstant.semiBold16())),
               buildGetContryListDropdown(),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("State", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("State", style: TextStyleConstant.semiBold16())),
               buildStateListDropdown(),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Zip Code", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child:
+                      Text("Zip Code", style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.zipCodeController,
                   hintText: "Enter Zip Code",
@@ -180,43 +194,58 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator: FormValidationServices.validateField(
                       fieldName: "Zip Code")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Phone", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Phone", style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.phoneController,
                   hintText: "Enter Phone",
                   textInputType: TextInputType.phone,
                   validator: FormValidationServices.validatePhone()),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Alternative Phone",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.mobileController,
                   hintText: "Enter Alternative Phone",
                   textInputType: TextInputType.number,
                   validator: FormValidationServices.validatePhone()),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Email", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Email", style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.emailController,
                   hintText: "Enter Email",
                   textInputType: TextInputType.emailAddress,
                   validator: FormValidationServices.validateEmail()),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Alternative Email",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.altEmailController,
                   hintText: "Enter Alternative Email",
                   textInputType: TextInputType.emailAddress,
                   validator: FormValidationServices.validateEmail()),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child:
-                      Text("Exam Venue", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Exam Venue",
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.examvenueController,
                   hintText: "Enter Exam Venue",
@@ -224,8 +253,11 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator: FormValidationServices.validateField(
                       fieldName: "Exam Venue")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
-                  child: Text("Branch", style: TextStyleConstant.medium16())),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
+                  child: Text("Branch", style: TextStyleConstant.semiBold16())),
               buildSelectBranchDropdown(),
 
               Padding(
@@ -241,15 +273,21 @@ class _StudentFormViewState extends State<StudentFormView> {
                   '5. NIBOSH IGC (International General Certification) IG1 & IG2',
                   4),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Mode of Enrollment",
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               buildSelectModeeOfEnrollMentDropdown(), // Add some space
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text(
                       'Do any Delegates have disabilities that will\nrequire special facilities or assistance? If yes,\nplease outline their requirements.',
-                      style: TextStyleConstant.medium16())),
+                      style: TextStyleConstant.semiBold16())),
               CustomTextField(
                   controller: controller.disabilityRequirementsController,
                   hintText: "Enter Requirements",
@@ -257,7 +295,10 @@ class _StudentFormViewState extends State<StudentFormView> {
                   validator: FormValidationServices.validateField(
                       fieldName: "Requirements")),
               Padding(
-                  padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+                  padding: EdgeInsets.only(
+                      top: screenHeightPadding,
+                      left: screenWidthPadding,
+                      bottom: responsiveHeight(height: 6)),
                   child: Text("Upload Your Document Images",
                       style: TextStyleConstant.semiBold16())),
               Row(
@@ -265,7 +306,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                 children: [
                   Column(
                     children: [
-                      Text("Profile", style: TextStyleConstant.medium16()),
+                      Text("Profile", style: TextStyleConstant.semiBold16()),
                       imageBox(
                           onTap: () {
                             selectImageSourceDialog(
@@ -278,7 +319,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                   ),
                   Column(
                     children: [
-                      Text("Document", style: TextStyleConstant.medium16()),
+                      Text("Document", style: TextStyleConstant.semiBold16()),
                       imageBox(
                         onTap: () {
                           selectImageSourceDialog(
@@ -292,7 +333,7 @@ class _StudentFormViewState extends State<StudentFormView> {
                   ),
                   Column(
                     children: [
-                      Text("Signature", style: TextStyleConstant.medium16()),
+                      Text("Signature", style: TextStyleConstant.semiBold16()),
                       imageBox(
                         onTap: () {
                           selectImageSourceDialog(
@@ -363,10 +404,10 @@ class _StudentFormViewState extends State<StudentFormView> {
                     ),
                   ),
                   Checkbox(
-                    value: _isVerified,
+                    value: controller.isVerified.value,
                     onChanged: (bool? value) {
                       setState(() {
-                        _isVerified = value!;
+                        controller.isVerified.value = value!;
                       });
                     },
                     activeColor: ColorConstant.green,
@@ -417,11 +458,11 @@ class _StudentFormViewState extends State<StudentFormView> {
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
             child: Checkbox(
-              key: ValueKey(courseSelections[index]),
-              value: courseSelections[index],
+              key: ValueKey(controller.courseSelections[index]),
+              value: controller.courseSelections[index],
               onChanged: (bool? value) {
                 setState(() {
-                  courseSelections[index] = value!;
+                  controller.courseSelections[index] = value!;
                   controller.toggleCourseSelection(title);
                 });
               },
@@ -1247,7 +1288,7 @@ class _StudentFormViewState extends State<StudentFormView> {
       }
 
       // Check if the verification checkbox is not ticked
-      if (!_isVerified) {
+      if (!controller.isVerified.value) {
         Get.snackbar(
           "Verification Required",
           "Please verify information.",
@@ -1260,10 +1301,12 @@ class _StudentFormViewState extends State<StudentFormView> {
 
       // All validations passed, proceed with submission
       CustomLoader.openCustomLoader();
-      controller.submitForm(userId: widget.userId, id: widget.id).then((_) {
+      controller
+          .submitForm(userId: controller.userId.value, id: widget.id)
+          .then((_) {
         CustomLoader.closeCustomLoader();
         Get.offAll(() => StudentFormThankView(
-              userId: widget.userId,
+              userId: controller.userId.value,
               id: widget.id,
             ));
       }).catchError((error) {

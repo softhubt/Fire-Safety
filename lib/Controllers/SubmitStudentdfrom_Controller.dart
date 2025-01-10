@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firesafety/Constant/storage_key_constant.dart';
+import 'package:firesafety/Services/local_storage_services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -14,51 +16,66 @@ import 'package:firesafety/Widgets/custom_toast.dart';
 import 'dart:io' as io;
 
 class SubmitStudentFormController extends GetxController {
-  // Form fields
-
   GetSubmitStudentFormModel getSubmitStudentFormModel =
       GetSubmitStudentFormModel();
   GetBranchList getBranchList = GetBranchList();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController nationalityController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController frmdatedobController = TextEditingController();
-  final TextEditingController countryBirthController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController stateController = TextEditingController();
-  final TextEditingController zipCodeController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController mobileController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController altEmailController = TextEditingController();
-  final TextEditingController examvenueController = TextEditingController();
-  final TextEditingController institutionController = TextEditingController();
-  final TextEditingController disabilityRequirementsController =
+  TextEditingController nameController = TextEditingController();
+  TextEditingController nationalityController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController frmdatedobController = TextEditingController();
+  TextEditingController countryBirthController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController altEmailController = TextEditingController();
+  TextEditingController examvenueController = TextEditingController();
+  TextEditingController institutionController = TextEditingController();
+  TextEditingController disabilityRequirementsController =
       TextEditingController();
-  final TextEditingController fromDateController = TextEditingController();
-  final TextEditingController toDateController = TextEditingController();
-  final TextEditingController degreeController = TextEditingController();
-  final RxString genderValue = 'Male'.obs;
-  final RxString maritalStatusValue = ''.obs;
-  final RxString SelectcountryListValue = ''.obs;
-  final RxString SelectStateListValue = ''.obs;
-  final RxString examVenueValue = ''.obs;
-  final RxString selectBranch = ''.obs;
-  final RxString selectModeOfEnrollment = ''.obs;
-  RxString selectId = "1".obs;
-  RxString userId = "".obs;
-  RxString id = "".obs;
-  RxString selectCode = "1".obs;
-  final RxList<OrderItem> educationEntries = <OrderItem>[].obs;
+  TextEditingController fromDateController = TextEditingController();
+  TextEditingController toDateController = TextEditingController();
+  TextEditingController degreeController = TextEditingController();
 
-  var selectedCourses = <String>[].obs; // Observable list for selected courses
+  var selectedCourses = <String>[].obs;
+
+  RxList<bool> courseSelections = List.generate(5, (index) => false).obs;
+
+  final formKey = GlobalKey<FormState>();
 
   io.File? selectedImage1;
   io.File? selectedImage2;
   io.File? selectedImage3;
   io.File? selectedImage4;
+
+  RxString genderValue = 'Male'.obs;
+  RxString maritalStatusValue = ''.obs;
+  RxString SelectcountryListValue = ''.obs;
+  RxString SelectStateListValue = ''.obs;
+  RxString examVenueValue = ''.obs;
+  RxString selectBranch = ''.obs;
+  RxString selectModeOfEnrollment = ''.obs;
+  RxString selectId = "1".obs;
+  RxString userId = "".obs;
+  RxString id = "".obs;
+  RxString selectCode = "1".obs;
+  RxList<OrderItem> educationEntries = <OrderItem>[].obs;
+
+  RxBool isVerified = false.obs;
+
+  Future initialFunctioun({required String widgetId}) async {
+    id.value = widgetId;
+
+    userId.value = await StorageServices.getData(
+        dataType: StorageKeyConstant.stringType,
+        prefKey: StorageKeyConstant.userId);
+
+    await getBranchListform();
+  }
 
   Future<void> pickImage(
       {required int imageNo, required ImageSource imageSource}) async {
@@ -79,14 +96,31 @@ class SubmitStudentFormController extends GetxController {
     }
   }
 
-  final formKey = GlobalKey<FormState>();
-
   void toggleCourseSelection(String course) {
     if (selectedCourses.contains(course)) {
       selectedCourses.remove(course);
     } else {
       selectedCourses.add(course);
     }
+  }
+
+  void clearAllFields() {
+    nameController.clear();
+    nationalityController.clear();
+    dobController.clear();
+    countryBirthController.clear();
+    addressController.clear();
+    countryController.clear();
+    stateController.clear();
+    zipCodeController.clear();
+    phoneController.clear();
+    mobileController.clear();
+    emailController.clear();
+    altEmailController.clear();
+    genderValue.value = 'Male';
+    maritalStatusValue.value = '';
+    examVenueValue.value = '';
+    educationEntries.clear();
   }
 
   Future<void> getBranchListform() async {
@@ -235,42 +269,5 @@ class SubmitStudentFormController extends GetxController {
       CustomLoader.closeCustomLoader();
       log("Error during form submission: $error");
     }
-  }
-
-  void clearAllFields() {
-    nameController.clear();
-    nationalityController.clear();
-    dobController.clear();
-    countryBirthController.clear();
-    addressController.clear();
-    countryController.clear();
-    stateController.clear();
-    zipCodeController.clear();
-    phoneController.clear();
-    mobileController.clear();
-    emailController.clear();
-    altEmailController.clear();
-    genderValue.value = 'Male';
-    maritalStatusValue.value = '';
-    examVenueValue.value = '';
-    educationEntries.clear();
-  }
-
-  @override
-  void onClose() {
-    nameController.dispose();
-    nationalityController.dispose();
-    dobController.dispose();
-    countryBirthController.dispose();
-    addressController.dispose();
-    countryController.dispose();
-    stateController.dispose();
-    zipCodeController.dispose();
-    phoneController.dispose();
-    mobileController.dispose();
-    emailController.dispose();
-    altEmailController.dispose();
-    examvenueController.dispose();
-    super.onClose();
   }
 }

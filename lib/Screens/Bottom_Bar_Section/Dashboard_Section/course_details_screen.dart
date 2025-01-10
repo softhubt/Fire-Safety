@@ -61,77 +61,75 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstant.white,
-      appBar: CustomAppBar(
-        title: "Course Details",
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
+        backgroundColor: ColorConstant.white,
+        appBar: CustomAppBar(
+          title: "Course Details",
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
+          ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: screenHeightPadding,
-          horizontal: screenWidthPadding,
-        ),
-        child: Column(
-          children: [
-            // Tab Bar Container with smooth gradient background
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: Get.height * 0.006,
-                horizontal: Get.width * 0.014,
-              ),
-              height: Get.height * 0.06,
-              decoration: BoxDecoration(
-                color: ColorConstant.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TabBar(
-                controller: controller.tabController,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: ColorConstant.primary),
-                labelColor: ColorConstant.white,
-                unselectedLabelColor: ColorConstant.primary,
-                labelStyle: TextStyleConstant.semiBold16(),
-                tabs: controller.tabList,
-                dividerColor: Colors.transparent,
-              ),
+        body: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeightPadding,
+              horizontal: screenWidthPadding,
             ),
-            const SizedBox(height: 10), // Add spacing for aesthetics
-            Expanded(
-              child: TabBarView(
-                controller: controller.tabController,
-                children: [
-                  overviewContent(controller: controller),
-                  courseContent(controller: controller),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: (widget.isPurchase == "0")
-          ? Padding(
-              padding: EdgeInsets.only(
-                  bottom: screenHeightPadding,
-                  left: screenWidthPadding,
-                  right: screenWidthPadding),
-              child: Row(
-                children: [
-                  Text(
-                    "₹ ${widget.amount} /-",
-                    style: TextStyleConstant.bold28(
-                      color: ColorConstant.primary,
-                    ),
+            child: Column(
+              children: [
+                // Tab Bar Container with smooth gradient background
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: Get.height * 0.006,
+                    horizontal: Get.width * 0.014,
                   ),
-                  const SizedBox(width: 10), // Space between price and button
-                  Expanded(
-                    child: CustomButton(
+                  height: Get.height * 0.06,
+                  decoration: BoxDecoration(
+                    color: ColorConstant.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TabBar(
+                    controller: controller.tabController,
+                    indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: ColorConstant.primary),
+                    labelColor: ColorConstant.white,
+                    unselectedLabelColor: ColorConstant.primary,
+                    labelStyle: TextStyleConstant.semiBold16(),
+                    tabs: controller.tabList,
+                    dividerColor: Colors.transparent,
+                  ),
+                ),
+                const SizedBox(height: 10), // Add spacing for aesthetics
+                Expanded(
+                    child: TabBarView(
+                  controller: controller.tabController,
+                  children: [
+                    overviewContent(controller: controller),
+                    courseContent(controller: controller),
+                  ],
+                )),
+              ],
+            )),
+        bottomNavigationBar: (widget.isPurchase == "0")
+            ? Padding(
+                padding: EdgeInsets.only(
+                    bottom: screenHeightPadding,
+                    left: screenWidthPadding,
+                    right: screenWidthPadding),
+                child: Row(
+                  children: [
+                    Text(
+                      "₹ ${widget.amount} /-",
+                      style: TextStyleConstant.bold28(
+                        color: ColorConstant.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 10), // Space between price and button
+                    Expanded(
+                        child: CustomButton(
                       title: "Buy Now",
                       gradient: const LinearGradient(
-                        colors: [ColorConstant.primary, Colors.pink],
+                        colors: [ColorConstant.primary, ColorConstant.pink],
                       ),
                       onTap: () {
                         controller.postPurchesCource(
@@ -142,13 +140,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
                             days: widget.days);
                         // Add purchase functionality
                       },
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : const SizedBox(),
-    );
+                    )),
+                  ],
+                ))
+            : const SizedBox());
   }
 
   Widget overviewContent({required CourseDetailController controller}) {
@@ -156,43 +151,28 @@ class _CourseDetailScreenState extends State<CourseDetailScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 10), // Add spacing
-        Text(
-          "Overview",
-          style: TextStyleConstant.bold20(color: ColorConstant.primary),
-        ),
+        Text("Overview",
+            style: TextStyleConstant.bold20(color: ColorConstant.primary)),
         const SizedBox(height: 10),
         ListTile(
-          leading:
-              const Icon(Icons.watch, color: ColorConstant.primary, size: 30),
-          title: Text(
-            "Duration: 6 hours",
-            style: TextStyleConstant.medium16(),
-          ),
-        ),
+            leading:
+                const Icon(Icons.watch, color: ColorConstant.primary, size: 30),
+            title:
+                Text("Duration: 6 hours", style: TextStyleConstant.medium16())),
         ListTile(
-          leading: const Icon(FontAwesomeIcons.certificate,
-              color: ColorConstant.primary, size: 30),
-          title: Text(
-            "Completion Certificate",
-            style: TextStyleConstant.medium16(),
-          ),
-        ),
+            leading: const Icon(FontAwesomeIcons.certificate,
+                color: ColorConstant.primary, size: 30),
+            title: Text("Completion Certificate",
+                style: TextStyleConstant.medium16())),
         ListTile(
-          leading: const Icon(Icons.calendar_today,
-              color: ColorConstant.primary, size: 30),
-          title: Text(
-            "90 Days Access",
-            style: TextStyleConstant.medium16(),
-          ),
-        ),
+            leading: const Icon(Icons.calendar_today,
+                color: ColorConstant.primary, size: 30),
+            title: Text("90 Days Access", style: TextStyleConstant.medium16())),
         ListTile(
-          leading: const Icon(Icons.card_giftcard,
-              color: ColorConstant.primary, size: 30),
-          title: Text(
-            "Enroll and win rewards",
-            style: TextStyleConstant.medium16(),
-          ),
-        ),
+            leading: const Icon(Icons.card_giftcard,
+                color: ColorConstant.primary, size: 30),
+            title: Text("Enroll and win rewards",
+                style: TextStyleConstant.medium16())),
       ],
     );
   }

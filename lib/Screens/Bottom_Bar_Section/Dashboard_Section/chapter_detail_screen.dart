@@ -37,7 +37,8 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
         .initialFunctioun(
             chapterId: widget.chapterId,
             initialIndex: widget.initialIndex ?? 0,
-            vsync: this)
+            vsync: this,
+            testPaymentId: widget.testpaymentId)
         .whenComplete(() => setState(() {}));
   }
 
@@ -65,7 +66,8 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
             child: controller.userId.value.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : Obx(() {
-                    final tabs = controller.getTabListWithAccess();
+                    final tabs = controller.getTabListWithAccess(
+                        testPaymentId: widget.testpaymentId);
                     if (tabs.isEmpty) {
                       return const Center(
                         child: CustomNoDataFound(

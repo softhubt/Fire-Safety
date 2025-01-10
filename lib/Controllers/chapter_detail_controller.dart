@@ -35,6 +35,7 @@ class ChapterDetailController extends GetxController {
     required String chapterId,
     required int initialIndex,
     required TickerProvider vsync,
+    required String testPaymentId,
   }) async {
     userId.value = await StorageServices.getData(
       dataType: StorageKeyConstant.stringType,
@@ -44,7 +45,7 @@ class ChapterDetailController extends GetxController {
     await getChapterAccess(chapterId: chapterId);
 
     // Dynamically filter accessible tabs
-    final accessibleTabs = getTabListWithAccess()
+    final accessibleTabs = getTabListWithAccess(testPaymentId: testPaymentId)
         .where((tab) => tab['isAccessible'] == true)
         .toList();
 
@@ -86,7 +87,8 @@ class ChapterDetailController extends GetxController {
     }
   }
 
-  List<Map<String, dynamic>> getTabListWithAccess() {
+  List<Map<String, dynamic>> getTabListWithAccess(
+      {required String testPaymentId}) {
     final accessList = getTabAccessListModel.elementwiseTabaccessList?.first;
     if (accessList == null) return [];
 
@@ -112,7 +114,7 @@ class ChapterDetailController extends GetxController {
           'view': TopicListScreen(
               chapterId: accessList.chapterId!,
               userId: userId.value,
-              testpaymentId: accessList.courseId!),
+              testpaymentId: testPaymentId),
         },
       if (accessList.flashExerciseAccess == "Yes")
         {
@@ -123,7 +125,7 @@ class ChapterDetailController extends GetxController {
               chapterId: accessList.chapterId!,
               userId: userId.value,
               courseId: accessList.courseId!,
-              testpaymentId: accessList.courseId!),
+              testpaymentId: testPaymentId),
         },
       if (accessList.formativeAccess == "Yes")
         {
@@ -134,7 +136,7 @@ class ChapterDetailController extends GetxController {
             chapterId: accessList.chapterId!,
             userId: userId.value,
             courseId: accessList.courseId!,
-            testpaymentId: accessList.courseId!,
+            testpaymentId: testPaymentId,
           ),
         },
     ];

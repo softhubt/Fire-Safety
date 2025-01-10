@@ -2,21 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 final EdgeInsetsGeometry screenPadding = EdgeInsets.symmetric(
-    vertical: Get.height * 0.020, horizontal: Get.width * 0.042);
+    vertical: responsiveHeight(height: 14),
+    horizontal: responsiveWidth(width: 20));
 final EdgeInsetsGeometry screenVerticalPadding =
-    EdgeInsets.symmetric(vertical: Get.height * 0.020);
+    EdgeInsets.symmetric(vertical: responsiveHeight(height: 14));
 final EdgeInsetsGeometry screenHorizontalPadding =
-    EdgeInsets.symmetric(horizontal: Get.width * 0.042);
+    EdgeInsets.symmetric(horizontal: responsiveWidth(width: 20));
 
-final double screenHeightPadding = Get.height * 0.020;
-final double screenWidthPadding = Get.width * 0.042;
+final double screenHeightPadding = responsiveHeight(height: 14);
+final double screenWidthPadding = responsiveWidth(width: 20);
 
 final EdgeInsetsGeometry contentPadding = EdgeInsets.symmetric(
-    vertical: Get.height * 0.014, horizontal: Get.width * 0.032);
+    vertical: responsiveHeight(height: 00),
+    horizontal: responsiveWidth(width: 12));
 final EdgeInsetsGeometry contentVerticalPadding =
-    EdgeInsets.symmetric(vertical: Get.height * 0.014);
+    EdgeInsets.symmetric(vertical: responsiveHeight(height: 10));
 final EdgeInsetsGeometry contentHorizontalPadding =
-    EdgeInsets.symmetric(horizontal: Get.width * 0.032);
+    EdgeInsets.symmetric(horizontal: responsiveWidth(width: 12));
 
-final double contentHeightPadding = Get.height * 0.014;
-final double contentWidthPadding = Get.width * 0.032;
+final double contentHeightPadding = responsiveHeight(height: 10);
+final double contentWidthPadding = responsiveWidth(width: 12);
+
+double responsiveHeight({required double height}) =>
+    Get.height * (height / 1000);
+
+double responsiveWidth({required double width}) => Get.width * (width / 1000);
+
+Widget responsiveSizedBoxHeight({required double height}) =>
+    SizedBox(height: responsiveHeight(height: height));
+
+Widget responsiveSizedBoxWidth({required double width}) =>
+    SizedBox(width: responsiveWidth(width: width));
