@@ -36,18 +36,26 @@ class ChapterDetailController extends GetxController {
     required int initialIndex,
     required TickerProvider vsync,
   }) async {
-    tabController = TabController(
-      length: tabList.length,
-      vsync: vsync,
-      initialIndex: initialIndex,
-    );
-
     userId.value = await StorageServices.getData(
       dataType: StorageKeyConstant.stringType,
       prefKey: StorageKeyConstant.userId,
     );
 
     await getChapterAccess(chapterId: chapterId);
+
+    // Dynamically filter accessible tabs
+    final accessibleTabs = getTabListWithAccess()
+        .where((tab) => tab['isAccessible'] == true)
+        .toList();
+
+    // Initialize the TabController with the length of accessible tabs
+    tabController = TabController(
+      length: accessibleTabs.length,
+      vsync: vsync,
+      initialIndex: (initialIndex < accessibleTabs.length) ? initialIndex : 0,
+    );
+
+    update();
   }
 
   Future<void> getChapterAccess({required String chapterId}) async {
@@ -83,47 +91,52 @@ class ChapterDetailController extends GetxController {
     if (accessList == null) return [];
 
     return [
-      {
-        'widget': const CustomTabBox(title: "Video", isExpandTab: false),
-        'isAccessible': accessList.videoAccess == "Yes",
-        'view': ChapterVideoContentView(chapterId: accessList.chapterId!),
-      },
-      {
-        'widget':
-            const CustomTabBox(title: "Study Material", isExpandTab: false),
-        'isAccessible': accessList.studymaterialAccess == "Yes",
-        'view': ChapterStudyMaterialView(chapterId: accessList.chapterId!),
-      },
-      {
-        'widget':
-            const CustomTabBox(title: "Quiz(MCQ Based)", isExpandTab: false),
-        'isAccessible': accessList.quizAccess == "Yes",
-        'view': TopicListScreen(
-            chapterId: accessList.chapterId!,
-            userId: userId.value,
-            testpaymentId: accessList.courseId!),
-      },
-      {
-        'widget':
-            const CustomTabBox(title: "FLASH EXERCISE", isExpandTab: false),
-        'isAccessible': accessList.flashExerciseAccess == "Yes",
-        'view': ChapterFlashExerciseView(
+      if (accessList.videoAccess == "Yes")
+        {
+          'widget': const CustomTabBox(title: "Video", isExpandTab: false),
+          'isAccessible': true,
+          'view': ChapterVideoContentView(chapterId: accessList.chapterId!),
+        },
+      if (accessList.studymaterialAccess == "Yes")
+        {
+          'widget':
+              const CustomTabBox(title: "Study Material", isExpandTab: false),
+          'isAccessible': true,
+          'view': ChapterStudyMaterialView(chapterId: accessList.chapterId!),
+        },
+      if (accessList.quizAccess == "Yes")
+        {
+          'widget':
+              const CustomTabBox(title: "Quiz(MCQ Based)", isExpandTab: false),
+          'isAccessible': true,
+          'view': TopicListScreen(
+              chapterId: accessList.chapterId!,
+              userId: userId.value,
+              testpaymentId: accessList.courseId!),
+        },
+      if (accessList.flashExerciseAccess == "Yes")
+        {
+          'widget':
+              const CustomTabBox(title: "FLASH EXERCISE", isExpandTab: false),
+          'isAccessible': true,
+          'view': ChapterFlashExerciseView(
+              chapterId: accessList.chapterId!,
+              userId: userId.value,
+              courseId: accessList.courseId!,
+              testpaymentId: accessList.courseId!),
+        },
+      if (accessList.formativeAccess == "Yes")
+        {
+          'widget': const CustomTabBox(
+              title: "FORMATIVE ASSESSMENT", isExpandTab: false),
+          'isAccessible': true,
+          'view': FormativeAssesmentView(
             chapterId: accessList.chapterId!,
             userId: userId.value,
             courseId: accessList.courseId!,
-            testpaymentId: accessList.courseId!),
-      },
-      {
-        'widget': const CustomTabBox(
-            title: "FORMATIVE ASSESSMENT", isExpandTab: false),
-        'isAccessible': accessList.formativeAccess == "Yes",
-        'view': FormativeAssesmentView(
-          chapterId: accessList.chapterId!,
-          userId: userId.value,
-          courseId: accessList.courseId!,
-          testpaymentId: accessList.courseId!,
-        ),
-      },
+            testpaymentId: accessList.courseId!,
+          ),
+        },
     ];
   }
 }

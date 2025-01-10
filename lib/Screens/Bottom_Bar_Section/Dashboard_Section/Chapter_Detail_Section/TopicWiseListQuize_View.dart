@@ -36,47 +36,44 @@ class _TopicListScreenState extends State<TopicListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (controller.chapterWiseTopicListModel.quizChapterwiseTopicList !=
-              null)
-          ? ListView.builder(
-              itemCount: controller
-                  .chapterWiseTopicListModel.quizChapterwiseTopicList?.length,
-              itemBuilder: (context, index) {
-                final element = controller
-                    .chapterWiseTopicListModel.quizChapterwiseTopicList?[index];
-                return Padding(
-                  padding: EdgeInsets.only(top: contentHeightPadding),
-                  child: Card(
-                    color: ColorConstant.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    child: ListTile(
-                      onTap: () {
-                        Get.to(() => ChapterQuizContentView(
-                            chapterId: widget.chapterId,
-                            topicId: "${element?.topicId}",
-                            userId: widget.userId,
-                            quizType: "3",
-                            testpaymentId: widget.testpaymentId));
-                      },
-                      leading:
-                          const Icon(Icons.book, color: ColorConstant.primary),
-                      title: Text("${element?.topicName}"),
-                      trailing: const Icon(Icons.arrow_forward_ios_rounded,
-                          color: ColorConstant.primary),
-                    ),
-                  ),
-                );
-              },
-            )
-          : ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return CustomShimmer(
-                    topPadding: contentHeightPadding,
-                    height: Get.height * 0.100);
-              },
-            ),
-    );
+        body: (controller.chapterWiseTopicListModel.quizChapterwiseTopicList !=
+                null)
+            ? ListView.builder(
+                itemCount: controller
+                    .chapterWiseTopicListModel.quizChapterwiseTopicList?.length,
+                itemBuilder: (context, index) {
+                  final element = controller.chapterWiseTopicListModel
+                      .quizChapterwiseTopicList?[index];
+                  return Padding(
+                      padding: EdgeInsets.only(top: contentHeightPadding),
+                      child: Card(
+                          color: ColorConstant.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          child: ListTile(
+                              onTap: () {
+                                Get.to(() => ChapterQuizContentView(
+                                    chapterId: widget.chapterId,
+                                    topicId: "${element?.topicId}",
+                                    userId: widget.userId,
+                                    quizType: "3",
+                                    testpaymentId: widget.testpaymentId));
+                              },
+                              leading: const Icon(Icons.book,
+                                  color: ColorConstant.primary),
+                              title: Text("${element?.topicName}"),
+                              trailing: const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: ColorConstant.primary))));
+                },
+              )
+            : ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return CustomShimmer(
+                      topPadding: contentHeightPadding,
+                      height: Get.height * 0.100);
+                },
+              ));
   }
 }

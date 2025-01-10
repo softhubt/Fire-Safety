@@ -4,11 +4,6 @@ import 'package:get/get.dart';
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Controllers/chapter_detail_controller.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_StudyMaterial_view.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_video_content_view.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_FormativeAssement_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/TopicWiseListQuize_View.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Widgets/custom_appbar.dart';
 
 class ChapterDetailScreen extends StatefulWidget {
@@ -56,58 +51,62 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          title: widget.chapterName,
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back, color: ColorConstant.white),
-          ),
-        ),
+            title: widget.chapterName,
+            leading: IconButton(
+                onPressed: () => Get.back(),
+                icon:
+                    const Icon(Icons.arrow_back, color: ColorConstant.white))),
         body: Padding(
-          padding: EdgeInsets.only(
-            top: screenHeightPadding,
-            left: screenWidthPadding,
-            right: screenWidthPadding,
-          ),
-          child: controller.userId.value.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : Obx(() {
-                  final tabs = controller.getTabListWithAccess();
-                  return Column(
-                    children: [
-                      Container(
+            padding: EdgeInsets.only(
+              top: screenHeightPadding,
+              left: screenWidthPadding,
+              right: screenWidthPadding,
+            ),
+            child: controller.userId.value.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : Obx(() {
+                    final tabs = controller.getTabListWithAccess();
+                    if (tabs.isEmpty) {
+                      return const Center(
+                        child: CustomNoDataFound(
+                            message: "No accessible content available."),
+                      );
+                    }
+
+                    return Column(
+                      children: [
+                        Container(
                           padding: EdgeInsets.symmetric(
                             vertical: Get.height * 0.006,
                             horizontal: Get.width * 0.014,
                           ),
                           height: Get.height * 0.054,
                           decoration: BoxDecoration(
-                            color: ColorConstant.extraLightPrimary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                              color: ColorConstant.extraLightPrimary,
+                              borderRadius: BorderRadius.circular(10)),
                           child: TabBar(
-                              controller: controller.tabController,
-                              isScrollable: true,
-                              indicator: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  color: ColorConstant.primary),
-                              labelColor: ColorConstant.white,
-                              tabs: tabs
-                                  .map<Widget>((tab) => tab['widget'])
-                                  .toList(),
-                              dividerColor: ColorConstant.transparent)),
-                      Expanded(
+                            controller: controller.tabController,
+                            isScrollable: true,
+                            indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.0),
+                                color: ColorConstant.primary),
+                            labelColor: ColorConstant.white,
+                            tabs: tabs
+                                .map<Widget>((tab) => tab['widget'] as Widget)
+                                .toList(),
+                            dividerColor: ColorConstant.transparent,
+                          ),
+                        ),
+                        Expanded(
                           child: TabBarView(
-                              controller: controller.tabController,
-                              children: tabs.map<Widget>((tab) {
-                                return tab['isAccessible']
-                                    ? tab['view']
-                                    : const CustomNoDataFound(
-                                        message:
-                                            "Please complete previous excersices to access this one.");
-                              }).toList())),
-                    ],
-                  );
-                }),
-        ));
+                            controller: controller.tabController,
+                            children: tabs
+                                .map<Widget>((tab) => tab['view'] as Widget)
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  })));
   }
 }
