@@ -1,12 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:camera/camera.dart';
-import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/bottom_bar_screen.dart';
 import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Controllers/SpekingTest_Controller.dart';
@@ -101,9 +99,9 @@ class _SpeakingTestModuleState extends State<SpeakingTestModule> {
                       Padding(
                           padding: screenPadding,
                           child: SingleChildScrollView(
-                              child: HtmlWidget(
+                              child: Text(
                                   "${controller.getSpeakingTestModel.proficiencyTestDetailsList?.first.questionDetails}",
-                                  textStyle: TextStyleConstant.medium14())))
+                                  style: TextStyleConstant.medium14())))
                     else
                       const SizedBox(),
                   ],

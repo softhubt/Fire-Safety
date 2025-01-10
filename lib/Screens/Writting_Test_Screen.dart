@@ -7,7 +7,6 @@ import 'package:firesafety/Widgets/custom_appbar.dart';
 import 'package:firesafety/Widgets/custom_textfield.dart';
 import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:firesafety/Controllers/WritingTestController.dart'; // Ensure this import matches your file structure
 import 'package:firesafety/Widgets/custom_button.dart';
@@ -57,9 +56,9 @@ class _WritingTestPageState extends State<WritingTestPage> {
                   children: [
                     Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: HtmlWidget(
+                        child: Text(
                             questionDetails ?? 'No question details available',
-                            textStyle: TextStyleConstant.medium14())),
+                            style: TextStyleConstant.medium14())),
                   ],
                 ))),
                 Padding(
