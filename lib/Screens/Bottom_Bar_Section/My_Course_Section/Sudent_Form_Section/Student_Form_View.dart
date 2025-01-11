@@ -26,8 +26,7 @@ class StudentFormView extends StatefulWidget {
 }
 
 class _StudentFormViewState extends State<StudentFormView> {
-  SubmitStudentFormController controller =
-      Get.put(SubmitStudentFormController());
+  StudentFormController controller = Get.put(StudentFormController());
 
   @override
   void initState() {
@@ -1011,7 +1010,7 @@ class _StudentFormViewState extends State<StudentFormView> {
   }
 
   selectImageSourceDialog(
-      {required SubmitStudentFormController controller, required int imageNo}) {
+      {required StudentFormController controller, required int imageNo}) {
     return Get.dialog(AlertDialog(
       title: const Text("Select Image Source Type"),
       actions: [
@@ -1324,3 +1323,518 @@ class _StudentFormViewState extends State<StudentFormView> {
     }
   }
 }
+
+
+
+// import 'dart:io';
+// import 'package:firesafety/Controllers/SubmitStudentdfrom_Controller.dart';
+// import 'package:firesafety/Models/Post_SubmitStudentForm_Model.dart';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:intl/intl.dart';
+// import 'package:firesafety/Constant/color_constant.dart';
+// import 'package:firesafety/Constant/layout_constant.dart';
+// import 'package:firesafety/Constant/textstyle_constant.dart';
+// import 'package:firesafety/Services/form_validation_services.dart';
+// import 'package:firesafety/Widgets/custom_appbar.dart';
+// import 'package:firesafety/Widgets/custom_button.dart';
+// import 'package:firesafety/Widgets/custom_textfield.dart';
+
+// class StudentFormView extends StatefulWidget {
+//   final String id;
+//   const StudentFormView({super.key, required this.id});
+
+//   @override
+//   State<StudentFormView> createState() => _StudentFormViewState();
+// }
+
+// class _StudentFormViewState extends State<StudentFormView> {
+//   final StudentFormController controller = Get.put(StudentFormController());
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     controller
+//         .initialFunctioun(widgetId: widget.id)
+//         .whenComplete(() => setState(() {}));
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: const CustomAppBar(title: "Student Form", isBack: true),
+//       body: Padding(
+//         padding: screenHorizontalPadding,
+//         child: Form(
+//           key: controller.formKey,
+//           child: ListView(
+//             children: [
+//               buildTextField("Name", controller.nameController,
+//                   TextInputType.name, "Enter Your Name"),
+//               buildTextField("Nationality", controller.nationalityController,
+//                   TextInputType.name, "Enter Your Nationality"),
+//               buildDateField("Date of Birth", controller.dobController,
+//                   "Enter Your Date of Birth"),
+//               buildGenderSelector(),
+//               buildTextField("Birth Place", controller.countryBirthController,
+//                   TextInputType.name, "Enter Birth Place"),
+//               buildDropdown("Marital Status", controller.maritalStatusValue,
+//                   ["Single", "Married", "Divorced", "Widowed"]),
+//               buildTextField("Address", controller.addressController,
+//                   TextInputType.streetAddress, "Enter Street Address"),
+//               buildDropdown("Country", controller.selectedCountryListValue,
+//                   ["India", "Australia", "China", "Colombia", "Italy"]),
+//               buildDropdown("State", controller.selectedStateListValue, [
+//                 "Maharashtra",
+//                 "Bihar",
+//                 "Haryana",
+//                 "Colombia",
+//                 "Chhattisgarh"
+//               ]),
+//               buildTextField("Zip Code", controller.zipCodeController,
+//                   TextInputType.number, "Enter Zip Code"),
+//               buildTextField("Phone", controller.phoneController,
+//                   TextInputType.phone, "Enter Phone"),
+//               buildTextField("Alternative Phone", controller.mobileController,
+//                   TextInputType.phone, "Enter Alternative Phone"),
+//               buildTextField("Email", controller.emailController,
+//                   TextInputType.emailAddress, "Enter Email"),
+//               buildTextField("Alternative Email", controller.altEmailController,
+//                   TextInputType.emailAddress, "Enter Alternative Email"),
+//               buildTextField("Exam Venue", controller.examvenueController,
+//                   TextInputType.streetAddress, "Enter Exam Venue"),
+//               (controller.getBranchList.branchList != null)
+//                   ? buildDropdown(
+//                       "Branch",
+//                       controller.selectedCountryListValue,
+//                       controller.getBranchList.branchList!
+//                           .map((item) => item.branch)
+//                           .whereType<String>()
+//                           .toList())
+//                   : const SizedBox(),
+//               buildCourseCheckboxes(),
+//               buildDropdown(
+//                   "Mode of Enrollment",
+//                   controller.selectModeOfEnrollment,
+//                   ["Offline Enrollment", "Online Enrollment"]),
+//               buildTextField(
+//                   "Disability Requirements",
+//                   controller.disabilityRequirementsController,
+//                   TextInputType.text,
+//                   "Enter Requirements"),
+//               buildImageUploadSection(),
+//               buildEducationDetailsSection(),
+//               buildVerificationSection(),
+//               buildTermsAndConditionsSection(),
+//               CustomButton(
+//                   title: "Submit",
+//                   onTap: () => controller.submitForm(
+//                       userId: controller.userId.value, id: widget.id)),
+//               SizedBox(height: screenHeightPadding),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget buildTextField(String label, TextEditingController controller,
+//       TextInputType inputType, String hintText) {
+//     return Padding(
+//       padding: EdgeInsets.only(
+//           top: screenHeightPadding,
+//           left: screenWidthPadding,
+//           bottom: responsiveHeight(height: 6)),
+//       child: CustomTextField(
+//         controller: controller,
+//         hintText: hintText,
+//         textInputType: inputType,
+//         validator: FormValidationServices.validateField(fieldName: label),
+//       ),
+//     );
+//   }
+
+//   Widget buildDateField(
+//       String label, TextEditingController controller, String hintText) {
+//     return GestureDetector(
+//       onTap: () => showDatePickerDialog(controller),
+//       child: buildTextField(label, controller, TextInputType.name, hintText),
+//     );
+//   }
+
+//   Widget buildGenderSelector() {
+//     return Padding(
+//       padding: EdgeInsets.only(
+//           top: screenHeightPadding,
+//           left: screenWidthPadding,
+//           bottom: responsiveHeight(height: 6)),
+//       child: Row(
+//         children: [
+//           buildGenderButton("Male"),
+//           SizedBox(width: responsiveWidth(width: 40)),
+//           buildGenderButton("Female"),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget buildGenderButton(String gender) {
+//     return Expanded(
+//       child: CustomButton(
+//         title: gender,
+//         backGroundColor: (controller.genderValue.value == gender)
+//             ? ColorConstant.primary
+//             : ColorConstant.primary.withOpacity(0.1),
+//         textColor: (controller.genderValue.value == gender)
+//             ? ColorConstant.white
+//             : ColorConstant.primary,
+//         onTap: () {
+//           controller.genderValue.value = gender;
+//           setState(() {});
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget buildDropdown(
+//       String label, RxString selectedValue, List<String> items) {
+//     return Padding(
+//       padding: EdgeInsets.only(
+//           top: screenHeightPadding,
+//           left: screenWidthPadding,
+//           bottom: responsiveHeight(height: 6)),
+//       child: DropdownButtonFormField<String>(
+//         value: selectedValue.value.isEmpty ? null : selectedValue.value,
+//         onChanged: (value) {
+//           setState(() {
+//             selectedValue.value = value!;
+//           });
+//         },
+//         decoration: InputDecoration(
+//           labelText: label,
+//           border: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(30),
+//               borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1)),
+//           focusedBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(30),
+//               borderSide: BorderSide(color: ColorConstant.primary, width: 2)),
+//           enabledBorder: OutlineInputBorder(
+//               borderRadius: BorderRadius.circular(30),
+//               borderSide: BorderSide(color: ColorConstant.lightGrey, width: 1)),
+//           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+//         ),
+//         items: items.map((String value) {
+//           return DropdownMenuItem<String>(
+//             value: value,
+//             child: Text(value.isEmpty ? 'Select $label' : value,
+//                 style: TextStyle(
+//                     color: value.isEmpty
+//                         ? ColorConstant.grey
+//                         : ColorConstant.black,
+//                     fontWeight: FontWeight.w400,
+//                     fontSize: 16)),
+//           );
+//         }).toList(),
+//         icon: Icon(Icons.arrow_drop_down,
+//             color: ColorConstant.primary.withOpacity(0.8)),
+//         iconSize: 24,
+//         isExpanded: true,
+//         dropdownColor: ColorConstant.white,
+//       ),
+//     );
+//   }
+
+//   Widget buildCourseCheckboxes() {
+//     return Column(
+//       children: [
+//         Padding(
+//           padding: EdgeInsets.only(top: screenHeightPadding),
+//           child: Center(
+//               child:
+//                   Text('TRAINING COURSES', style: TextStyleConstant.bold18())),
+//         ),
+//         buildCourseCheckbox('1. Diploma Safety Course', 0),
+//         buildCourseCheckbox('2. POST DIPLOMA Safety COURSES', 1),
+//         buildCourseCheckbox('3. GRADUATION PROGRAMS (ASP/CSP)', 2),
+//         buildCourseCheckbox('4. CERTIFICATE COURSES', 3),
+//         buildCourseCheckbox(
+//             '5. NIBOSH IGC (International General Certification) IG1 & IG2', 4),
+//       ],
+//     );
+//   }
+
+//   Widget buildCourseCheckbox(String title, int index) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Expanded(
+//             child: Text(title,
+//                 style: TextStyle(
+//                     fontSize: 16,
+//                     fontWeight: FontWeight.w600,
+//                     color: ColorConstant.black.withOpacity(0.8))),
+//           ),
+//           AnimatedSwitcher(
+//             duration: const Duration(milliseconds: 200),
+//             child: Checkbox(
+//               key: ValueKey(controller.courseSelections[index]),
+//               value: controller.courseSelections[index],
+//               onChanged: (bool? value) {
+//                 setState(() {
+//                   controller.courseSelections[index] = value!;
+//                   controller.toggleCourseSelection(title);
+//                 });
+//               },
+//               activeColor: ColorConstant.green,
+//               checkColor: Colors.white,
+//               side: BorderSide(color: ColorConstant.lightGrey, width: 1.5),
+//               shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(5)),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget buildImageUploadSection() {
+//     return Column(
+//       children: [
+//         Padding(
+//           padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+//           child: Text("Upload Your Document Images",
+//               style: TextStyleConstant.semiBold16()),
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: [
+//             buildImageBox("Profile", 1, controller.selectedImage1),
+//             buildImageBox("Document", 2, controller.selectedImage2),
+//             buildImageBox("Signature", 3, controller.selectedImage3),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget buildImageBox(String label, int imageNo, Rx<File?> image) {
+//     return Column(
+//       children: [
+//         Text(label, style: TextStyleConstant.semiBold16()),
+//         GestureDetector(
+//           onTap: () => selectImageSourceDialog(imageNo),
+//           child: Container(
+//             height: Get.height * 0.080,
+//             width: Get.width * 0.170,
+//             decoration: BoxDecoration(
+//               color: ColorConstant.lightGrey,
+//               borderRadius: BorderRadius.circular(16),
+//               border: Border.all(width: 2, color: ColorConstant.grey),
+//               image: image.value != null
+//                   ? DecorationImage(
+//                       image: FileImage(image.value!), fit: BoxFit.fill)
+//                   : null,
+//             ),
+//             child: image.value == null
+//                 ? const Icon(Icons.add_a_photo, color: ColorConstant.grey)
+//                 : null,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget buildEducationDetailsSection() {
+//     return Column(
+//       children: [
+//         Padding(
+//           padding: EdgeInsets.only(top: screenHeightPadding, bottom: 6),
+//           child:
+//               Text("Education Details", style: TextStyleConstant.semiBold16()),
+//         ),
+//         buildTextField("Institution Name", controller.institutionController,
+//             TextInputType.name, "Institution Name"),
+//         buildDateField("From Date", controller.fromDateController, "From Date"),
+//         buildDateField("To Date", controller.toDateController, "To Date"),
+//         buildTextField("Degree Obtained", controller.degreeController,
+//             TextInputType.name, "Enter Degree Obtained"),
+//         CustomButton(title: "Add to List", onTap: addToList),
+//         buildAcademicTable(),
+//       ],
+//     );
+//   }
+
+//   void addToList() {
+//     setState(() {
+//       controller.educationEntries.add(OrderItem(
+//         cartId: controller.selectCode.value,
+//         id: controller.selectId.value,
+//         instituteName: controller.institutionController.text,
+//         fromDate: controller.fromDateController.text,
+//         toDate: controller.toDateController.text,
+//         degree: controller.degreeController.text,
+//       ));
+
+//       // Clear education form fields
+//       controller.institutionController.clear();
+//       controller.fromDateController.clear();
+//       controller.toDateController.clear();
+//       controller.degreeController.clear();
+//     });
+//   }
+
+//   Widget buildAcademicTable() {
+//     return SingleChildScrollView(
+//       scrollDirection: Axis.horizontal,
+//       child: DataTable(
+//         columns: const [
+//           DataColumn(label: Text('Institution Name')),
+//           DataColumn(label: Text('From Date')),
+//           DataColumn(label: Text('To Date')),
+//           DataColumn(label: Text('Degree Obtained')),
+//           DataColumn(label: Text('Action')),
+//         ],
+//         rows: controller.educationEntries.map((entry) {
+//           return DataRow(
+//             cells: [
+//               DataCell(Text(entry.instituteName)),
+//               DataCell(Text(entry.fromDate)),
+//               DataCell(Text(entry.toDate)),
+//               DataCell(Text(entry.degree)),
+//               DataCell(IconButton(
+//                 icon: const Icon(Icons.delete),
+//                 onPressed: () {
+//                   setState(() {
+//                     controller.educationEntries.remove(entry);
+//                   });
+//                 },
+//               )),
+//             ],
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+
+//   Widget buildVerificationSection() {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Expanded(
+//           child: Text(
+//             "Please verify the information",
+//             style: TextStyle(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.w600,
+//                 color: ColorConstant.black.withOpacity(0.8)),
+//           ),
+//         ),
+//         Checkbox(
+//           value: controller.isVerified.value,
+//           onChanged: (bool? value) {
+//             setState(() {
+//               controller.isVerified.value = value!;
+//             });
+//           },
+//           activeColor: ColorConstant.green,
+//           checkColor: Colors.white,
+//           side: BorderSide(color: ColorConstant.lightGrey, width: 1.5),
+//           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+//         ),
+//       ],
+//     );
+//   }
+
+//   Widget buildTermsAndConditionsSection() {
+//     return Padding(
+//       padding: screenVerticalPadding,
+//       child: GestureDetector(
+//         onTap: showTermsAndConditions,
+//         child: Text("Read Terms and Conditions",
+//             style: TextStyleConstant.bold18(color: ColorConstant.primary)),
+//       ),
+//     );
+//   }
+
+//   void showDatePickerDialog(TextEditingController controller) async {
+//     final DateTime? dateTime = await showDatePicker(
+//       context: context,
+//       initialDate: DateTime.now(),
+//       firstDate: DateTime(1900),
+//       lastDate: DateTime(2100),
+//     );
+
+//     if (dateTime != null) {
+//       controller.text = DateFormat('yyyy-MM-dd').format(dateTime);
+//       setState(() {});
+//     }
+//   }
+
+//   void selectImageSourceDialog(int imageNo) {
+//     Get.dialog(AlertDialog(
+//       title: const Text("Select Image Source Type"),
+//       actions: [
+//         Card(
+//           child: ListTile(
+//             onTap: () {
+//               Get.back();
+//               controller
+//                   .pickImage(imageNo: imageNo, imageSource: ImageSource.camera)
+//                   .whenComplete(() => setState(() {}));
+//             },
+//             title: const Text("Select From Camera"),
+//           ),
+//         ),
+//         Card(
+//           child: ListTile(
+//             onTap: () {
+//               Get.back();
+//               controller
+//                   .pickImage(imageNo: imageNo, imageSource: ImageSource.gallery)
+//                   .whenComplete(() => setState(() {}));
+//             },
+//             title: const Text("Select From Gallery"),
+//           ),
+//         ),
+//       ],
+//     ));
+//   }
+
+//   void showTermsAndConditions() {
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           content: SingleChildScrollView(
+//             child: RichText(
+//               text: const TextSpan(
+//                 children: [
+//                   TextSpan(
+//                     text: "Terms and Conditions of Service\n\n",
+//                     style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.black,
+//                         fontSize: 20),
+//                   ),
+//                   TextSpan(
+//                     text:
+//                         "In these Terms and Conditions 'Company' means Parmanand College of Fire Safety Engineering and Safety Management (PCFSM), 5th floor, Landge Landmark, Kasarwadi, Mumbai - Pune Highway, Pune 411034, MH, India. The 'Client' means the person or persons and/or Companies that order products or services. The 'Product or Services' means the products or services offered by the Company and more particularly specified in the Booking Form and Company invoice. 'Order' means the written confirmation placed by the Client for the purchase of products or services. The terms and conditions apply to all contracts for Product or Services between the Client and the Company to the exclusion of any terms and conditions specified by the Client.\n\n",
+//                     style: TextStyle(color: Colors.black),
+//                   ),
+//                   WidgetSpan(child: SizedBox(height: 20)),
+//                   TextSpan(
+//                     text: "Fees\n",
+//                     style: TextStyle(fontWeight: FontWeight.bold),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

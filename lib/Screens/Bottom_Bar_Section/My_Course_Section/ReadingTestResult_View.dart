@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
@@ -202,6 +204,7 @@ class _RedingTestResultViewState extends State<RedingTestResultView> {
                         child: CustomButton(
                           title: "Restart Test",
                           onTap: () {
+                            log("message");
                             Get.back(); // Goes back to the previous screen
                             setState(() {
                               controller.resetQuiz(); // Resets the quiz

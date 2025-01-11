@@ -164,9 +164,7 @@ class ReadingTestController extends GetxController {
           postReadingResultModel.statusCode == "201") {
         log("Quiz results posted successfully.");
 
-        Get.to(
-          () => ListeningWithMcqView(userId: userId, id: id),
-        );
+        Get.to(() => ListeningWithMcqView(userId: userId, id: id));
       } else {
         log("Something went wrong: ${postReadingResultModel.statusCode}");
       }
