@@ -83,13 +83,12 @@ class _StudentDashboardViewState extends State<StudentDashboardView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                    color: ColorConstant.primary,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Icon(element.icon,
-                                    color: ColorConstant.white),
-                              ),
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.primary,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Icon(element.icon,
+                                      color: ColorConstant.white)),
                               const SizedBox(height: 8),
                               Text(element.title,
                                   style: TextStyleConstant.semiBold16(),

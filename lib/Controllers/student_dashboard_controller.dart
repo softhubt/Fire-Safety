@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:firesafety/Models/get_batch_details_model.dart';
+import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/Sudent_Form_Section/chat_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
 import 'package:firesafety/Widgets/custom_web_view.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,12 @@ class StudentDashboardController extends GetxController {
       required String categoryId,
       required String subcategoryId,
       required String testPaymentId}) async {
+    userId.value = await StorageServices.getData(
+        dataType: StorageKeyConstant.stringType,
+        prefKey: StorageKeyConstant.userId);
+
+    await getBatchDetails(testPaymentId: testPaymentId);
+
     dashboardElementList.value = [
       DashboardElementListModel(
           title: "My Course",
@@ -58,14 +65,18 @@ class StudentDashboardController extends GetxController {
       DashboardElementListModel(
           title: "My Batches", icon: Icons.groups_sharp, onTap: () {}),
       DashboardElementListModel(
-          title: "Messages", icon: Icons.message_rounded, onTap: () {}),
+          title: "Messages",
+          icon: Icons.message_rounded,
+          onTap: () {
+            Get.to(() => ChatView(
+                testPaymentId: testPaymentId,
+                teacherId: getBatchDetailsModel.teacherId ?? ""));
+          }),
     ];
 
     userId.value = await StorageServices.getData(
         dataType: StorageKeyConstant.stringType,
         prefKey: StorageKeyConstant.userId);
-
-    await getBatchDetails(testPaymentId: testPaymentId);
   }
 
   Future getBatchDetails({required String testPaymentId}) async {
