@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
@@ -104,6 +106,7 @@ class _StudentDashboardViewState extends State<StudentDashboardView> {
                           )));
                 },
               ),
+              responsiveSizedBoxHeight(height: 20),
             ],
           ),
         ));

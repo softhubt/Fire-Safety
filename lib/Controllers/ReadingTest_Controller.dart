@@ -162,13 +162,16 @@ class ReadingTestController extends GetxController {
 
       if (postReadingResultModel.statusCode == "200" ||
           postReadingResultModel.statusCode == "201") {
+        CustomLoader.closeCustomLoader();
         log("Quiz results posted successfully.");
 
         Get.to(() => ListeningWithMcqView(userId: userId, id: id));
       } else {
+        CustomLoader.closeCustomLoader();
         log("Something went wrong: ${postReadingResultModel.statusCode}");
       }
     } catch (error) {
+      CustomLoader.closeCustomLoader();
       log("Error posting quiz results: $error");
     } finally {
       CustomLoader.closeCustomLoader();

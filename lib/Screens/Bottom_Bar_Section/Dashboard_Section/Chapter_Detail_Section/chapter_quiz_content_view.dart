@@ -51,7 +51,7 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Quize", isBack: true),
+      appBar: const CustomAppBar(title: "Quiz", isBack: true),
       body: (controller.isFetchingData.value)
           ? Padding(
               padding: const EdgeInsets.all(16),
@@ -298,7 +298,7 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                                         print(
                                             "Wrong Answers: ${controller.wrongAnswers.value}");
 
-                                        Get.offAll(() => TestResultView(
+                                        Get.to(() => TestResultView(
                                               testListId: controller
                                                       .getChapterQuizListModel
                                                       .testDetailsList?[0]
@@ -306,11 +306,11 @@ class _ChapterQuizContentViewState extends State<ChapterQuizContentView> {
                                                   '',
                                               testName: 'Quiz Test',
                                               attemptedQuestions: double.tryParse(
-                                                      "${controller.correctAnswers.value ?? 0}") ??
+                                                      "${controller.correctAnswers.value}") ??
                                                   0.0,
                                               unattemptedQuestions: (double
                                                           .tryParse(
-                                                              "${controller.questions.length ?? 0}") ??
+                                                              "${controller.questions.length}") ??
                                                       0.0) -
                                                   (double.tryParse(
                                                           "${controller.correctAnswers.value}") ??

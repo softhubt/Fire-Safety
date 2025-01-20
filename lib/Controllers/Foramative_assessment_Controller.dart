@@ -175,6 +175,12 @@ class ChapterFormativeAssessmentController extends GetxController {
         questions.clear();
         log("Somethig went wrong during getting formative assessment list ::: ${getFormativeAssessmentModel.message}");
       }
+
+      questions.forEach(
+        (element) {
+          controllers[element.id]?.clear();
+        },
+      );
     } catch (error) {
       questions.clear();
       log("Somethig went wrong during getting formative assessment list ::: $error");

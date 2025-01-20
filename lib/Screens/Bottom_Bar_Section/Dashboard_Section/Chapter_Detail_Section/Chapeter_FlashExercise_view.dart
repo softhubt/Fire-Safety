@@ -119,27 +119,23 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                         child: Card(
                           color: ColorConstant.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                              borderRadius: BorderRadius.circular(16)),
                           child: Padding(
                             padding: screenPadding,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Question
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Icon(
-                                      Icons.question_mark,
-                                      color: ColorConstant.blue,
-                                    ),
+                                    const Icon(Icons.question_mark,
+                                        color: ColorConstant.blue),
                                     SizedBox(width: Get.width * 0.016),
                                     Expanded(
                                       child: Text(
-                                        "Q ${index + 1}: ${element?.question ?? ""}",
-                                        style: TextStyleConstant.semiBold20(),
-                                      ),
+                                          "Q ${index + 1}: ${element?.question ?? ""}",
+                                          style:
+                                              TextStyleConstant.semiBold20()),
                                     ),
                                   ],
                                 ),
@@ -156,10 +152,8 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                                         color: ColorConstant.amber,
                                       ),
                                       SizedBox(width: Get.width * 0.016),
-                                      Text(
-                                        "Marks: ${element?.marks ?? ""}",
-                                        style: TextStyleConstant.medium18(),
-                                      ),
+                                      Text("Marks: ${element?.marks ?? ""}",
+                                          style: TextStyleConstant.medium18()),
                                     ],
                                   ),
                                 ),
@@ -168,17 +162,14 @@ class _ChapterFlashExerciseViewState extends State<ChapterFlashExerciseView> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Icon(
-                                      Icons.comment,
-                                      color: ColorConstant.green,
-                                    ),
+                                    const Icon(Icons.comment,
+                                        color: ColorConstant.green),
                                     SizedBox(width: Get.width * 0.016),
                                     Expanded(
                                       child: Text(
                                         "Comment: ${element?.comment ?? ""}",
-                                        style: TextStyleConstant.medium18(
-                                          color: ColorConstant.grey,
-                                        ),
+                                        style: TextStyleConstant.semiBold18(
+                                            color: ColorConstant.green),
                                       ),
                                     ),
                                   ],

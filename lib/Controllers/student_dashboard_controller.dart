@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firesafety/Models/get_batch_details_model.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/Sudent_Form_Section/chat_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/My_Course_Section/my_course_screen.dart';
+import 'package:firesafety/Widgets/custom_toast.dart';
 import 'package:firesafety/Widgets/custom_web_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -71,6 +72,12 @@ class StudentDashboardController extends GetxController {
             Get.to(() => ChatView(
                 testPaymentId: testPaymentId,
                 teacherId: getBatchDetailsModel.teacherId ?? ""));
+          }),
+      DashboardElementListModel(
+          title: "Feedback",
+          icon: Icons.message_rounded,
+          onTap: () {
+            customToast(message: "Thanks for giving your valueable feedback");
           }),
     ];
 

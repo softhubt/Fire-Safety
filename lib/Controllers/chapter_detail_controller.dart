@@ -67,13 +67,12 @@ class ChapterDetailController extends GetxController {
       };
 
       var response = await HttpServices.postHttpMethod(
-        url: EndPointConstant.chapterWiseTabAccess,
-        payload: payload,
-        urlMessage: "Get tab access url",
-        payloadMessage: "Get tab access payload",
-        statusMessage: "Get tab access status",
-        bodyMessage: "Get tab access response",
-      );
+          url: EndPointConstant.chapterWiseTabAccess,
+          payload: payload,
+          urlMessage: "Get tab access url",
+          payloadMessage: "Get tab access payload",
+          statusMessage: "Get tab access status",
+          bodyMessage: "Get tab access response");
 
       getTabAccessListModel = getTabAccessListModelFromJson(response["body"]);
       if (getTabAccessListModel.statusCode == "200" ||
