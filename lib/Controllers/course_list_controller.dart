@@ -19,6 +19,7 @@ class CourseListController extends GetxController {
 
   // Variable to hold the purchase ID
   RxString Id = ''.obs;
+
   String _formatDate(String? date) {
     if (date == null) return ''; // Return an empty string if the date is null
     try {
