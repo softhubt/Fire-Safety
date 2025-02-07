@@ -1016,23 +1016,23 @@ class _StudentFormViewState extends State<StudentFormView> {
       actions: [
         Card(
             child: ListTile(
-          onTap: () {
-            Get.back();
-            controller
-                .pickImage(imageNo: imageNo, imageSource: ImageSource.camera)
-                .whenComplete(() => setState(() {}));
-          },
-          title: const Text("Select From Camera"),
-        )),
+                onTap: () {
+                  Get.back();
+                  controller
+                      .pickImage(
+                          imageNo: imageNo, imageSource: ImageSource.camera)
+                      .whenComplete(() => setState(() {}));
+                },
+                title: const Text("Select From Camera"))),
         Card(
             child: ListTile(
           onTap: () {
             Get.back();
             controller
-                .pickImage(imageNo: imageNo, imageSource: ImageSource.gallery)
+                .pickFile(imageNo: imageNo)
                 .whenComplete(() => setState(() {}));
           },
-          title: const Text("Select From Gallery"),
+          title: const Text("Select Pdf"),
         )),
       ],
     ));
@@ -1323,8 +1323,6 @@ class _StudentFormViewState extends State<StudentFormView> {
     }
   }
 }
-
-
 
 // import 'dart:io';
 // import 'package:firesafety/Controllers/SubmitStudentdfrom_Controller.dart';

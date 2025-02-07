@@ -255,7 +255,7 @@ class _ListeningWithMcqViewState extends State<ListeningWithMcqView> {
         bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16.0),
             child:
-                CustomButton(title: "Ssubmit", onTap: () => _submitAnswers())));
+                CustomButton(title: "Submit", onTap: () => _submitAnswers())));
   }
 }
 

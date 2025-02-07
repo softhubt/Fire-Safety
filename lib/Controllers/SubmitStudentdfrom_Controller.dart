@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:firesafety/Constant/storage_key_constant.dart';
 import 'package:firesafety/Services/local_storage_services.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +95,27 @@ class StudentFormController extends GetxController {
       }
     } else {
       log("No image selected");
+    }
+  }
+
+  Future<void> pickFile({
+    required int imageNo,
+  }) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      if (imageNo == 1) {
+        selectedImage1 = io.File(result.files.single.path!);
+      } else if (imageNo == 2) {
+        selectedImage2 = io.File(result.files.single.path!);
+      } else if (imageNo == 3) {
+        selectedImage3 = io.File(result.files.single.path!);
+      } else if (imageNo == 4) {
+        selectedImage4 = io.File(result.files.single.path!);
+      }
     }
   }
 

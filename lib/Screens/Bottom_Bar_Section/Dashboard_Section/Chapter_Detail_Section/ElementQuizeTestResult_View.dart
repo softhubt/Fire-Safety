@@ -2,7 +2,6 @@ import 'package:firesafety/Constant/color_constant.dart';
 import 'package:firesafety/Constant/layout_constant.dart';
 import 'package:firesafety/Constant/textstyle_constant.dart';
 import 'package:firesafety/Controllers/chapter_quiz_content_controller.dart';
-import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/Chapeter_FlashExercise_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/Chapter_Detail_Section/chapter_quiz_content_view.dart';
 import 'package:firesafety/Screens/Bottom_Bar_Section/Dashboard_Section/chapter_detail_screen.dart';
 import 'package:firesafety/Widgets/custom_button.dart';
