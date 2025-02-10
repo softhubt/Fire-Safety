@@ -68,7 +68,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                         Get.to(() => CourseDetailScreen(
                             courseId:
                                 "${controller.getCourseListModel.courseList?[index].courseId}",
-                            testpaymentId: "widget.testpaymentId,",
+                            testpaymentId: "widget.testpaymentId",
                             isPurchase: widget.isPurchase,
                             amount: widget.amount,
                             categoryId: widget.categoryId,
